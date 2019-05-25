@@ -1,0 +1,5 @@
+<configuration> 
+  <connectionStrings configSource="db.config" />
+  <appSettings configSource="app.config" />
+  <rewriter configSource="URLRewriter.config" />
+</configuration>
