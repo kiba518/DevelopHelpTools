@@ -1,0 +1,23 @@
+bool -> System.Boolean (布尔型，其值为 true 或者 false)
+
+byte -> System.Byte (字节型，占 1 字节，表示 8 位正整数，范围 0 ~ 255)
+
+sbyte -> System.SByte (带符号字节型，占 1 字节，表示 8 位整数，范围 -128 ~ 127)
+
+char -> System.Char (字符型，占有两个字节，表示 1 个 Unicode 字符)
+
+short -> System.Int16 (短整型，占 2 字节，表示 16 位整数，范围 -32,768 ~ 32,767)
+
+ushort -> System.UInt16 (无符号短整型，占 2 字节，表示 16 位正整数，范围 0 ~ 65,535)
+
+uint -> System.UInt32 (无符号整型，占 4 字节，表示 32 位正整数，范围 0 ~ 4,294,967,295)
+
+int -> System.Int32 (整型，占 4 字节，表示 32 位整数，范围 -2,147,483,648 到 2,147,483,647)
+
+float -> System.Single (单精度浮点型，占 4 个字节)
+
+ulong -> System.UInt64 (无符号长整型，占 8 字节，表示 64 位正整数，范围 0 ~ 大约 10 的 20 次方)
+
+long -> System.Int64 (长整型，占 8 字节，表示 64 位整数，范围大约 -(10 的 19) 次方 到 10 的 19 次方)
+
+double -> System.Double (双精度浮点型，占8 个字节)
