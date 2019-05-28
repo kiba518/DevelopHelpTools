@@ -1,0 +1,399 @@
+//c++:HANDLE(void   *)                          ----    c#:System.IntPtr
+//c++:Byte(unsigned   char)                     ----    c#:System.Byte
+//c++:SHORT(short)                              ----    c#:System.Int16
+//c++:WORD(unsigned   short)                    ----    c#:System.UInt16
+//c++:INT(int)                                  ----    c#:System.Int16
+//c++:INT(int)                                  ----    c#:System.Int32
+//c++:UINT(unsigned   int)                      ----    c#:System.UInt16
+//c++:UINT(unsigned   int)                      ----    c#:System.UInt32
+//c++:LONG(long)                                ----    c#:System.Int32
+//c++:ULONG(unsigned   long)                    ----    c#:System.UInt32
+//c++:DWORD(unsigned   long)                    ----    c#:System.UInt32
+//c++:DECIMAL                                   ----    c#:System.Decimal
+//c++:BOOL(long)                                ----    c#:System.Boolean
+//c++:CHAR(char)                                ----    c#:System.Char
+//c++:LPSTR(char   *)                           ----    c#:System.String
+//c++:LPWSTR(wchar_t   *)                       ----    c#:System.String
+//c++:LPCSTR(const   char   *)                  ----    c#:System.String
+//c++:LPCWSTR(const   wchar_t   *)              ----    c#:System.String
+//c++:PCAHR(char   *)                           ----    c#:System.String
+//c++:BSTR                                      ----    c#:System.String
+//c++:FLOAT(float)                              ----    c#:System.Single
+//c++:DOUBLE(double)                            ----    c#:System.Double
+//c++:VARIANT                                   ----    c#:System.Object
+//c++:PBYTE(byte   *)                           ----    c#:System.Byte[]
+
+//c++:BSTR                                      ----    c#:StringBuilder
+//c++:LPCTSTR                                   ----    c#:StringBuilder
+//c++:LPCTSTR                                   ----    c#:string
+//c++:LPTSTR                                    ----    c#:[MarshalAs(UnmanagedType.LPTStr)] string
+//c++:LPTSTR 输出变量名                         ----    c#:StringBuilder 输出变量名
+//c++:LPCWSTR                                   ----    c#:IntPtr
+//c++:BOOL                                      ----    c#:bool 
+//c++:HMODULE                                   ----    c#:IntPtr  
+//c++:HINSTANCE                                 ----    c#:IntPtr
+//c++:结构体                                    ----    c#:public struct 结构体{};
+//c++:结构体 **变量名                           ----    c#:out 变量名   //C#中提前申明一个结构体实例化后的变量名
+//c++:结构体 &变量名                            ----    c#:ref 结构体 变量名
+//c++:WORD                                      ----    c#:ushort
+//c++:DWORD                                     ----    c#:uint
+//c++:DWORD                                     ----    c#:int
+//c++:UCHAR                                     ----    c#:int
+//c++:UCHAR                                     ----    c#:byte
+//c++:UCHAR*                                    ----    c#:string
+//c++:UCHAR*                                    ----    c#:IntPtr
+//c++:GUID                                      ----    c#:Guid
+//c++:Handle                                    ----    c#:IntPtr
+//c++:HWND                                      ----    c#:IntPtr
+//c++:DWORD                                     ----    c#:int
+//c++:COLORREF                                  ----    c#:uint
+
+
+//c++:unsigned char                             ----    c#:byte
+//c++:unsigned char *                           ----    c#:ref byte
+//c++:unsigned char *                           ----    c#:[MarshalAs(UnmanagedType.LPArray)] byte[]
+//c++:unsigned char *                           ----    c#:[MarshalAs(UnmanagedType.LPArray)] Intptr
+
+//c++:unsigned char &                           ----    c#:ref byte
+//c++:unsigned char 变量名                      ----    c#:byte 变量名
+//c++:unsigned short 变量名                     ----    c#:ushort 变量名
+//c++:unsigned int 变量名                       ----    c#:uint 变量名
+//c++:unsigned long 变量名                      ----    c#:ulong 变量名
+
+//c++:char 变量名                               ----    c#:byte 变量名   //C++中一个字符用一个字节表示,C#中一个字符用两个字节表示
+//c++:char 数组名[数组大小]                     ----    c#:MarshalAs(UnmanagedType.ByValTStr, SizeConst         =         数组大小)]        public string 数组名; ushort
+
+//c++:char *                                    ----    c#:string       //传入参数
+//c++:char *                                    ----    c#:StringBuilder//传出参数
+//c++:char *变量名                              ----    c#:ref string 变量名
+//c++:char *输入变量名                          ----    c#:string 输入变量名
+//c++:char *输出变量名                          ----    c#:[MarshalAs(UnmanagedType.LPStr)] StringBuilder 输出变量名
+
+//c++:char **                                   ----    c#:string
+//c++:char **变量名                             ----    c#:ref string 变量名
+//c++:const char *                              ----    c#:string
+//c++:char[]                                    ----    c#:string
+//c++:char 变量名[数组大小]                     ----    c#:[MarshalAs(UnmanagedType.ByValTStr,SizeConst        =        数组大小)] public string 变量名;
+
+//c++:struct 结构体名 *变量名                   ----    c#:ref 结构体名 变量名
+//c++:委托 变量名                               ----    c#:委托变量名
+
+//c++:int                                       ----    c#:int
+//c++:int                                       ----    c#:ref int
+//c++:int &                                     ----    c#:ref int
+//c++:int *                                     ----    c#:ref int      //C#中调用前需定义int 变量名         =         0;
+
+//c++:*int                                      ----    c#:IntPtr
+//c++:int32 PIPTR *                             ----    c#:int32[]
+//c++:float PIPTR *                             ----    c#:float[]
+      
+
+//c++:double** 数组名                           ----    c#:ref double 数组名
+//c++:double*[] 数组名                          ----    c#:ref double 数组名
+//c++:long                                      ----    c#:int
+//c++:ulong                                     ----    c#:int
+      
+//c++:UINT8 *                                   ----    c#:ref byte       //C#中调用前需定义byte 变量名         =         new byte();      
+
+
+//c++:handle                                    ----    c#:IntPtr
+//c++:hwnd                                      ----    c#:IntPtr      
+//c++:void *                                    ----    c#:IntPtr      
+//c++:void * user_obj_param                     ----    c#:IntPtr user_obj_param
+//c++:void * 对象名称                           ----    c#:([MarshalAs(UnmanagedType.AsAny)]Object 对象名称
+
+
+      
+//c++:char, INT8, SBYTE, CHAR                               ----    c#:System.SByte
+//c++:short, short int, INT16, SHORT                        ----    c#:System.Int16
+//c++:int, long, long int, INT32, LONG32, BOOL , INT        ----    c#:System.Int32
+//c++:__int64, INT64, LONGLONG                              ----    c#:System.Int64
+//c++:unsigned char, UINT8, UCHAR , BYTE                    ----    c#:System.Byte
+//c++:unsigned short, UINT16, USHORT, WORD, ATOM, WCHAR , __wchar_t             ----    c#:System.UInt16
+//c++:unsigned, unsigned int, UINT32, ULONG32, DWORD32, ULONG, DWORD, UINT      ----    c#:System.UInt32
+//c++:unsigned __int64, UINT64, DWORDLONG, ULONGLONG                            ----    c#:System.UInt64
+//c++:float, FLOAT                                                              ----    c#:System.Single
+//c++:double, long double, DOUBLE                                               ----    c#:System.Double
+
+//Win32 Types                                                                   ----  CLR Type
+      
+
+//Struct需要在C#里重新定义一个Struct
+//CallBack回调函数需要封装在一个委托里，delegate static extern int FunCallBack(string str);
+
+//unsigned char** ppImage替换成IntPtr ppImage
+//int& nWidth替换成ref int nWidth
+//int*, int&, 则都可用 ref int 对应
+//双针指类型参数，可以用 ref IntPtr
+//函数指针使用c++: typedef double (*fun_type1)(double); 对应 c#:public delegate double  fun_type1(double);
+//char* 的操作c++: char*; 对应 c#:StringBuilder;
+//c#中使用指针:在需要使用指针的地方 加 unsafe
+
+
+//unsigned   char对应public   byte
+
+
+WORD                                ushort
+DWORD                 uint
+UCHAR                 int/byte               大部分情况都可以使用int代替,而如果需要严格对齐的话则应该用bytebyte
+UCHAR*                 string/IntPtr
+unsigned char*      [MarshalAs(UnmanagedType.LPArray)]byte[]/？（Intptr）
+char*                 string
+LPCTSTR             string
+LPTSTR                 [MarshalAs(UnmanagedType.LPTStr)] string
+long                     int
+ulong               uint
+Handle                 IntPtr
+HWND                     IntPtr
+void*                 IntPtr
+int                      int
+int*                     ref int
+*int                     IntPtr
+unsigned int        uint
+COLORREF            uint
+
+API与C#的数据类型对应关系表
+API数据类型 类型描述               C#类型  API数据类型  类型描述              C#类型
+WORD 16位无符号整数               ushort  CHAR                   字符                       char
+LONG 32位无符号整数               int          DWORDLONG          64位长整数          long
+DWORD 32位无符号整数              uint      HDC                   设备描述表句柄  int
+HANDLE 句柄,32位整数              int          HGDIOBJ GDI     对象句柄              int
+UINT 32位无符号整数               uint      HINSTANCE          实例句柄              int
+BOOL 32位布尔型整数               bool      HWM                   窗口句柄              int
+LPSTR 指向字符的32位指针      string  HPARAM               32位消息参数      int
+LPCSTR 指向常字符的32位指针 String  LPARAM               32位消息参数      int
+BYTE 字节                                    byte      WPARAM               32位消息参数      int
+
+BOOL          =        System.Int32
+BOOLEAN       =        System.Int32
+BYTE          =        System.UInt16
+CHAR          =        System.Int16
+COLORREF      =        System.UInt32
+DWORD         =        System.UInt32
+DWORD32       =        System.UInt32
+DWORD64       =        System.UInt64
+FLOAT         =        System.Float
+HACCEL        =        System.IntPtr
+HANDLE        =        System.IntPtr
+HBITMAP       =        System.IntPtr
+HBRUSH        =        System.IntPtr
+HCONV         =        System.IntPtr
+HCONVLIST     =        System.IntPtr
+HCURSOR       =        System.IntPtr
+HDC           =        System.IntPtr
+HDDEDATA      =        System.IntPtr
+HDESK         =        System.IntPtr
+HDROP         =        System.IntPtr
+HDWP          =        System.IntPtr
+HENHMETAFILE  =        System.IntPtr
+HFILE         =        System.IntPtr
+HFONT         =        System.IntPtr
+HGDIOBJ       =        System.IntPtr
+HGLOBAL       =        System.IntPtr
+HHOOK         =        System.IntPtr
+HICON         =        System.IntPtr
+HIMAGELIST    =        System.IntPtr
+HIMC          =        System.IntPtr
+HINSTANCE     =        System.IntPtr
+HKEY          =        System.IntPtr
+HLOCAL        =        System.IntPtr
+HMENU         =        System.IntPtr
+HMETAFILE     =        System.IntPtr
+HMODULE       =        System.IntPtr
+HMONITOR      =        System.IntPtr
+HPALETTE      =        System.IntPtr
+HPEN          =        System.IntPtr
+HRGN          =        System.IntPtr
+HRSRC         =        System.IntPtr
+HSZ           =        System.IntPtr
+HWINSTA       =        System.IntPtr
+HWND          =        System.IntPtr
+INT           =        System.Int32
+INT32         =        System.Int32
+INT64         =        System.Int64
+LONG          =        System.Int32
+LONG32        =        System.Int32
+LONG64        =        System.Int64
+LONGLONG      =        System.Int64
+LPARAM        =        System.IntPtr
+LPBOOL        =        System.Int16[]
+LPBYTE        =        System.UInt16[]
+LPCOLORREF    =        System.UInt32[]
+LPCSTR        =        System.String
+LPCTSTR       =        System.String
+LPCVOID       =        System.UInt32
+LPCWSTR       =        System.String
+LPDWORD       =        System.UInt32[]
+LPHANDLE      =        System.UInt32
+LPINT         =        System.Int32[]
+LPLONG        =        System.Int32[]
+LPSTR         =        System.String
+LPTSTR        =        System.String
+LPVOID        =        System.UInt32
+LPWORD        =        System.Int32[]
+LPWSTR        =        System.String
+LRESULT       =        System.IntPtr
+PBOOL         =        System.Int16[]
+PBOOLEAN      =        System.Int16[]
+PBYTE         =        System.UInt16[]
+PCHAR         =        System.Char[]
+PCSTR         =        System.String
+PCTSTR        =        System.String
+PCWCH         =        System.UInt32
+PCWSTR        =        System.UInt32
+PDWORD        =        System.Int32[]
+PFLOAT        =        System.Float[]
+PHANDLE       =        System.UInt32
+PHKEY         =        System.UInt32
+PINT          =        System.Int32[]
+PLCID         =        System.UInt32
+PLONG         =        System.Int32[]
+PLUID         =        System.UInt32
+PSHORT        =        System.Int16[]
+PSTR          =        System.String
+PTBYTE        =        System.Char[]
+PTCHAR        =        System.Char[]
+PTSTR         =        System.String
+PUCHAR        =        System.Char[]
+PUINT         =        System.UInt32[]
+PULONG        =        System.UInt32[]
+PUSHORT       =        System.UInt16[]
+PVOID         =        System.UInt32
+PWCHAR        =        System.Char[]
+PWORD         =        System.Int16[]
+PWSTR         =        System.String
+REGSAM        =        System.UInt32
+SC_HANDLE     =        System.IntPtr
+SC_LOCK       =        System.IntPtr
+SHORT         =        System.Int16
+SIZE_T        =        System.UInt32
+SSIZE_        =        System.UInt32
+TBYTE         =        System.Char
+TCHAR         =        System.Char
+UCHAR         =        System.Byte
+UINT          =        System.UInt32
+UINT32        =        System.UInt32
+UINT64        =        System.UInt64
+ULONG         =        System.UInt32
+ULONG32       =        System.UInt32
+ULONG64       =        System.UInt64
+ULONGLONG     =        System.UInt64
+USHORT        =        System.UInt16
+WORD          =        System.UInt16
+WPARAM        =        System.IntPtr
+
+Wtypes.h 中的非托管类型    非托管C 语言类型     托管类名           说明
+HANDLE                     void*                System.IntPtr      32 位
+BYTE                       unsigned char        System.Byte        8 位
+SHORT                      short                System.Int16       16 位
+WORD                       unsigned short       System.UInt16      16 位
+INT                        int                  System.Int32       32 位
+UINT                       unsigned int         System.UInt32      32 位
+LONG                       long                 System.Int32       32 位
+BOOL                       long                 System.Int32       32 位
+DWORD                      unsigned long        System.UInt32      32 位
+ULONG                      unsigned long        System.UInt32      32 位
+CHAR                       char                 System.Char        用 ANSI 修饰。
+LPSTR                      char*                System.String 或 System.StringBuilder  用 ANSI 修饰。
+LPCSTR                     Const char*          System.String 或 System.StringBuilder  用 ANSI 修饰。
+LPWSTR                     wchar_t*             System.String 或 System.StringBuilder  用 Unicode 修饰。
+LPCWSTR                    Const wchar_t*       System.String 或 System.StringBuilder  用 Unicode 修饰。
+FLOAT                      Float                System.Single     32 位
+DOUBLE                     Double               System.Double     64 位
+ 
+C/C++中的结构类型数据在C#下的转换
+ 
+在做项目移植的时候，经常会碰到数据类型的转换，而我这一次碰到的是C/C++中的结构怎样转换到C#。折腾了一个晚上终于有一个完美的方案。
+例如我们在C/C++下的结构数据如下：
+
+typedef struct
+{
+    char  sLibName[ 256 ];
+    char  sPathToLibrary[ 256 ];
+    INT32       iEntries;
+    INT32       iUsed;
+    UINT16     iSort;
+    UINT16     iVersion;
+    BOOLEAN     fContainsSubDirectories;
+    INT32       iReserved;
+} LIBHEADER;
+
+我们想把它转成C#下的结构类型如下：
+    public struct LIBHEADER
+    {
+        public char[] sLibName;
+        public char[] sPathToLibrary;
+        public Int32 iEntries;
+        public Int32 iUsed;
+        public UInt16 iSort;
+        public UInt16 iVersion;
+        public Boolean fContainsSubDirectories;
+        public Int32 iReserved;
+    }
+   
+   
+看上去好像没问题了，呵呵呵，其实这样是不行的，我们得再给C#编译器一些信息，告诉它一些字符数组的大小。然后它们在C#下面长得样子就变成这样：
+   
+   
+    [StructLayout(LayoutKind.Sequential)]
+    public struct LIBHEADER
+    {
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+        public char[] sLibName;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+        public char[] sPathToLibrary;
+        public Int32 iEntries;
+        public Int32 iUsed;
+        public UInt16 iSort;
+        public UInt16 iVersion;
+        public Boolean fContainsSubDirectories;
+        public Int32 iReserved;
+    }
+   
+然后写一个函数负责转换。
+public StructType ConverBytesToStructure<StructType>(byte[] bytesBuffer)
+        {
+            // 检查长度。
+            if (bytesBuffer.Length != Marshal.SizeOf(typeof(StructType)))
+            {
+                throw new ArgumentException("bytesBuffer参数和structObject参数字节长度不一致。");
+            }
+
+            IntPtr bufferHandler = Marshal.AllocHGlobal(bytesBuffer.Length);
+            for (int index = 0; index < bytesBuffer.Length; index++)
+            {
+                Marshal.WriteByte(bufferHandler, index, bytesBuffer[index]);
+            }
+            StructType structObject = (StructType)Marshal.PtrToStructure(bufferHandler, typeof(StructType));
+            Marshal.FreeHGlobal(bufferHandler);
+            return structObject;
+        }
+       
+    然后我们的函数用例是这样：
+            FileStream file = File.OpenRead(@"D:/Jagged Alliance 2 Gold/INSTALL.LOG");
+            byte[] buffer = new byte[Marshal.SizeOf(typeof(LIBHEADER))];
+            file.Read(buffer, 0, buffer.Length);
+            LIBHEADER testValue = CommonTools.ConverBytesToStructure<LIBHEADER>(buffer);
+             string libName = new string(testValue.sLibName);
+             string pathToLibrary = new string(testValue.sPathToLibrary);
+            
+OK,搞定。
+如果想去掉后面两句的char数组的转换哪代码如下
+
+C#中的结构代码
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct LIBHEADER
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string sLibName;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string sPathToLibrary;
+        public Int32 iEntries;
+        public Int32 iUsed;
+        public UInt16 iSort;
+        public UInt16 iVersion;
+        public Boolean fContainsSubDirectories;
+        public Int32 iReserved;
+    }
+   
+其它代码不用作修改便可使用

@@ -85,7 +85,7 @@
   //c++:char ** ---- c#:string
   //c++:char **变量名 ---- c#:ref string 变量名
   //c++:const char * ---- c#:string
-  //c++:char[] ---- c#:string
+  //c++:char[] ---- c#:string  [MarshalAs(UnmanagedType.ByValArray, SizeConst = 255)]
   //c++:char 变量名[数组大小] ---- c#:[MarshalAs(UnmanagedType.ByValTStr,SizeConst=数组大小)] public string 变量名;  
 
 
@@ -133,7 +133,7 @@
   //Win32 Types ---- CLR Type   
     
 
-  //Struct需要在C#里重新定义一个Struct
+  //Struct需要在C#里重新定义一个Struct 加上 [StructLayoutAttribute(LayoutKind.Sequential)]
   //CallBack回调函数需要封装在一个委托里，delegate static extern int FunCallBack(string str);
 
   //unsigned char** ppImage替换成IntPtr ppImage
@@ -155,3 +155,9 @@
   *  
   *  
   */
+
+typedef void (*EASY_PLAYERPRO_CALLBACK)(__int32 msg, __int64 param);
+
+ public delegate void EASY_PLAYERPRO_CALLBACK(Int32 msg, Int64 param);
+ IntPtr ret = Marshal.GetFunctionPointerForDelegate(pointer);
+
