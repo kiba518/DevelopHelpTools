@@ -1,0 +1,17 @@
+IntPtr windowHandle = new WindowInteropHelper(this).Handle;
+IntPtr controlHandle = ((HwndSource)PresentationSource.FromVisual(spplayer)).Handle;//wpf里窗体句柄是唯一的，任何控件获取的都是窗体句柄
+IntPtr controlHandle2 = GetHandleByDependencyObject(spplayer);
+private IntPtr GetHandleByDependencyObject(DependencyObject dependencyObject)
+{
+	HwndSource hwndSource = (System.Windows.Interop.HwndSource)PresentationSource.FromDependencyObject(dependencyObject);
+	IntPtr handle = hwndSource.Handle;
+	return handle;
+}
+WPF想要控件句柄和窗体句柄不一样，要使用WindowsFormsHost
+通过WindowsFormsHost来创建一个Winform控件，这样的他句柄就和窗体的句柄不一样了
+
+ xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+ xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration" 新版中不需要引用这个命名空间
+ <WindowsFormsHost Name="spplayer"  >
+	<wf:Panel  x:Name="spplayer1" /> 这里的Name需要加x:，因为x通常是WPF页面自定义的自身命名空间。【xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"】，加上x才能把这个Name定义到页面的命名空间内，才能在.cs文件中找到该控件
+</WindowsFormsHost>  
