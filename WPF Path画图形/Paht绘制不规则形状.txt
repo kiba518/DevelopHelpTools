@@ -1,0 +1,96 @@
+写代码出身的我们经常需要使用一些简单 但是不是规则图形的Path 但限于美工功底有限 不知道怎么去画
+
+下面我告诉大家一些简单的小技巧 用代码来画Path 个人还是比较喜欢用代码 因为数值控制的更精细
+
+ 
+
+MSDN告诉我们,Path可以用这些形状绘制:
+
+ArcSegment 类 表示两点之间的一条椭圆弧。
+
+BezierSegment 类 表示在两个点之间绘制的一条三次贝塞尔曲线。
+
+LineSegment 类 在PathFigure中的两个点之间创建一条直线。
+
+PolyBezierSegment 类 表示一条或多条三次方贝塞尔曲线。
+
+PolyLineSegment 类 表示由PointCollection定义的线段集合，每个Point指定线段的终点。
+
+PolyQuadraticBezierSegment 类 表示一系列二次贝塞尔线段。
+
+QuadraticBezierSegment 类 在PathFigure的两点之间创建一条二次贝塞尔曲线。
+
+ 
+
+说了这么多,好复杂呀,我们可以挑最简单的来用:
+
+LineSegment 画直线,PolyLineSegment 画折线,ArcSegment 画圆弧
+
+其实有了这三个类,我们可以画绝大多数简单常用的形状了,下面我举两个例子
+
+
+
+ 
+
+ 
+
+这个形状宽和高都是100,其中矩形宽100高90,三角宽10高10居中
+
+对于这样有棱角的图形,我们只需要找到他所有的顶点就行了
+
+ 
+
+
+
+然后顺时针依次连起来,用PolyLineSegment折线来表示就行了
+
+
+复制代码
+1 <Path Stroke="Red" StrokeThickness="1">
+2             <Path.Data>
+3                 <PathGeometry>
+4                     <PathFigure StartPoint="0,0">
+5                         <PolyLineSegment Points="100,0 100,90 55,90 50,100 45,90 0,90 0,0"></PolyLineSegment>
+6                     </PathFigure>
+7                 </PathGeometry>
+8             </Path.Data>
+9         </Path>
+复制代码
+ 
+
+
+
+来看这个带有圆角的图形,4个圆弧的半径是5,其他属性和上图一样.我们需要将它拆分,拆分成8个部分,4个圆弧和4个边,因为左上角圆弧的关系,起点设置成(5,0),每一部分的起点,都是上一部分的终点:
+
+上边的直线:终点(95,0)
+右上角的圆弧:终点(100,5),Size(5,5) 因为圆弧表示的是椭圆的圆弧,Size就是Size(宽,高),当宽和高都一样设置为5时,就指的是半径为5的圆的圆弧了
+右边的直线:终点(100,85)
+右下角的圆弧:终点(95,90),Size(5,5)
+下边的折线:点的集合(55,90 50,100 45,90 5,90) 由于我们是顺时针来的,下边点的集合是从右到左依次来的
+左下角圆弧:终点(0,85),Size(5,5)
+左边的直线:终点(0,5)
+左上角的圆弧:终点(5,0) 与起点重合
+
+
+
+复制代码
+ 1 <Path Stroke="Red" StrokeThickness="1">
+ 2             <Path.Data>
+ 3                 <PathGeometry>
+ 4                     <PathFigure StartPoint="5,0">
+ 5                         <LineSegment Point="95,0"></LineSegment>
+ 6                         <!--SweepDirection获取或设置一个值，该值指定是以 Clockwise 方向还是以 Counterclockwise 方向绘制弧-->
+ 7                         <!--顺时针绘制还是逆时针绘制,你试下另一个值,看下效果就知道怎么回事了-->
+ 8                         <ArcSegment Point="100,5" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
+ 9                         <LineSegment Point="100,85"></LineSegment>
+10                         <ArcSegment Point="95,90" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
+11                         <PolyLineSegment Points="55,90 50,100 45,90 5,90"></PolyLineSegment>
+12                         <ArcSegment Point="0,85" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
+13                         <LineSegment Point="0,5"></LineSegment>
+14                         <ArcSegment Point="5,0" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
+15                     </PathFigure>
+16                 </PathGeometry>
+17             </Path.Data>
+18         </Path>
+复制代码
+ 
