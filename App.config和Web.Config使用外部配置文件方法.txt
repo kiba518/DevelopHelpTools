@@ -3,3 +3,9 @@
   <appSettings configSource="app.config" />
   <rewriter configSource="URLRewriter.config" />
 </configuration>
+
+configSource 
+<?xml version="1.0" encoding="utf-8" ?>
+<appSettings>
+  <add key="Duration" value="60"/>
+</appSettings>
