@@ -44,17 +44,17 @@ LineSegment 画直线,PolyLineSegment 画折线,ArcSegment 画圆弧
 
 然后顺时针依次连起来,用PolyLineSegment折线来表示就行了
 
-
+下箭头 
 复制代码
-1 <Path Stroke="Red" StrokeThickness="1">
-2             <Path.Data>
-3                 <PathGeometry>
-4                     <PathFigure StartPoint="0,0">
-5                         <PolyLineSegment Points="100,0 100,90 55,90 50,100 45,90 0,90 0,0"></PolyLineSegment>
-6                     </PathFigure>
-7                 </PathGeometry>
-8             </Path.Data>
-9         </Path>
+<Path Stroke="Red" StrokeThickness="1"> 
+            <Path.Data> 
+                <PathGeometry> 
+                    <PathFigure StartPoint="0,0"> 
+                        <PolyLineSegment Points="100,0 100,90 55,90 50,100 45,90 0,90 0,0"></PolyLineSegment> 
+                    </PathFigure> 
+                </PathGeometry> 
+            </Path.Data> 
+        </Path>
 复制代码
  
 
@@ -72,25 +72,27 @@ LineSegment 画直线,PolyLineSegment 画折线,ArcSegment 画圆弧
 左上角的圆弧:终点(5,0) 与起点重合
 
 
+下箭头圆角
+复制代码 
+ <Path Stroke="Red" StrokeThickness="1" Margin="280,140,0,0">
+            <Path.Data>
+                <PathGeometry>
+                    <PathFigure StartPoint="5,0">
+                        <LineSegment Point="95,0"></LineSegment>
+                        <!--SweepDirection获取或设置一个值，该值指定是以 Clockwise 方向还是以 Counterclockwise 方向绘制弧-->
 
-复制代码
- 1 <Path Stroke="Red" StrokeThickness="1">
- 2             <Path.Data>
- 3                 <PathGeometry>
- 4                     <PathFigure StartPoint="5,0">
- 5                         <LineSegment Point="95,0"></LineSegment>
- 6                         <!--SweepDirection获取或设置一个值，该值指定是以 Clockwise 方向还是以 Counterclockwise 方向绘制弧-->
- 7                         <!--顺时针绘制还是逆时针绘制,你试下另一个值,看下效果就知道怎么回事了-->
- 8                         <ArcSegment Point="100,5" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
- 9                         <LineSegment Point="100,85"></LineSegment>
-10                         <ArcSegment Point="95,90" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
-11                         <PolyLineSegment Points="55,90 50,100 45,90 5,90"></PolyLineSegment>
-12                         <ArcSegment Point="0,85" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
-13                         <LineSegment Point="0,5"></LineSegment>
-14                         <ArcSegment Point="5,0" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
-15                     </PathFigure>
-16                 </PathGeometry>
-17             </Path.Data>
-18         </Path>
+                        <!--顺时针绘制还是逆时针绘制,你试下另一个值,看下效果就知道怎么回事了-->
+
+                        <ArcSegment Point="100,5" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
+                        <LineSegment Point="100,85"></LineSegment>
+                        <ArcSegment Point="95,90" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
+                        <PolyLineSegment Points="55,90 50,100 45,90 5,90"></PolyLineSegment>
+                        <ArcSegment Point="0,85" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
+                        <LineSegment Point="0,5"></LineSegment>
+                        <ArcSegment Point="5,0" Size="5,5" SweepDirection="Clockwise"></ArcSegment>
+                    </PathFigure>
+                </PathGeometry>
+            </Path.Data>
+        </Path>
 复制代码
  
