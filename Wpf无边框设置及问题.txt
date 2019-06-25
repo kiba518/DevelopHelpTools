@@ -1,0 +1,7 @@
+WindowStyle="None" 设置无边框 但仍然会有一条白边在上面，因为需要用该白边拖动放大缩小窗体
+ResizeMode="NoResize" 设置不可改变大小可以去掉白边
+AllowsTransparency="False"  设置允许透明也会去掉白边，并且因为是透明的，白边的改变大小功能也消失了。
+不过该设置一旦实行，会造成wpf内使用winform控件出问题，webbrowser也有问题。
+最佳解决方案是
+WindowStyle="None" ResizeMode="NoResize"
+设置上，然后手动做一个拖动窗体放大缩小的功能。
