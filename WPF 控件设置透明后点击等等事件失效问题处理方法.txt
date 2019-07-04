@@ -1,0 +1,18 @@
+  <Button Margin="15,1,5,1" DockPanel.Dock="Left" ToolTip="开始" x:Name="btnPause" Command="{Binding PauseCommand}" 
+                                        Height="28" Width="19" >
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <Grid>
+                                                <DockPanel Name="dpCon" Height="28" Width="19" Background="#081a2d" Opacity="0.01"> 
+                                                </DockPanel>
+                                                <Image Name="dpimg" Source="/Image/开始.png" Stretch="None" Opacity="1"/>
+                                            </Grid>
+                                            <ControlTemplate.Triggers> 
+                                                <DataTrigger Binding="{Binding IsPlaying}" Value="True">
+                                                    <Setter Property="Source" TargetName="dpimg"  Value="/Image/暂停.png">
+                                                    </Setter> 
+                                                </DataTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate> 
+                                    </Button.Template> 
+                                </Button>
