@@ -1,0 +1,2 @@
+var bg = new ImageBrush();
+bg.ImageSource = new BitmapImage(new Uri(path, UriKind.Relative)); 
