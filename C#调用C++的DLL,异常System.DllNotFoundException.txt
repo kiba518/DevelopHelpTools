@@ -1,0 +1,2 @@
+C++如果调用了MFC就安装MFC。
+如果环境正确，则复制 一台正常运行的机器的C:\Windows\System32 的msvc 开头的全部dll到问题机上即可。
