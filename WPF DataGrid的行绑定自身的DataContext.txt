@@ -1,0 +1,2 @@
+{Binding Converter={StaticResource cvAvgViewConvert}}
+绑定自身的DataContext时，Binding与 Converter之间没有逗号
