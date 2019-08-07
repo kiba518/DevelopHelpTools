@@ -1,0 +1,4565 @@
+Usage: vlc [options] [stream] ...
+You can specify multiple streams on the commandline. They will be enqueued in the playlist.
+The first item specified will be played first.
+
+Options-styles:
+  --option  A global option that is set for the duration of the program.
+   -option  A single letter version of a global --option.
+   :option  An option that only applies to the stream directly before it
+            and that overrides previous settings.
+
+Stream MRL syntax:
+  [[access][/demux]://]URL[@[title][:chapter][-[title][:chapter]]] [:option=value ...]
+
+  Many of the global --options can also be used as MRL specific :options.
+  Multiple :option=value pairs can be specified.
+
+URL syntax:
+  [file://]filename              Plain media file
+  http://ip:port/file            HTTP URL
+  ftp://ip:port/file             FTP URL
+  mms://ip:port/file             MMS URL
+  screen://                      Screen capture
+  [dvd://][device][@raw_device]  DVD device
+  [vcd://][device]               VCD device
+  [cdda://][device]              Audio CD device
+  udp://[[<source address>]@[<bind address>][:<bind port>]]
+                                 UDP stream sent by a streaming server
+  vlc://pause:<seconds>          Special item to pause the playlist for a certain time
+  vlc://quit                     Special item to quit VLC
+
+未找到匹配的模块。使用 --list 或 --list-verbose 来列出可用模块。
+
+ VBI 和 Teletext 解码器
+      --vbi-page=<整数>        Teletext 页
+          打开可能的 Teletext 页。默认的页是索引 100
+      --vbi-opaque, --no-vbi-opaque
+                                 文本总是不透明 (默认开启)
+          设置 vbi 不透明为否使得边框话的文本透明。
+          (默认开启)
+      --vbi-position={0 (居中), 1 (左), 2 (右), 4 (上), 8 (下), 5 (左上), 6 (右上), 9 (左下), 10 (右下)}
+                                 Teletext 排列
+          您可以强制指定 teletext 在视频上的位置 (0=居中、1=左
+          、2=右、4=上、8=下，您也可以混合使用这些值，例如
+          6 = 右上)。
+      --vbi-text, --no-vbi-text  Teletext 文本字幕 (默认关闭)
+          将 teletext 字幕作为文本输出代替 RGBA (默认关闭)
+
+ YUV 视频输出
+      --yuv-file=<字串>        设备，先进先出队列或文件名
+          写入 YUV 帧的目的设备、FIFO 队列或文件名。
+      --yuv-chroma=<字串>      使用了色度
+          强制为输出使用指定的色度。默认是 I420。
+      --yuv-yuv4mpeg2, --no-yuv-yuv4mpeg2
+                                 YUV4MPEG2 头部 (默认关闭) (默认关闭)
+          mplayer yuv 视频输出兼容 YUV4MPEG2 头，要求 fourcc 为
+          YV12/I420。vlc 默认将帧的 fourcc 写入输出处。
+          (默认关闭)
+
+ H.264/MPEG4 AVC 编码器 (x264)
+      --sout-x264-keyint=<整数>
+                                 最大 GOP 大小
+          设置 IDR 帧之间的最大间隔。较大的帧将节省大小，巍
+          ¶改进在给予为率下的搜索精确性质量。
+      --sout-x264-min-keyint=<整数>
+                                 最小 GOP 大小
+          设置 IDR 帧之间的最小间隔。在 H.264 中 I 帧没有必要勊          »‘定一个封闭的 GOP，因为它允许在它之前预测更多的㋊          ¸§ (也可以查看参考帧选项)。因此 I 帧没有搜索的必褍
+          。IDR 帧将从任意参考帧之前限制之后的 P
+          帧。
+如果场景出现在此间隔内，它们还是将会被编码
+          为 I 帧，但是不启动一个新的 GOP。
+      --sout-x264-scenecut=<整数 [-1 .. 100]>
+                                 扩展 I 帧激进性
+          场景剪辑检测。控制如何主动的插入额外的 I
+          帧。较小的场景剪辑值，编解码器将会经常在超过关狊          ”®值时强制一个 I 帧。较好的场景剪辑值可能会为 I
+          帧查找一个较佳的位置。较大的值将使用尽可能多的
+          I 帧，因此产生不必要的体积增加。-1 为关闭场景剪輍
+          ‘检测，所以 I 帧将会被插入到每个 keyint 帧中，这可拊          ƒ½会导致编码效率的降低。范围是 1 到 100。
+      --sout-x264-bframes=<整数 [0 .. 16]>
+                                 在 I 和 P 之间的 B 帧
+          在 I 和 P 帧之间的连续 B 帧。范围是 1 到 16。
+      --sout-x264-b-adapt=<整数 [0 .. 2]>
+                                 适应 B 帧检测
+          强制使用指定数量的连续 B 帧，除非可能是 I 帧前的
+          B 帧。范围由 0 到 2。
+      --sout-x264-b-bias=<整数 [-100 .. 100]>
+                                 影响 (倾向) B 帧用法
+          倾向使用 B 帧。积极的值将造成更多的 B 帧,
+          保守的值将造成较少的 B 帧。
+      --sout-x264-bpyramid={none,strict,normal}
+                                 保留一些 B 帧作为参考
+          允许将 B 用作预测其他帧的参考。保留连续超过 2 个
+          B 帧的中间部分作为参考，并适当重排帧。
+ - none:
+          禁用
+ - strict: 严格的等级椎
+ - normal: 不严格 (与
+          Blu-ray 不兼容)
+
+      --sout-x264-cabac, --no-sout-x264-cabac
+                                 CABAC (默认开启)
+          CABAC (内容适应二进制算法编码)。将轻微的降速编码名
+          Œ解码, 但是会节省 10 到 15% 位率。 (默认开启)
+      --sout-x264-ref=<整数 [1 .. 16]>
+                                 参考帧数量
+          用作预测的前帧数量。这在动画中非常有效，但是可拊          ƒ½会造成看上去和原始版本稍有差异。某些解码器可聍
+          ½无法分析大的参考帧值。范围是 1 到 16。
+      --sout-x264-nf, --no-sout-x264-nf
+                                 跳过循环滤镜 (默认关闭)
+          取消去块循环滤镜 (降低质量)。 (默认关闭)
+      --sout-x264-deblock=<字串>
+                                 循环滤镜 AlphaCO 和 Beta 参数 alpha:
+                                 beta
+          循环滤镜 AlphaCO 和 Beta 参数。alpha 和 beta
+          参数的范围是 -6 到 6。-6 表示很少的过滤，6
+          表示强过滤。
+      --sout-x264-psy-rd=<字串>
+                                 疯狂视觉优化的强度，默认为
+                                 "1.0:0.0"
+          第一个参数控制是否启用 RD (subme>=6) 第二个参数控制勊          –¯狂视觉优化是否使用 Trellis，默认关闭
+      --sout-x264-psy, --no-sout-x264-psy
+                                 使用疯狂视觉优化 (默认开启)
+          使用所有可能同时恶化 PSNR 与 SSIM 的视觉优化
+          (默认开启)
+      --sout-x264-level=<字串> H.264 等级
+          指定 H.264 等级 (如 Annex A 标准所定)。等级不是强制的
+          ；而是取决于用户所选的与其它编码选项相兼容的等勊          º§。范围从 1 到 5.1 (10 到 51 也允许使用)。
+      --sout-x264-profile={baseline,main,high}
+                                 H.264 档案
+          指定 H.264 profile，将对已有设置强加限制
+      --sout-x264-interlaced, --no-sout-x264-interlaced
+                                 交错模式 (默认关闭)
+          纯交错模式。 (默认关闭)
+      --sout-x264-slices=<整数>
+                                 强制每帧切片数
+          强制矩形切片，可被其他切片设置覆盖
+      --sout-x264-slice-max-size=<整数>
+                                 限定各切片的尺寸为指定字节数
+          设定以字节为单位的最大切片尺寸，含 NAL
+          开销所占的尺寸
+      --sout-x264-slice-max-mbs=<整数>
+                                 限定宏块中各切片的尺寸
+          设置每切片的最大宏块数
+      --sout-x264-hrd={none,vbr,cbr}
+                                 HRD 计时信息
+          HRD 计时信息
+      --sout-x264-qp=<整数 [-1 .. 51]>
+                                 设置 QP
+          这将选择要使用的量化器。较低的值会有较佳的精确䋊          €§，但是有较高的位率。26 是一个比较好的值。范围乍
+          Ž 0 (无损) 到 51。
+      --sout-x264-crf=<整数 [0 .. 51]>
+                                 基于质量的 VBR
+          基于质量的 1 pass VBR。范围从 0 到 51。
+      --sout-x264-qpmin=<整数 [0 .. 51]>
+                                 最小 QP
+          最小的量化器参数。15 到 35 看上去是一个有用的范围
+          。
+      --sout-x264-qpmax=<整数 [0 .. 51]>
+                                 最大 QP
+          最大量化器参数。
+      --sout-x264-qpstep=<整数 [0 .. 51]>
+                                 最大 QP 步进
+          在帧之前的最大 QP 步进。
+      --sout-x264-ratetol=<浮点 [0.000000 .. 100.000000]>
+                                 平均位率公差
+          平均位率内允许的误差 (以 kbits/s 为单位)。
+      --sout-x264-vbv-maxrate=<整数>
+                                 最大本地位率
+          设置最大本地位率 (以 kbits/s 为位率)。
+      --sout-x264-vbv-bufsize=<整数>
+                                 VBV 缓冲
+          最大本地位率的平均周期 (以 kbits 为单位)。
+      --sout-x264-vbv-init=<浮点 [0.000000 .. 1.000000]>
+                                 初始 VBV 缓冲占有期
+          设置初始缓存占有期作为缓存的一部分。范围从 0.0
+          到 1.0。
+      --sout-x264-ipratio=<浮点 [1.000000 .. 2.000000]>
+                                 I 和 P 之间的 QP 因数
+          在 I 和 P 之间的 QP 因数。范围从 1.0 到 2.0。
+      --sout-x264-pbratio=<浮点 [1.000000 .. 2.000000]>
+                                 P 和 B 之间的 QP 因数
+          在 P 和 B 之间的 QP 因数。范围从 1.0 到 2.0。
+      --sout-x264-chroma-qp-offset=<整数>
+                                 在色度和亮度之间的差异
+          在色度和亮度之间的差异。
+      --sout-x264-pass=<整数 [0 .. 3]>
+                                 多重编码码率控制
+          多重编码码率控制:
+ - 1: 一重, 创建状态文件
+ - 2:
+          二重, 不覆盖状态文件
+ - 3: 多重, 覆盖状态文件
+
+      --sout-x264-qcomp=<浮点 [0.000000 .. 1.000000]>
+                                 QP 曲线压缩
+          QP 曲线压缩。范围从 0.0 (CBR) 到 1.0 (QCP)。
+      --sout-x264-cplxblur=<浮点>
+                                 减少 QP 波动
+          这将减少在曲线压缩之前的 QP 波动。临时模糊的复杂
+          性。
+      --sout-x264-qblur=<浮点> 减少 QP 波动
+          这在曲线压缩之后减少 QP 的波动。临时模糊突增。
+      --sout-x264-aq-mode=<整数 [0 .. 2]>
+                                 AQ 如何发布位
+          定义 AQ 位分发模式，默认 1
+ - 0: 禁用
+ - 1: 当前 x264
+          的默认模式
+ - 2: 使用 log(数值)^2 替代 log(数值)
+          并尝试适应各帧强度
+      --sout-x264-aq-strength=<浮点>
+                                 AQ 强度
+          减少块并模糊平面及纹理区域的强度，默认是
+          1.0
+推荐在 0 到 2 之间
+ - 0.5: 弱 AQ
+ - 1.5: 强 AQ
+      --sout-x264-partitions={none,fast,normal,slow,all}
+                                 分割计算器
+          在分析模式中的分割计算器: 
+ - 无  : 
+ - 快速  : i4x4
+
+          - 普通  : i4x4,p8x8,(i8x8)
+ - 慢    : i4x4,p8x8,(i8x8),b8x8
+ -
+          全部  : i4x4,p8x8,(i8x8),b8x8,p4x4
+(p4x4 需要 p8x8。i8x8 需要
+          8x8dct)。
+      --sout-x264-direct={none,spatial,temporal,auto}
+                                 直接 MV 预计模式
+          直接 MV 预计模式。
+      --sout-x264-direct-8x8=<整数 [-1 .. 1]>
+                                 直接预计大小
+          直接预计大小:  -  0: 4x4
+ -  1: 8x8
+ - -1:
+          按照等级的最小可能
+
+      --sout-x264-weightb, --no-sout-x264-weightb
+                                 用于 B 帧的有利预计 (默认开启)
+          用于 B 帧的有利预计。 (默认开启)
+      --sout-x264-weightp=<整数 [0 .. 2]>
+                                 P 帧加权预测
+           P 帧加权预测:  - 0: 禁用
+ - 1: 隐性补偿
+ - 2:
+          智能分析
+
+      --sout-x264-me={dia,hex,umh,esa,tesa}
+                                 整数像素运动估计模式
+          选择运动估计算法:  - dia: 方块搜索, 半径为 1 (快)
+ -
+          hex: 六边形搜索, 半径为 2
+ - umh: 不一致的多六边形搜勊          ´¢ (较佳但速度慢)
+ - esa: 穷举搜索 (非常慢,
+          主要用于测试)
+ - tesa: hadamard 穷举搜索 (非常慢,
+          主要用于测试)
+
+      --sout-x264-merange=<整数 [1 .. 64]>
+                                 最大运动向量搜索范围
+          运动估算搜索的最大距离，较慎重的预测点。默认的
+          16 适合大多数的距离，高连续动态场景可以设置为 24
+          和 32。范围是 0 到 64。
+      --sout-x264-mvrange=<整数>
+                                 最大运动向量长度
+          以像素为单位的最大运动向量长度。-1
+          是自动，基于等级。
+      --sout-x264-mvrange-thread=<整数>
+                                 线程之间的最小缓存空间
+          线程之间的最小缓冲空间。-1 是自动，基于线程数量ዊ          €‚
+      --sout-x264-subme=<整数> 子像素运动估计和切割确定质量
+          此参数控制了在运动估计处理过程中的质量与速度比
+          (较低 = 快速和高质量 = 较佳的质量)。范围是 1 到 9。
+      --sout-x264-mixed-refs, --no-sout-x264-mixed-refs
+                                 在一个每分割基础上判断参考
+                                 (默认开启)
+          允许每 8x8 或 16x8 的分割独立的选择一个参考帧，相卍
+          的每个预宏块只有一个参考帧。 (默认开启)
+      --sout-x264-chroma-me, --no-sout-x264-chroma-me
+                                 动态估算中的色度 (默认开启)
+          在 P 帧中的用于 subpel 和模式确定的色度 ME。
+          (默认开启)
+      --sout-x264-8x8dct, --no-sout-x264-8x8dct
+                                 适应空间改版大小 (默认开启)
+          用于 inter-MB 中的 8x8 的传输中的基于 SATD 的判断。
+          (默认开启)
+      --sout-x264-trellis=<整数 [0 .. 2]>
+                                 格式 RD 量化
+          格式 RD 量化: 
+ - 0: 关闭
+ - 1: 仅在编码最后一个 MB
+          时开启
+ - 2: 在所有模式判断时开启
+这需要 CABAC。
+      --sout-x264-lookahead=<整数 [0 .. 60]>
+                                 统计帧数以供帧类预测
+          统计帧数以供帧类预测。目前默认低于 x264
+          的默认设置，因为不可混流的输出仍然无法很好处理䋊          ›´大的值
+      --sout-x264-intra-refresh, --no-sout-x264-intra-refresh
+                                 使用周期性的内部刷新 (默认关闭)
+          使用周期性的内部刷新而不是 IDR 帧 (默认关闭)
+      --sout-x264-mbtree, --no-sout-x264-mbtree
+                                 使用 mb-tree 速率控制 (默认开启)
+          您可以禁用 Macroblock-tree 宏块树速率控制 (默认开启)
+      --sout-x264-fast-pskip, --no-sout-x264-fast-pskip
+                                 在 P 帧上的早期跳过检测
+                                 (默认开启)
+          在 P 帧上的早期跳过检测。 (默认开启)
+      --sout-x264-dct-decimate, --no-sout-x264-dct-decimate
+                                 P 帧的阀系数 (默认开启)
+          P 帧上的阀系数。消除 dct 块仅包含一个小的单一系数
+          。 (默认开启)
+      --sout-x264-nr=<整数 [0 .. 1000]>
+                                 噪点消除
+          Dct-域噪点消除。适应伪造的死区。10 到 1000
+          看上去是一个有用的范围。
+      --sout-x264-deadzone-inter=<整数 [0 .. 32]>
+                                 Inter 亮度量化死区
+          设置 intra 量化死区的大小。范围是 0 到 32。
+      --sout-x264-deadzone-intra=<整数 [0 .. 32]>
+                                 Intra 亮度量化死区
+          设置 intra 量化死区的大小。范围是 0 到 32。
+      --sout-x264-non-deterministic, --no-sout-x264-non-deterministic
+                                 在线程中的非确定性优化
+                                 (默认关闭)
+          以可重复性为代价轻微改进 SMP 的质量。 (默认关闭)
+      --sout-x264-asm, --no-sout-x264-asm
+                                 CPU 优化 (默认开启)
+          使用汇编 CPU 优化。 (默认开启)
+      --sout-x264-psnr, --no-sout-x264-psnr
+                                 PSNR 计算 (默认关闭)
+          计算并打印 PSNR 状态。这不会影响实际编码质量。
+          (默认关闭)
+      --sout-x264-ssim, --no-sout-x264-ssim
+                                 SSIM 计算 (默认关闭)
+          计算并打印 SSIM 状态。这不会影响实际编码质量。
+          (默认关闭)
+      --sout-x264-quiet, --no-sout-x264-quiet
+                                 静默模式 (默认关闭)
+          静默模式。 (默认关闭)
+      --sout-x264-sps-id=<整数>
+                                 SPS 和 PPS id 号
+          设置 SPS 和 PPS id 号以允许用不同的设置连接流。
+      --sout-x264-aud, --no-sout-x264-aud
+                                 访问单元分隔符 (默认关闭)
+          生成反问单元分隔符 NAL 单元。 (默认关闭)
+      --sout-x264-verbose, --no-sout-x264-verbose
+                                 统计 (默认关闭)
+          打印每帧的状态。 (默认关闭)
+      --sout-x264-stats=<字串> 2 重状态文件名
+          用于多重编码的 2 重状态文件文件名。
+      --sout-x264-preset={ultrafast,superfast,veryfast,faster,fast,medium,slow,slower,veryslow,placebo}
+                                 使用预设作为默认设置。将被用户拊                                 ®¾置覆盖。
+          使用预设作为默认设置。将被用户设置覆盖。
+      --sout-x264-tune={film,animation,grain,stillimage,psnr,ssim,fastdecode,zerolatency}
+                                 根据特定类型源或情况调整设置。㋊                                 °†被用户设置覆盖。
+          根据特定类型源或情况调整设置。将被用户设置覆盖ዊ          €‚
+
+ Win32 waveOut 扩展输出
+      --waveout-float32, --no-waveout-float32
+                                 使用浮点 32 输出 (默认开启)
+          此选项将允许您开启或关闭高质量浮点 32
+          音频输出模式 (可能某些声卡无法很好的支持)。
+          (默认开启)
+      --waveout-audio-device={wavemapper}
+                                 选择音频设备
+          选择特殊音频设备，或者由 windows 确定 (默认)，更改狊          œ€要重新启动 VLC 才能生效。
+
+ 显示墙滤镜
+      --wall-cols=<整数>       列数
+          视频分离后的水平窗口数量。
+      --wall-rows=<整数>       行数
+          视频分离后的垂直窗口数量。
+      --wall-active=<字串>     活动窗口
+          活动窗口列表 (以逗号为分隔符)，默认为全部
+      --wall-element-aspect=<字串>
+                                 元素高宽比
+          显示墙的个别显示高宽比。
+
+ Simple DirectMedia Layer 视频输出
+      --sdl-chroma=<字串>      SDL 色度格式
+          强制 SDL 渲染器使用指定的色度格式替代尝试通过使璍
+          ¨最有效的一个改进性能。
+
+ Vorbis 音频解码器
+      --sout-vorbis-quality=<整数 [0 .. 10]>
+                                 编码质量
+          强制指定一个 1 (低) 到 10 (高) 之间的质量，而不是指
+          定一个特定的位速率。这将会生成一个 VBR 流。
+      --sout-vorbis-max-bitrate=<整数>
+                                 最大编码位率
+          以 kbps 为单位的最大位率。这对流应用程序来说非常䋊          œ‰用。
+      --sout-vorbis-min-bitrate=<整数>
+                                 最小编码位率
+          以 kbps 为单位的最小位率。这对编码固定大小的频道䋊          ¥说非常有用。
+      --sout-vorbis-cbr, --no-sout-vorbis-cbr
+                                 CBR 编码 (默认关闭)
+          强制固定位率编码 (CBR)。 (默认关闭)
+
+ RTSP VoD 服务器
+      --rtsp-host=<字串>       RTSP 主机地址
+          这将定义 RTSP VOD 服务器将要将要监听的地址、端口和
+          路径。
+语法为地址:端口/路径。默认值是监听在端口
+          554 上的所有接口 (地址 0.0.0.0)，无路径。
+如仅欲监听
+          本地接口，请使用 "localhost" 作为地址。
+      --rtsp-raw-mux=<字串>    用于 RAW RTSP 传输的 MUX
+          用于 RAW RTSP 传输的 MUX
+      --rtsp-throttle-users=<整数>
+                                 连接的最大数量
+          这将显示客户端可以连接至 RTSP VOD 的最大数量。0
+          表示不限制。
+      --rtsp-session-timeout=<整数>
+                                 在 RTSP 会话字串中设置超时选项
+          定义要添加什么超时选项到 RTSP 会话 ID 字串中。请为
+          它设置一个要完整移除的超时选项条目。这需要一些
+          IPTV STB (例如一些由 HansunTech 产生的)。默认值为 5。
+
+ 显存输出
+      --vmem-width=<整数>      宽度
+          视频内存缓冲宽度。
+      --vmem-height=<整数>     高度
+          视频内存缓冲高度。
+      --vmem-pitch=<整数>      节拍
+          以字节为单位的视频内存缓冲节拍。
+      --vmem-chroma=<字串>     色度
+          用于内存图像的 4 字节输出色度，例如 "RV32"。
+
+ 可视化过滤器
+   常规:
+      --effect-list=<字串>     效果列表
+          可视化效果列表，由逗号分隔。
+当前的效果包括:
+          dummy、scope、频谱、频谱仪与 vuMeter。
+      --effect-width=<整数>    视频宽度
+          效果视频窗口的宽度，以像素为单位。
+      --effect-height=<整数>   视频高度
+          效果视频窗口的高度，以像素为单位。
+   光谱分析器:
+      --visual-80-bands, --no-visual-80-bands
+                                 更多频带 : 80 / 20 (默认开启)
+          频谱分析器的更多频带 : 如启用则为 80，否则为 20。
+          (默认开启)
+      --visual-peaks, --no-visual-peaks
+                                 开启峰值 (默认开启)
+          在光谱分析器中描绘 "峰值"。 (默认开启)
+   分频器:
+      --spect-show-original, --no-spect-show-original
+                                 开启原始图像光谱 (默认关闭)
+          在分光器中开启 "平面" 光谱分析。 (默认关闭)
+      --spect-show-base, --no-spect-show-base
+                                 开启基底 (默认开启)
+          定义如何描绘波段基底。 (默认开启)
+      --spect-radius=<整数>    基础像素半径
+          定义基础波段的像素半径 (起始)。
+      --spect-sections=<整数>  光谱区域
+          光谱将存在多少个区域。
+      --spect-color=<整数>     V 平面颜色
+          V 平面的立方移位交叉 YUV 颜色 ( 0 - 127 )。
+      --spect-show-bands, --no-spect-show-bands
+                                 开启波段 (默认开启)
+          在分光器中描绘波段。 (默认开启)
+      --spect-80-bands, --no-spect-80-bands
+                                 更多频带 : 80 / 20 (默认开启)
+          分光计的更多波段 : 如启用则为 80，否则为 20。
+          (默认开启)
+      --spect-separ=<整数>     频带分离器
+          在波段间的空像素数量。
+      --spect-amp=<整数>       放大
+          这是修改波段高度的系数。
+      --spect-show-peaks, --no-spect-show-peaks
+                                 开启峰值 (默认开启)
+          在光谱分析器中描绘 "峰值"。 (默认开启)
+      --spect-peak-width=<整数>
+                                 像素扩展宽度
+          在像素峰值上添加或减少像素。
+      --spect-peak-height=<整数>
+                                 峰值高度
+          峰值项目的总计像素高度。
+
+ VCD 输入
+      --vcd-caching=<整数>     缓存值(毫秒)
+          VCD 的缓存值，此值应该以毫秒为单位设置。
+
+ VC1 去复用器
+      --vc1-fps=<浮点>         每秒帧数
+          VC-1 流的期望帧率。
+
+ Libtwolame 音频解码器
+      --sout-twolame-quality=<浮点>
+                                 编码质量
+          强制指定一个 0.0 (低) 到 50.0 (高) 之间的编码质量，羍
+          Œ不是指定一个特定的位速率。这将会生成一个 VBR
+          流。
+      --sout-twolame-mode={0 (立体声), 1 (双单声道), 2 (联合立体声)}
+                                 立体声模式
+          立体声流的处理模式
+      --sout-twolame-vbr, --no-sout-twolame-vbr
+                                 VBR 模式 (默认关闭)
+          使用可变位率。默认使用固定位率 (CBR)。 (默认关闭)
+      --sout-twolame-psy=<整数>
+                                 心理声学模型
+          从 -1 (无模型) 到 4 的整数。
+
+ MPEG 传输流去复用器
+      --ts-extra-pmt=<字串>    扩展 PMT
+          允许用户指定一个扩展 pmt (pmt_pid=pid:stream_type[,...])。
+      --ts-es-id-pid, --no-ts-es-id-pid
+                                 设置 ES 的 id 为 PID (默认开启)
+          设置每个被 VLC 处理的通量流内部 ID 作为在 TS
+          流内部的 PID。代替 1, 2, 3, 等。用于执行 #duplicate{...,
+          select="es=<pid>"}'。 (默认开启)
+      --ts-out=<字串>          快速 udp 流
+          通过 udp 发送 TS 到指定的 ip:端口 (您必须知道您在做⋊          »€么)。
+      --ts-out-mtu=<整数>      用于输出模式的 MTU
+          用于输出模式的 MTU。
+      --ts-csa-ck=<字串>       CSA ck
+          用于 CSA 加密算法的控制字符
+      --ts-csa2-ck=<字串>      CSA ck
+          用于 CSA 加密算法的控制字符
+      --ts-csa-pkt=<整数>      以字节为单位的要解密的数据包大㋊                                 °
+          指定要解密的 TS 数据包大小。解密通常要在之前从值
+          中去掉 TS 头部。
+      --ts-silent, --no-ts-silent
+                                 静默模式 (默认关闭)
+          不在加密的 PES 中显示。 (默认关闭)
+      --ts-dump-file=<字串>    转储的文件名
+          指定 TS 要转储的文件名。
+      --ts-dump-append, --no-ts-dump-append
+                                 附加 (默认关闭)
+          如果文件已存在并且选中了此选项，已存在的文件将⋊          ¸会被覆盖。 (默认关闭)
+      --ts-dump-size=<整数>    转储缓冲大小
+          为读取和写入一个整数数据优化缓存大小。在这里指㋊          ®š缓存大小并不是数据包数。
+      --ts-split-es, --no-ts-split-es
+                                 分离子流 (默认开启)
+          将 teletex/dvbs 页面分为独立的基本流。当使用流输出敍
+          ¶关闭此选项可能有用。 (默认开启)
+
+ 视频转换滤镜
+ 旋转或翻转视频
+      --transform-type={90,180,270,hflip,vflip}
+                                 变换类型
+           '90', '180', '270', 'hflip' 和 'vflip' 中的一个
+
+ Theora 视频解码器
+      --sout-theora-quality=<整数>
+                                 编码质量
+          强制指定一个 1 (低) 到 10 (高) 之间的质量，而不是指
+          定一个特定的位速率。这将会生成一个 VBR 流。
+
+ 视频比例滤镜
+      --swscale-mode={0 (快速双线性), 1 (双线性), 2 (双三次 (较好的质量)), 3 (实验性), 4 (最近邻 (质量较差)), 5 (区域), 6 (彩度双三次 / 色度双线性), 7 (高斯), 8 (SincR), 9 (兰兹), 10 (双三次线条)}
+                                 缩放模式
+          要使用的缩放模式。
+
+ Philips OGT (SVCD 字幕) 解码器
+      --svcdsub-debug=<整数>   开启调试
+          此整数将在二进制视图中作为调试掩码
+调用           
+                1
+数据包分配信息        2
+
+
+ 文本字幕解析器
+      --sub-fps=<浮点>         帧每秒
+          覆盖普通帧每秒设置。这仅工作于 MicroDVD 和 SubRTP
+          (SRT) 字幕。
+      --sub-delay=<整数>       字幕延迟
+          为所有字幕应用一个延迟 (在 1/10 秒，例如 100 代表
+          10 秒)。
+      --sub-type={auto,microdvd,subrip,subviewer,ssa1,ssa2-4,ass,vplayer,sami,dvdsubtitle,mpl2,aqt,pjs,mpsub,jacosub,psb,realtext,dks,subviewer1}
+                                 字幕格式
+          强制字幕格式。可用的值是 : "microdvd", "subrip",
+          "subviewer", "ssa1", "ssa2-4", "ass", "vplayer", "sami",
+          "dvdsubtitle", "mpl2", "aqt", "pjs", "mpsub", "jacosub", "psb",
+          "realtext", "dks", "subviewer1",  和 "auto" (自动检测，此选项
+          应该总是有效)。
+      --sub-description=<字串> 字幕描述
+          覆盖默认轨道描述。
+
+ 文本字幕解码器
+      --subsdec-align={0 (居中), 1 (左), 2 (右)}
+                                 字幕调整
+          设置字幕调整
+      --subsdec-encoding={,UTF-8,UTF-16,UTF-16BE,UTF-16LE,GB18030,ISO-8859-15,Windows-1252,ISO-8859-2,Windows-1250,ISO-8859-3,ISO-8859-10,Windows-1251,KOI8-R,KOI8-U,ISO-8859-6,Windows-1256,ISO-8859-7,Windows-1253,ISO-8859-8,Windows-1255,ISO-8859-9,Windows-1254,ISO-8859-11,Windows-874,ISO-8859-13,Windows-1257,ISO-8859-14,ISO-8859-16,ISO-2022-CN-EXT,EUC-CN,ISO-2022-JP-2,EUC-JP,Shift_JIS,CP949,ISO-2022-KR,Big5,ISO-2022-TW,Big5-HKSCS,VISCII,Windows-1258}
+                                 字幕文本编码
+          设置在文本字幕中使用的编码
+      --subsdec-autodetect-utf8, --no-subsdec-autodetect-utf8
+                                 自动检测 UTF-8 字幕 (默认开启)
+          这将开启自动检测字幕文件内的 UTF-8 编码。
+          (默认开启)
+      --subsdec-formatted, --no-subsdec-formatted
+                                 格式化字幕 (默认开启)
+          有些字幕格式允许格式化文本。VLC 将部分处理它，但
+          是您可以选择关闭所有格式。 (默认开启)
+
+ 转码流输出
+   视频:
+      --sout-transcode-venc=<字串>
+                                 视频编码器
+          这是将被使用的视频编码器模块 (以及它被分配的选韍
+          ¹)。
+      --sout-transcode-vcodec=<字串>
+                                 目标视频编解码器
+          这是将被视频的视频编解码器。
+      --sout-transcode-vb=<整数>
+                                 视频位率
+          要转换的视频流的目标位率。
+      --sout-transcode-scale=<浮点>
+                                 视频比例
+          在转码时应用到视频的比例因素 (eg: 0.25)
+      --sout-transcode-fps=<浮点>
+                                 视频帧率
+          视频流的目标输出帧率。
+      --sout-transcode-hurry-up, --no-sout-transcode-hurry-up
+                                 紧急 (默认开启)
+          如果您的 CPU 不能跟进编码率，转码器将丢弃帧。
+          (默认开启)
+      --sout-transcode-deinterlace, --no-sout-transcode-deinterlace
+                                 反交错视频 (默认关闭)
+          在编码前反交错视频。 (默认关闭)
+      --sout-transcode-deinterlace-module={deinterlace,ffmpeg-deinterlace}
+                                 反交错模块
+          指定要使用的反交错模式。
+      --sout-transcode-width=<整数>
+                                 视频宽度
+          输出视频宽度。
+      --sout-transcode-height=<整数>
+                                 视频高度
+          输出视频高度。
+      --sout-transcode-maxwidth=<整数>
+                                 最大视频宽度
+          最大输出视频宽度。
+      --sout-transcode-maxheight=<整数>
+                                 最大视频高度
+          最大输出视频高度。
+      --sout-transcode-vfilter=<字串>
+                                 视频滤镜
+          将被应用到视频流的视频滤镜 (在应用覆盖层之后)。䋊          ‚¨可以输入一个冒号分隔的滤镜列表。
+   音频:
+      --sout-transcode-aenc=<字串>
+                                 音频编码器
+          这是将被使用的音频编码器模块 (和它被分配的选项)ዊ          €‚
+      --sout-transcode-acodec=<字串>
+                                 目标音频编解码器
+          这是将要使用的音频编解码器。
+      --sout-transcode-ab=<整数>
+                                 音频位率
+          要转码的音频流位率。
+      --sout-transcode-alang=<字串>
+                                 音频语言
+          这是音频流的语言。
+      --sout-transcode-channels=<整数>
+                                 声道
+          在转码流中的声道数。
+      --sout-transcode-samplerate=<整数>
+                                 音频采样率
+          要转码的音频流采样率 (11250, 22500, 44100 或 48000)。
+      --sout-transcode-audio-sync, --no-sout-transcode-audio-sync
+                                 同步音轨 (默认关闭)
+          此选项将丢弃/复制视频帧和音频轨道进行同步。
+          (默认关闭)
+      --sout-transcode-afilter=<字串>
+                                 音频滤镜
+          将被应用到音频流的音频滤镜 (在转换滤镜被应用后)ዊ          €‚您可以输入一个冒号分隔的滤镜列表。
+   覆盖/字幕输出:
+      --sout-transcode-senc=<字串>
+                                 字幕编码器
+          这是将被使用的字幕编码器模块 (以及被分配的选项)ዊ          €‚
+      --sout-transcode-scodec=<字串>
+                                 目标字幕编解码器
+          这是将被使用的字幕编解码器。
+      --sout-transcode-soverlay, --no-sout-transcode-soverlay
+                                 目标字幕编解码器 (默认关闭)
+          这是将被使用的字幕编解码器。 (默认关闭)
+      --sout-transcode-sfilter=<字串>
+                                 覆盖
+          这将允许您在转码后的视频流上添加覆盖层
+          (也被叫做 "子画面")。由滤镜生成的子画面将直接覆癍
+          –在视频上。您必须输入一个冒号分隔的子画面模块的
+          列表
+   屏幕显示:
+      --sout-transcode-osd, --no-sout-transcode-osd
+                                 OSD 菜单 (默认关闭)
+          流式化屏幕显示菜单 (使用 osd 菜单子画面模块)。
+          (默认关闭)
+   其它:
+      --sout-transcode-threads=<整数>
+                                 线程数量
+          用于转码的线程数量。
+      --sout-transcode-high-priority, --no-sout-transcode-high-priority
+                                 高优先级 (默认关闭)
+          在输出优先级上运行可选的编码器线程代替视频。
+          (默认关闭)
+
+ 标准流输出
+      --sout-standard-access=<字串>
+                                 输出访问模式
+          用于流的输出模块。
+      --sout-standard-mux=<字串>
+                                 输出复用器
+          用于流的复用器。
+      --sout-standard-dst=<字串>
+                                 输出目标
+          用于流的目标 (URL)。替代路径和绑定参数
+      --sout-standard-bind=<字串>
+                                 要绑定的地址 (dst 的补充设置)
+          将绑定给 vlc 监听入站流的 地址:端口，此为 dst
+          补充设置，dst=绑定+'/'+路径。dts 参数将替代此项
+      --sout-standard-path=<字串>
+                                 用于流的文件名 (用于 dts 的帮助器
+                                 设置)
+          用于 dts 的流帮助器设置文件名,
+          dst=绑定+'/'+路径。dts 参数将替代此项
+      --sout-standard-sap, --no-sout-standard-sap
+                                 SAP 宣告 (默认关闭)
+          使用 SAP 宣告此会话。 (默认关闭)
+      --sout-standard-name=<字串>
+                                 会话名称
+          这是将被在 SDP (会话描述符) 中宣告的会话名称。
+      --sout-standard-group=<字串>
+                                 会话组名
+          如果您选择了 SAP 的话这将允许您为宣告指定一组会譍
+          。
+      --sout-standard-description=<字串>
+                                 会话描述
+          这将允许您给予一个将被在 SDP (会话描述符)
+          中宣告的短描述的详细流信息。
+      --sout-standard-url=<字串>
+                                 会话 URL
+          这将允许您给予一个将被在 SDP (会话描述符)
+          中宣告的短描述的详细流信息 (通常是发布流的组织)ዊ          €‚
+      --sout-standard-email=<字串>
+                                 会话电子邮件
+          这将允许您为要在 SDP (会话描述符) 中宣告的流给予䶍
+          €个联系的邮件。
+      --sout-standard-phone=<字串>
+                                 会话电话号码
+          这将允许您为要在 SDP (会话描述符) 中宣告的流给予䶍
+          €个联系的电话号码。
+
+ 输出到内存缓冲器的流
+      --sout-smem-video-prerender-callback=<字串>
+                                 视频预渲染器回调
+          视频预渲染器回调函数的地址。此函数设定用于完成䋊          ¸²染的缓冲器
+      --sout-smem-audio-prerender-callback=<字串>
+                                 音频预渲染器回调
+          音频预渲染器回调函数的地址。此函数设定用于完成䋊          ¸²染的缓冲器
+      --sout-smem-video-postrender-callback=<字串>
+                                 视频后渲染器回调
+          视频后渲染器回调函数的地址。此函数将在渲染进入勊          ¼“冲器时调用
+      --sout-smem-audio-postrender-callback=<字串>
+                                 音频后渲染器回调
+          音频后渲染器回调函数的地址。此函数将在渲染进入勊          ¼“冲器时调用
+      --sout-smem-video-data=<字串>
+                                 视频回调数据
+          视频回调函数的数据。
+      --sout-smem-audio-data=<字串>
+                                 音频回调数据
+          视频回调函数的数据。
+      --sout-smem-time-sync, --no-sout-smem-time-sync
+                                 已同步时间的输出 (默认开启)
+          输出时间同步选项。如果为真，将照常渲染流，否则㋊          °†尽可能快地渲染。 (默认开启)
+
+ RTP 流输出
+      --sout-rtp-dst=<字串>    目标
+          这是将被使用的输出 URL。
+      --sout-rtp-sdp=<字串>    SDP
+          这将允许您为此 RTP 会话指定如何使 SDP (会话描述符)
+          变为可用。您必须使用一个 URL http://地址通过 HTTP
+          访问 SDP，rtsp:// 地址用于 RTSP 访问，而 sap://
+          用于通过 SAP 的 SDP 广播。
+      --sout-rtp-mux=<字串>    复用器
+          这将允许您指定用于流输出的复用器。默认不使用复勊          ”¨器 (标准 RTP 流)。
+      --sout-rtp-sap, --no-sout-rtp-sap
+                                 SAP 宣告 (默认关闭)
+          使用 SAP 宣告此会话。 (默认关闭)
+      --sout-rtp-name=<字串>   会话名称
+          这是将被在 SDP (会话描述符) 中宣告的会话名称。
+      --sout-rtp-description=<字串>
+                                 会话描述
+          这将允许您给予一个将被在 SDP (会话描述符)
+          中宣告的短描述的详细流信息。
+      --sout-rtp-url=<字串>    会话 URL
+          这将允许您给予一个将被在 SDP (会话描述符)
+          中宣告的短描述的详细流信息 (通常是发布流的组织)ዊ          €‚
+      --sout-rtp-email=<字串>  会话电子邮件
+          这将允许您为要在 SDP (会话描述符) 中宣告的流给予䶍
+          €个联系的邮件。
+      --sout-rtp-phone=<字串>  会话电话号码
+          这将允许您为要在 SDP (会话描述符) 中宣告的流给予䶍
+          €个联系的电话号码。
+      --sout-rtp-proto={dccp,sctp,tcp,udp,udplite}
+                                 传输协议
+          这将选择 RTP 要使用的传输协议。
+      --sout-rtp-port=<整数>   端口
+          这将允许您为 RTP 流指定一个基础端口。
+      --sout-rtp-port-audio=<整数>
+                                 音频端口
+          这将允许您为 RTP 流指定一个默认的音频端口。
+      --sout-rtp-port-video=<整数>
+                                 视频端口
+          这将允许您为 RTP 流指定一个默认的视频端口。
+      --sout-rtp-ttl=<整数>    跳跃限制 (TTL)
+          这是由流输出发送的多播数据包的跳跃限制
+          (也被称为 "在线时间" 或 TTL) (-1 = 使用操作系统内建瘍
+          „默认值)。
+      --sout-rtp-rtcp-mux, --no-sout-rtp-rtcp-mux
+                                 RTP/RTCP 多路技术 (默认关闭)
+          这将通过同一端口作为 RTP 数据包发送被接收 RTCP
+          数据包。 (默认关闭)
+      --sout-rtp-caching=<整数>
+                                 缓存值 (毫秒)
+          默认出站 RTP 流的缓存值。此值应该以毫秒为单位设绍
+          ®。
+      --sout-rtp-key=<字串>    SRTP 密匙 (十六进制)
+          RTP 数据包将被完整的保护并使用此安全 RTP
+          主共享密匙进行加密。
+      --sout-rtp-salt=<字串>   SRTP 独立终端 (十六进制)
+          安全 RTP 需要一个 (非秘密) 主独立终端值。
+      --sout-rtp-mp4a-latm, --no-sout-rtp-mp4a-latm
+                                 MP4A LATM (默认关闭)
+          这将允许您流式 MPEG4 LATM 音频流 (查看 RFC3016)。
+          (默认关闭)
+
+ 录制串流输出
+      --sout-record-dst-prefix=<字串>
+                                 目标前缀
+          自动创建的目标文件的前缀
+
+ 远程音频输出协议 (RAOP) 串流输出
+      --sout-raop-host=<字串>  主机
+          目标设备的主机名或 IP 地址
+      --sout-raop-password=<字串>
+                                 密码
+          目标设备的密码。
+      --sout-raop-password-file=<字串>
+                                 密码文件
+          由文件读取目标设备的密码。
+      --sout-raop-volume=<整数 [0 .. 255]>
+                                 音量
+          模拟输出的输出音量: 0 为静音，1..255 由几乎听不见再
+          °非常响亮。
+
+ Mosaic 桥流输出
+      --sout-mosaic-bridge-id=<字串>
+                                 ID
+          指定一个用于此子画面的标识符
+      --sout-mosaic-bridge-width=<整数>
+                                 视频宽度
+          输出视频宽度。
+      --sout-mosaic-bridge-height=<整数>
+                                 视频高度
+          输出视频高度。
+      --sout-mosaic-bridge-sar=<字串>
+                                 示范高宽比
+          目标的示范高宽比 (1:1, 3:4, 2:3)。
+      --sout-mosaic-bridge-chroma=<字串>
+                                 图像色度
+          强制使用一个指定的色度。如果您计划使用 Alphamask
+          或蓝屏视频滤镜请使用 YUVA。
+      --sout-mosaic-bridge-vfilter=<字串>
+                                 视频滤镜
+          将要被应用的视频流的视频滤镜。
+      --sout-mosaic-bridge-alpha=<整数 [0 .. 255]>
+                                 透明
+          mosaic 图像的透明度。
+      --sout-mosaic-bridge-x=<整数>
+                                 X 偏移
+          在 mosaic 左上角开始的非负 X 坐标。
+      --sout-mosaic-bridge-y=<整数>
+                                 Y 偏移
+          在 mosaic 左上角开始的非负 Y 坐标。
+
+ 通量流输出
+   一般:
+      --sout-es-access=<字串>  输出访问模式
+          这是将要使用的默认输出访问模式。
+      --sout-es-mux=<字串>     输出复用器
+          这是将要被使用的默认复用器。
+      --sout-es-dst=<字串>     输出 URL
+          这是默认的输出 URL。
+   音频:
+      --sout-es-access-audio=<字串>
+                                 音频输出访问模式
+          这是将要用于的音频输出访问模块。
+      --sout-es-mux-audio=<字串>
+                                 音频输出复用器
+          这是将要用于音频的复用器。
+      --sout-es-dst-audio=<字串>
+                                 音频输出 URL
+          这是将要用于音频的输出 URL。
+   视频:
+      --sout-es-access-video=<字串>
+                                 视频输出访问模块
+          这是将要用于视频输出的访问模块。
+      --sout-es-mux-video=<字串>
+                                 视频输出复用器
+          这是将要用于视频的复用器。
+      --sout-es-dst-video=<字串>
+                                 视频输出 URL
+          这是将要用于视频的输出 URL。
+
+ 显示流输出
+      --sout-display-audio, --no-sout-display-audio
+                                 开启音频 (默认开启)
+          开启/关闭音频渲染。 (默认开启)
+      --sout-display-video, --no-sout-display-video
+                                 开启视频 (默认开启)
+          开启/关闭视频渲染。 (默认开启)
+      --sout-display-delay=<整数>
+                                 延迟
+          在显示流时插入延迟。
+
+ 桥接流输出
+   桥接输出:
+      --sout-bridge-out-id=<整数>
+                                 ID
+          用于此通量流的整数标识符。这将在稍后被用作
+          "发现" 此流。
+      --sout-bridge-out-in-name=<字串>
+                                 目标连入桥名称
+          目标连入桥的名称。如果您不需要同时使用多个连入䋊          ¡¥，可以忽略此选项。
+   桥接输入:
+      --sout-bridge-in-delay=<整数>
+                                 延迟
+          来自图片视频输出的图片将按照此值
+          (以毫秒为单位，应 >= 100 毫秒) 被延迟。要使用高的侍
+          ¼，您将同时需要加大缓冲值。
+      --sout-bridge-in-id-offset=<整数>
+                                 ID 偏移
+          添加到在 bridge_out 中流 ID 偏移以使流 ID 的 bridge_in
+          注册。
+      --sout-bridge-in-name=<字串>
+                                 当前实例名称
+          此连入桥实例的名称。如果您不需要同时使用多个连㋊          …¥桥，可以忽略此选项。
+      --sout-bridge-in-placeholder, --no-sout-bridge-in-placeholder
+                                 缺数据时退回到占位流 (默认关闭)
+          如果设为 true，桥没有从其他连入桥接收到数据时将彍
+          ½略所有的输入基本流。这可在真实源中断时用于配置
+          占位流。源与占位流的格式应该相同。 (默认关闭)
+      --sout-bridge-in-placeholder-delay=<整数>
+                                 占位延迟
+          占位流生效前的延时 (毫秒)。
+      --sout-bridge-in-placeholder-switch-on-iframe, --no-sout-bridge-in-placeholder-switch-on-iframe
+                                 等出现 I 帧后再切换占位流
+                                 (默认开启)
+          如果启用，在占位流和正常流之间的切换将只在 I
+          帧进行。这将以稍微长些的延时（取决于流中 I
+          帧出现的频率）为代价避免流切换时的花屏。
+          (默认开启)
+
+ DVD 字幕解码器
+      --dvdsub-transparency, --no-dvdsub-transparency
+                                 禁用 DVD 字幕透明 (默认关闭)
+          移除 DVD 字幕所使用的所有透明特效。 (默认关闭)
+
+ Speex 音频解码器
+      --sout-speex-mode={0 (短波 (8kHz)), 1 (长波 (16kHz)), 2 (超长波 (32kHz))}
+                                 模式
+          强制编码器的模式。
+      --sout-speex-complexity=<整数 [1 .. 10]>
+                                 编码复杂度
+          强制编码器的复杂度。
+      --sout-speex-cbr, --no-sout-speex-cbr
+                                 CBR 编码 (默认关闭)
+          强制进行恒定码率编码 (CBR) 而不是默认的动态码率编
+          码 (VBR)。 (默认关闭)
+      --sout-speex-quality=<浮点 [0.000000 .. 10.000000]>
+                                 编码质量
+          强制一个从 0 (低) 到 10 (高) 的质量值。
+      --sout-speex-max-bitrate=<整数>
+                                 最大位率
+          强制 VBR 位率的最大值
+      --sout-speex-vad, --no-sout-speex-vad
+                                 语音活动检测 (默认开启)
+          启用语音活动检测 (VAD)。在 VBR 模式中会自动激活。
+          (默认开启)
+      --sout-speex-dtx, --no-sout-speex-dtx
+                                 非连续传输 (默认关闭)
+          启用非连续传输 (DTX)。 (默认关闭)
+
+ 音频空间化器
+      --spatializer-roomsize=<浮点>
+                                 室内大小
+          定义滤镜模拟房间的虚拟表面。
+      --spatializer-width=<浮点>
+                                 室内宽度
+          虚拟室内的宽度
+      --spatializer-wet=<浮点> 湿
+      --spatializer-dry=<浮点> 干
+      --spatializer-damp=<浮点>
+                                 湿气
+
+ 外观化界面
+      --skins2-last=<字串>     要使用的外观
+          要使用外观路径。
+      --skins2-config=<字串>   设置最后使用的外观
+          最后使用外观窗口设置，此选项将自动被更新，不要⋊          ¿®改它。
+      --skins2-systray, --no-skins2-systray
+                                 系统托盘图标 (默认关闭)
+          为 VLC 显示系统托盘图标 (默认关闭)
+      --skins2-taskbar, --no-skins2-taskbar
+                                 在任务栏上显示 VLC (默认开启)
+          在任务栏上显示 VLC (默认开启)
+      --skins2-transparency, --no-skins2-transparency
+                                 开启透明效果 (默认关闭)
+          如果您需要您可以关闭所有的透明效果。这在窗口移㋊          Š¨不是很清楚的情况下很有效。 (默认关闭)
+      --skinned-playlist, --no-skinned-playlist
+                                 使用一个外观化的播放列表
+                                 (默认开启)
+          使用一个外观化的播放列表 (默认开启)
+      --skinned-video, --no-skinned-video
+                                 如果有外观可用，则在外观化的窗㋊                                 £中显示视频 (默认开启)
+          当设为 '否' 时，此参数意在为旧的外观创造回放视频
+          的条件，即使无可用的视频标签 (默认开启)
+
+ 锐化视频滤镜
+ 增加外形间的反差。
+      --sharpen-sigma=<浮点 [0.000000 .. 2.000000]>
+                                 锐化强度 (0-2)
+          设置锐化强度，在 0 和 2 之间。默认为 0.05。
+
+ 屏幕输入
+      --screen-caching=<整数>  缓存值(毫秒)
+          屏幕捕获的缓存值。此值必须以毫秒为单位设置。
+      --screen-fps=<浮点>      帧率
+          捕获期望的帧率。
+      --screen-top=<整数>      子屏幕左上角
+          左上角子屏幕的上坐标。
+      --screen-left=<整数>     子屏幕左上角
+          左上角子屏幕的左坐标。
+      --screen-width=<整数>    子屏幕宽度
+          子屏幕宽度
+      --screen-height=<整数>   子屏幕高度
+          子屏幕高度
+      --screen-follow-mouse, --no-screen-follow-mouse
+                                 更随鼠标 (默认关闭)
+          在捕获子屏幕时跟随鼠标。 (默认关闭)
+      --screen-mouse-image=<字串>
+                                 鼠标指针图像
+          如指定，将使用此图像来绘制捕获中的鼠标指针。
+      --screen-fragment-size=<整数>
+                                 捕获片段大小
+          按在预定义的高度的屏幕碎片优化捕获 (16
+          可能是一个较好的值，0 为关闭)。
+
+ 场景视频滤镜
+ 将视频发至图片文件
+      --scene-format=<字串>    图像格式
+          输出图像的格式 (png, jpeg, ...)。
+      --scene-width=<整数>     图像宽度
+          您可以强制指定图像的宽度。按默认 (-1) VLC
+          将自动适应视频参数。
+      --scene-height=<整数>    图像高度
+          您可以强制指定图像高度。按默认 (-1) VLC 将自动适应
+          视频参数。
+      --scene-prefix=<字串>    文件名前缀
+          输出图像文件名的前缀。如替换不为真，输出文件名㋊          °†是 "前缀数字.格式" 的形式。
+      --scene-path=<字串>      目录路径前缀
+          图片文件存储路径。如果未设置，将自动将图片存放㋊          ˆ°用户主目录中。
+      --scene-replace, --no-scene-replace
+                                 总是写入到相同的文件中
+                                 (默认关闭)
+          总是写入到相同的文件中替代为每幅图像创建一个文⋊          »¶。由于此原因数字将不会被附加到文件名后。
+          (默认关闭)
+      --scene-ratio=<整数>     录制率
+          图像录制的机率。3 表示三幅中的一副图像将被录制⾍
+          ‚
+
+ 音频节拍定标器，与频率同步
+      --scaletempo-stride=<整数 [1 .. 2000]>
+                                 步长度
+          以毫秒为单的输出布长度
+      --scaletempo-overlap=<浮点 [0.000000 .. 1.000000]>
+                                 覆盖长度
+          覆盖步长度百分比
+      --scaletempo-search=<整数 [0 .. 200]>
+                                 搜索长度
+          以毫秒为单位的最佳搜索覆盖未知
+
+ 网络流 (SAP)
+      --sap-addr=<字串>        SAP 多播地址
+          SAP 模块通常自己会选择正确的监听地址。当然您自己
+          也可以指定一个地址。
+      --sap-ipv4, --no-sap-ipv4  IPv4 SAP (默认开启)
+          在标准地址上监听 IPv4 宣告。 (默认开启)
+      --sap-ipv6, --no-sap-ipv6  IPv6 SAP (默认开启)
+          在标准地址上监听 IPv6 宣告。 (默认开启)
+      --sap-timeout=<整数>     SAP 超时时限 (秒)
+          在 SAP 项目没有接受到新的宣告时删除的延迟。
+      --sap-parse, --no-sap-parse
+                                 尝试解析通告 (默认开启)
+          这将会开启 SAP 模块的实际宣告解析。否则所有宣告宍
+          †会使用 "live555" (RTP/RTSP) 模块解析。 (默认开启)
+      --sap-strict, --no-sap-strict
+                                 SAP 严格模式 (默认关闭)
+          在开启此选项时，SAP 解析器将会放弃一些非必要的通
+          知。 (默认关闭)
+
+ 实时协议 (RTP) 输入
+      --rtp-caching=<整数 [0 .. 65535]>
+                                 RTP 反抖动缓冲长度 (毫秒)
+          为迟到的 RTP 数据包等待多长时间 (并推迟执行)。
+      --rtcp-port=<整数 [0 .. 65535]>
+                                 RTCP (本地) 端口
+          RTCP 包将由此传输协议端口接收。如果为零，将使用墍
+          š路 RTP/RTCP。
+      --srtp-key=<字串>        SRTP 密匙 (十六进制)
+          RTP 数据包将使用此安全 RTP 主共享密匙进行验证并解勊           。
+      --srtp-salt=<字串>       SRTP 独立终端 (十六进制)
+          安全 RTP 需要一个 (非秘密) 主独立终端值。
+      --rtp-max-src=<整数 [1 .. 255]>
+                                 最大 RTP 源
+          在同一时间内允许多少独立的活动 RTP 源。
+      --rtp-timeout=<整数>     RTP 源超时 (秒)
+          在一个源过期之前等待任意数据包多长时间。
+      --rtp-max-dropout=<整数 [0 .. 32767]>
+                                 最大 RTP 丢弃序号
+          如果 RTP 数据包太靠前就将按此从最后接收的数据包庍
+          €始的数量被废弃 (例如在将来)。
+      --rtp-max-misorder=<整数 [0 .. 32767]>
+                                 最大 RTP 混淆序号
+          如果 RTP 数据包被绑定的太远将按此从最后接收的数拍
+          ®包开始的数量被废弃 (例如在将来)。
+
+ RSS 与 Atom feed 显示
+ 在视频上显示 RSS 或 ATOM Feed
+      --rss-urls=<字串>        Feed 网址
+          RSS/Atom feed 以 '|' (竖线) 分隔的 URL。
+   位置:
+      --rss-x=<整数>           X 偏移
+          从屏幕左边缘开始的 X 偏移。
+      --rss-y=<整数>           Y 偏移
+          从屏幕顶部向下的 Y 偏移。
+      --rss-position={0 (居中), 1 (左), 2 (右), 4 (上), 8 (下), 5 (左上), 6 (右上), 9 (左下), 10 (右下)}
+                                 文本位置
+          您可以强制指定在视频上的文本位置 (0=居中、1=左、2
+          =右、4=上、8=下，您也可以混合使用这些值，例如
+          6=4+2 表示右上)。
+   字体:
+      --rss-opacity=<整数 [0 .. 255]>
+                                 不透明度
+          覆盖文本的不透明度 (与透明度相反)。0 = 透明, 255 =
+          完全不透明。
+      --rss-color={-268435456 (默认), 0 (黑色), 8421504 (灰色), 12632256 (银色), 16777215 (白色), 8388608 (栗色), 16711680 (红色), 16711935 (紫红色), 16776960 (黄色), 8421376 (橄榄绿), 32768 (绿色), 32896 (凫蓝色), 65280 (酸橙绿色), 8388736 (紫色), 128 (藏青色), 255 (蓝色), 65535 (水蓝色)}
+                                 颜色
+          要视频上渲染的文本颜色。这必须是一个十六进制值
+          (类似 HTML 颜色)。前两个字节是红，然后是绿、栏。#0
+          00000 = 黑、#FF0000 = 红、#00FF00 = 绿、#FFFF00 = 黄 (红 +
+          绿)、#FFFFFF = 白
+      --rss-size=<整数>        字体大小，像素
+          以像素为单位的字体大小。默认是 -1 (使用默认字体墍
+          §小)。
+   其它:
+      --rss-speed=<整数>       feed 的速度
+          RSS/Atom feed 的毫秒速度 (大为慢)。
+      --rss-length=<整数>      最大长度
+          在屏幕上显示的最大字节数量。
+      --rss-ttl=<整数>         刷新时间
+          每次强制刷新 feed 的间隔描述。0 表示永远不更新
+          feed。
+      --rss-images, --no-rss-images
+                                 Feed 图像 (默认开启)
+          如果可用显示 feed 图像。 (默认开启)
+      --rss-title={-1 (默认), 0 (不显示), 1 (总是可见), 2 (滚动显示 feed)}
+                                 标题显示模式
+          标题显示模式。默认为 0 (隐藏) 如果 feed 有一副图像㋊          ¹¶且图像为开启时 1 为其它。
+
+ 旋转视频滤镜
+      --rotate-angle=<整数 [0 .. 359]>
+                                 角度值
+          角度值 (0 到 359)
+
+ 通过 VNC 的远程 OSD
+      --rmtosd-host=<字串>     VNC 主机
+          VNC 主机或 IP 地址。
+      --rmtosd-port=<整数 [1 .. 65535]>
+                                 VNC 端口
+          VNC 端口号。
+      --rmtosd-password=<字串> VNC 密码
+          VNC 密码。
+      --rmtosd-update=<整数 [200 .. 300]>
+                                 VNC 查询间隔
+          需要 VNC 的更新间隔，默认为每 300 毫秒。
+      --rmtosd-vnc-polling, --no-rmtosd-vnc-polling
+                                 VNC 查询 (默认关闭)
+          激活 VNC 查询。请不要在作为 VDR ffnetdev
+          客户端时激活。 (默认关闭)
+      --rmtosd-mouse-events, --no-rmtosd-mouse-events
+                                 鼠标事件 (默认关闭)
+          发送鼠标事件到 VNC 主机。在作为 VDR ffnetdev
+          客户端时不需要。 (默认关闭)
+      --rmtosd-key-events, --no-rmtosd-key-events
+                                 密匙事件 (默认关闭)
+          发送密匙事件到 VNC 客户端。 (默认关闭)
+      --rmtosd-alpha=<整数 [0 .. 255]>
+                                 Alpha 透明值 (默认 255)
+          OSD VNC 的透明度可以通过给予 0 到 255 之间的值被更改
+          。一个较低的值将有较高的透明度一个较高的值透明㋊          º¦较小。默认为不透明 (值 255) 最小为完全透明 (值
+          0)。
+
+ Raw 去复用器
+      --rawvid-fps=<字串>      每秒帧数
+          播放 raw 视频流时所需的帧率。格式为 30000/1001 或
+          29.97
+      --rawvid-width=<整数>    宽度
+          这是为 raw 视频流指定宽度，以像素为单位。
+      --rawvid-height=<整数>   高度
+          这是为 raw 视频流指定高度，以像素为单位。
+      --rawvid-chroma=<字串>   强制色度 (谨慎使用)
+          强制色度。这是一个四字节的字串。
+      --rawvid-aspect-ratio=<字串>
+                                 高宽比
+          高宽比 (4:3, 16:9)。默认是方块像素。
+
+ DV (数字视频) 去复用器
+      --rawdv-hurry-up, --no-rawdv-hurry-up
+                                 紧急 (默认关闭)
+          如果输入不能保持帧率，那么去复用器将增加时间戳ዊ          €‚ (默认关闭)
+
+ raw 音频去复用器
+      --rawaud-channels=<整数> 声道
+          输入流的音频声道数。数值 >0。默认为 2。
+      --rawaud-samplerate=<整数>
+                                 音频采样率 (Hz)
+          音频采样率，单位为赫兹。默认为 48000 Hz。
+      --rawaud-fourcc=<字串>   原始输入格式的 FOURCC 码
+          raw 输入格式的 FOURCC 代码。这是个四位的字符串。
+      --rawaud-lang=<字串>     强制音频语言
+          强制输出混流的音频语言。三个字母的 ISO639
+          码。默认为 'eng'。
+
+ Qt 界面
+      --qt-minimal-view, --no-qt-minimal-view
+                                 以最小外观启动 (无菜单)
+                                 (默认关闭)
+          以最小外观启动 (无菜单) (默认关闭)
+      --qt-notification, --no-qt-notification
+                                 在轨道更改时显示提示弹出框
+                                 (默认开启)
+          在 VLC 被最小化或隐藏时，如果当前的播放列表项目暍
+          ‰变动，就显示一个内容为艺术家和轨道名称的弹出提
+          示窗口。 (默认开启)
+      --qt-opacity=<浮点 [0.100000 .. 1.000000]>
+                                 在 0.1 到 1 之间的窗口不透明度
+          为主界面、播放列表和扩展面板设置在 0.1 和 1
+          之间的窗口透明度。此选项仅工作于 Windows 和
+          带混合扩展的 X11。
+      --qt-fs-opacity=<浮点 [0.100000 .. 1.000000]>
+                                 全屏控制板的不透明度，从 0.1 到 1
+          为主界面、播放列表和扩展面板设置在 0.1 和 1
+          之间的窗口透明度。此选项仅工作于 Windows
+          和带混合扩展的 X11。
+      --qt-system-tray, --no-qt-system-tray
+                                 系统托盘图标 (默认开启)
+          在系统托盘处显示一个图标使您可以对 VLC media player
+          进行简单的操作。 (默认开启)
+      --qt-start-minimized, --no-qt-start-minimized
+                                 仅以系统托盘方式启动 VLC
+                                 (默认关闭)
+          VLC 启动时将只显示任务栏图标 (默认关闭)
+      --qt-video-autoresize, --no-qt-video-autoresize
+                                 缩放界面至原生视频大小
+                                 (默认开启)
+          您可以选择:
+ - 界面将被缩放至视频大小
+ -
+          视频将被缩放至适合界面的大小
+ 默认状况下，界面宍
+          †被缩放至视频大小。 (默认开启)
+      --qt-name-in-title, --no-qt-name-in-title
+                                 在窗口标题显示正在播放的项目名勊                                 §° (默认开启)
+          在控制器窗口标题中显示歌曲或视频的名称。
+          (默认开启)
+      --qt-fs-controller, --no-qt-fs-controller
+                                 在全屏模式中显示控制器
+                                 (默认开启)
+          在全屏模式中显示控制器 (默认开启)
+      --qt-volume-complete, --no-qt-volume-complete
+                                 允许音量被设置为 400% (默认关闭)
+          允许音量的修改范围为 0% 到 400%，而不是 0% 到
+          200%。由于它使用软件放大的原因，可能会造成音频失
+          真。 (默认关闭)
+      --qt-autosave-volume, --no-qt-autosave-volume
+                                 自动在退出时保存音量 (默认关闭)
+          自动在退出时保存音量 (默认关闭)
+      --qt-embedded-open, --no-qt-embedded-open
+                                 在打开对话框中嵌入文件浏览器
+                                 (默认关闭)
+          在打开对话框中嵌入文件浏览器 (默认关闭)
+      --qt-recentplay, --no-qt-recentplay
+                                 在菜单中保存最近播放的项目
+                                 (默认开启)
+          在菜单中保存最近播放的项目 (默认开启)
+      --qt-recentplay-filter=<字串>
+                                 要过滤的单词列表，以 | 符号分隔
+          用于过滤播放器最近播放过的项目的正则表达式
+      --qt-adv-options, --no-qt-adv-options
+                                 高级选项 (默认关闭)
+          在对话框中显示所有高级选项。 (默认关闭)
+      --qt-advanced-pref, --no-qt-advanced-pref
+                                 显示高级参数设置代替简易设置
+                                 (默认关闭)
+          在打开参数设置对话框时显示高级参数设置而非建议㋊          ‚数设置。 (默认关闭)
+      --qt-error-dialogs, --no-qt-error-dialogs
+                                 显示不重要的错误和警告对话框
+                                 (默认开启)
+          显示不重要的错误和警告对话框 (默认开启)
+      --qt-updates-notif, --no-qt-updates-notif
+                                 激活可用的更新提示 (默认开启)
+          激活自动的新版本软件更新提示。它每两星期运行一䋊          ¬¡。 (默认开启)
+      --qt-updates-days=<整数> 在两次更新检测之间的间隔天数
+          在两次更新检测之间的间隔天数
+      --qt-slider-colours=<字串>
+                                 定义音量滑杆的颜色
+          定义音量滑杆的颜色
+通过一个由 ';' 分隔的 12
+          位数字指定
+默认是 '255;255;255;20;226;20;255;176;15;235;30;20'
+          
+另一个选择是 '30;30;50;40;40;100;50;50;160;150;150;255'
+      --qt-privacy-ask, --no-qt-privacy-ask
+                                 在启动时询问网络策略 (默认开启)
+          在启动时询问网络策略 (默认开启)
+      --qt-fullscreen-screennumber=<整数>
+                                 定义要切换到全屏幕模式的屏幕
+          全屏的屏幕编号，可以不是界面所在的屏幕
+      --qt-autoload-extensions, --no-qt-autoload-extensions
+                                 启动时载入扩展 (默认开启)
+          自动在启动时载入扩展 (默认开启)
+
+ 智力交互游戏视频滤镜
+      --puzzle-rows=<整数 [2 .. 16]>
+                                 智力游戏的行数
+          智力游戏的行数
+      --puzzle-cols=<整数 [2 .. 16]>
+                                 智力游戏的列数
+          智力游戏的列数
+      --puzzle-black-slot, --no-puzzle-black-slot
+                                 使一个碎块成为一个黑色的槽
+                                 (默认关闭)
+          生成一个黑槽。其它碎块可以仅和黑槽进行交换。
+          (默认关闭)
+
+ MPEG-PS 去复用器
+      --ps-trust-timestamps, --no-ps-trust-timestamps
+                                 受信任的 MPEG 时间戳 (默认开启)
+          通常我们使用 MPEG 文件的时间戳来计算位置和持续时狊          —´。但是在某些时候这可能没有用。关闭此选项使用仍
+          率计算代替。 (默认开启)
+
+ 视频预处理滤镜
+      --postproc-q=<整数 [0 .. 6]>
+                                 预处理质量
+          预处理的质量。有效范围是 0 到 6
+高等级需要相当多勊          š„ CPU 资源，但是能产生较好的图像质量。
+      --postproc-name=<字串>   FFmpeg 预处理滤镜链
+          FFmpeg 预处理滤镜链
+
+ PORTAUDIO 音频输出
+      --portaudio-audio-device=<整数>
+                                 输出设备
+          用于输出设备的 Portaudio 定义器
+
+ Podcast
+      --podcast-urls=<字串>    Podcast URL 列表
+          请输入要检索的 podcast 列表, 由 '|' (竖条) 分隔。
+
+ 播放列表
+      --playlist-autostart, --no-playlist-autostart
+                                 自动启动 (默认开启)
+          在播放列表被载入后自动开始播放其中的内容。
+          (默认开启)
+      --playlist-skip-ads, --no-playlist-skip-ads
+                                 跳过广告 (默认开启)
+          使用播放列表选项通常被用于防治广告被跳过检测并狊          ˜²止添加它们到播放列表中。 (默认开启)
+      --shoutcast-show-adult, --no-shoutcast-show-adult
+                                 显示 shoutcast 成人内容 (默认关闭)
+          在使用视频播放列表时显示 NC17 分级的视频流。
+          (默认关闭)
+
+ 参数均衡器
+      --param-eq-lowf=<浮点>   低频 (Hz)
+      --param-eq-lowgain=<浮点 [-20.000000 .. 20.000000]>
+                                 低频增益 (dB)
+      --param-eq-highf=<浮点>  高频 (Hz)
+      --param-eq-highgain=<浮点 [-20.000000 .. 20.000000]>
+                                 高频增益 (dB)
+      --param-eq-f1=<浮点>     频率 1 (Hz)
+      --param-eq-gain1=<浮点 [-20.000000 .. 20.000000]>
+                                 频率 1 增益 (dB)
+      --param-eq-q1=<浮点 [0.100000 .. 100.000000]>
+                                 频率 1 Q
+      --param-eq-f2=<浮点>     频率 2 (Hz)
+      --param-eq-gain2=<浮点 [-20.000000 .. 20.000000]>
+                                 频率 2 增益 (dB)
+      --param-eq-q2=<浮点 [0.100000 .. 100.000000]>
+                                 频率 2 Q
+      --param-eq-f3=<浮点>     频率 3 (Hz)
+      --param-eq-gain3=<浮点 [-20.000000 .. 20.000000]>
+                                 频率 3 增益 (dB)
+      --param-eq-q3=<浮点 [0.100000 .. 100.000000]>
+                                 频率 3 Q
+
+ 摄像头: 覆盖视频滤镜的墙
+ 将视频切为多个窗口以便在屏幕墙上显示
+      --panoramix-cols=<整数>  列数
+          选择被分割视频的垂直视频窗口数量
+      --panoramix-rows=<整数>  行数
+          选择被分割视频的水平视频窗口数量
+      --panoramix-bz-length=<整数 [0 .. 100]>
+                                 重叠面积区域长度 (以 %)
+          选择以百分比为单位的混合区域长度
+      --panoramix-bz-height=<整数 [0 .. 100]>
+                                 重叠面积区域高度 (以 %)
+          选择混合区域的百分比高度 (2x2 墙)
+      --panoramix-attenuate, --no-panoramix-attenuate
+                                 衰减 (默认开启)
+          如果您希望通过此插件衰减混合区域，请选择此选项
+          (如果选项未选中，衰减将由 OpenGL 执行) (默认开启)
+      --panoramix-bz-begin=<整数 [0 .. 100]>
+                                 衰减, 开始 (在 %)
+          选择开始混合区域的拉格朗日系数百分比
+      --panoramix-bz-middle=<整数 [0 .. 100]>
+                                 衰减, 中 (在 %)
+          选择中部混合区域的拉格朗日系数百分比
+      --panoramix-bz-end=<整数 [0 .. 100]>
+                                 衰减, 末尾 (在 %)
+          选择末尾混合区域的拉格朗日系数百分比
+      --panoramix-bz-middle-pos=<整数 [1 .. 99]>
+                                 中间位置 (在 %)
+          选择混合区域中间点 (拉格朗日系数) 的百分比位置
+          (50 为中间)
+      --panoramix-bz-gamma-red=<浮点 [0.000000 .. 5.000000]>
+                                 伽玛 (红) 矫正
+          选择混合区域的伽玛矫正 (红或 Y 部分)
+      --panoramix-bz-gamma-green=<浮点 [0.000000 .. 5.000000]>
+                                 伽玛 (绿) 矫正
+          选择混合区域的伽玛矫正 (绿或 U 部分)
+      --panoramix-bz-gamma-blue=<浮点 [0.000000 .. 5.000000]>
+                                 伽玛 (蓝) 矫正
+          选择混合区域的伽玛矫正 (蓝或 V 部分)
+      --panoramix-bz-blackcrush-red=<整数 [0 .. 255]>
+                                 用于红色的黑压挤
+          选择混合区域的黑压挤 (红或 Y 部分)
+      --panoramix-bz-blackcrush-green=<整数 [0 .. 255]>
+                                 用于绿色的黑压挤
+          选择混合区域的黑压挤 (绿或 U 部分)
+      --panoramix-bz-blackcrush-blue=<整数 [0 .. 255]>
+                                 用于蓝色的黑压挤
+          选择混合区域的黑压挤 (蓝或 V 部分)
+      --panoramix-bz-whitecrush-red=<整数 [0 .. 255]>
+                                 用于红色白压挤
+          选择混合区域的白压挤 (红或 Y 部分)
+      --panoramix-bz-whitecrush-green=<整数 [0 .. 255]>
+                                 用于绿色的白压挤
+          选择混合区域的白压挤 (绿或 U 部分)
+      --panoramix-bz-whitecrush-blue=<整数 [0 .. 255]>
+                                 用蓝色的白压挤
+          选择混合区域的白压挤 (蓝或 V 部分)
+      --panoramix-bz-blacklevel-red=<整数 [0 .. 255]>
+                                 红色的黑等级
+          选择混合区域的黑等级 (红或 Y 部分)
+      --panoramix-bz-blacklevel-green=<整数 [0 .. 255]>
+                                 绿色的黑等级
+          选择混合区域的黑等级 (绿或 U 部分)
+      --panoramix-bz-blacklevel-blue=<整数 [0 .. 255]>
+                                 蓝色的黑等级
+          选择混合区域的黑等级 (蓝或 V 部分)
+      --panoramix-bz-whitelevel-red=<整数 [0 .. 255]>
+                                 红色的白等级
+          选择混合区域的白等级 (红或 Y 部分)
+      --panoramix-bz-whitelevel-green=<整数 [0 .. 255]>
+                                 绿色的白等级
+          选择混合区域的白等级 (绿或 U 部分)
+      --panoramix-bz-whitelevel-blue=<整数 [0 .. 255]>
+                                 蓝色的白等级
+          选择混合区域的白等级 (蓝或 V 部分)
+      --panoramix-active=<字串>
+                                 活动窗口
+          逗号分隔的活动窗口列表，默认为全部
+
+ MPEG-I/II 视频封包器
+      --packetizer-mpegvideo-sync-iframe, --no-packetizer-mpegvideo-sync-iframe
+                                 在内部帧中同步 (默认关闭)
+          通常封包器将会在下一个完全帧时进行同步。此标志㋊          °†指示分包器在找到第一个内部帧时就进行同步。
+          (默认关闭)
+
+ 屏幕显示菜单
+      --osdmenu-x=<整数>       X 坐标
+          您可以通过在其上左击移动 OSD 菜单。
+      --osdmenu-y=<整数>       Y 坐标
+          您可以通过在其上左击移动 OSD 菜单。
+      --osdmenu-position={0 (居中), 1 (左), 2 (右), 4 (上), 8 (下), 5 (左上), 6 (右上), 9 (左下), 10 (右下)}
+                                 菜单位置
+          您可以强制指定 OSD 菜单在视频上的位置 (0=居中、1=嵍
+          ¦、2=右、4=上、8=下，您也可以混合使用这些值，例如
+           6=4+2 表示右上)。
+      --osdmenu-file=<字串>    设置文件
+          用于 OSD 菜单的设置文件。
+      --osdmenu-file-path=<字串>
+                                 OSD 菜单图像的路径
+          OSD 菜单图像的路径。这将覆盖在 OSD
+          定义文件中的路径。
+      --osdmenu-timeout=<整数> 菜单超时
+          OSD 菜单图像获取一个 15 秒的默认超时时间加入到它乍
+          ¬的剩余时间中。这将保持它们能在最后指定的时间内
+          被显示。
+      --osdmenu-update=<整数 [0 .. 1000]>
+                                 菜单更新间隔
+          默认为每 200 毫秒更新一次 OSD 菜单图片。较短的环境
+          更新时间可能会造成传输错误。请小心使用此选项作⋊          ¸º编码 OSD 菜单，这将增大计算负担。范围为 0 - 1000
+          毫秒。
+      --osdmenu-alpha=<整数 [0 .. 255]>
+                                 Alpha 透明值 (默认 255)
+          可以通过给定在 0 到 255 之间的值更改 OSD 菜单的透明
+          度。一个较低的值为比较透明，较高的值为不透明。狊          »˜认为不透明 (值 255) 最小是完全透明 (值 0)。
+
+ VLM 远程控制界面
+      --telnet-host=<字串>     主机
+          这是界面将要监听的主机。它默认给所有网络界面
+          (0.0.0.0)。如果您希望界面仅对本机可用请输入
+          "127.0.0.1"。
+      --telnet-port=<整数>     端口
+          这是此界面将要监听的 TCP 端口。默认为 4212。
+      --telnet-password=<字串> 密码
+          一个被用于保护此界面的简易管理员密码。默认值是
+          "admin"。
+
+ 远程控制界面
+      --rc-show-pos, --no-rc-show-pos
+                                 显示流位置 (默认关闭)
+          显示在流中的当前位置。 (默认关闭)
+      --rc-quiet, --no-rc-quiet  不打开 DOS 命令行界面 (默认关闭)
+          在默认情况下 rc 接口插件将会启动一个 DOS
+          命令行窗口。开启静默模式将不会出现此命令窗口但䋊          ˜¯也可能在您希望在没有打开视频窗口时停止 VLC
+          的时候导致麻烦。 (默认关闭)
+      --rc-host=<字串>         TCP 命令输入
+          尝试通过一个端口输入命令。您可以设置地址和界面㋊          °†被绑定的端口。
+
+ HTTP 远程控制界面
+      --http-host=<字串>       主机地址
+          HTTP 界面将要监听的地址和端口。它默认用于所有网繍
+          œ界面 (0.0.0.0)。如果您只想让 HTTP 界面仅对本机可用ﺍ
+          Œ请输入 127.0.0.1
+      --http-src=<字串>        源目录
+          源目录
+      --http-handlers=<字串>   处理器
+          处理扩展和可执行文件的路径 (例如: php=/usr/bin/php,pl=/
+          usr/bin/perl)。
+      --http-album-art, --no-http-album-art
+                                 导出专辑封面为 /art (默认关闭)
+          允许将当前播放列表项目中的专辑封面导出到 /art 和
+          /art?id=<id> URL。 (默认关闭)
+   HTTP SSL:
+      --http-intf-cert=<字串>  证书文件
+          HTTP 界面 x509 PEM 证书文件 (开启 SSL)。
+      --http-intf-key=<字串>   私匙文件
+          HTTP 界面 x509 PEM 私匙文件。
+      --http-intf-ca=<字串>    根 CA 文件
+          HTTP 界面 x509 PEM 受信任的根 CA 证书文件。
+      --http-intf-crl=<字串>   CRL 文件
+          HTTP 界面证书废止列表文件。
+
+ Windows 服务界面
+      --ntservice-install, --no-ntservice-install
+                                 安装 Windows 服务 (默认关闭)
+          安装服务并退出。 (默认关闭)
+      --ntservice-uninstall, --no-ntservice-uninstall
+                                 卸载 Windows 服务 (默认关闭)
+          卸载 服务并退出。 (默认关闭)
+      --ntservice-name=<字串>  显示服务名称
+          更改服务的显示名称。
+      --ntservice-options=<字串>
+                                 设置选项
+          设置将被服务使用的设置选项 (例如 --foo=bar -- no-
+          foobar)。它应该在安装时指定，这样服务才能被正确配
+          置。
+      --ntservice-extraintf=<字串>
+                                 扩展界面模块
+          服务附属的附加界面。它应该在安装时指定，这样服㋊          Š¡才能被正确配置。使用一个逗号分隔的界面列表。(㋊          …¬共值是: logger, sap, rc, http)
+
+ 音量规格化
+      --norm-buff-size=<整数>  音频缓冲数量
+          这是功率测量时生成的音频缓冲数量。一个较高数值勊          š„缓冲将会增大滤镜的响应时间，但是可能会在短的卍
+          ˜化内降低灵敏度。
+      --norm-max-level=<浮点>  最大音量层级
+          如果平均功率超过 N 缓冲并高于此值是，音量将会被拊          §„格化。此值必须是确定的浮点值。0.5 和 10
+          看上去比较合适。
+
+ 网络同步
+      --netsync-master, --no-netsync-master
+                                 网络主时钟 (默认关闭)
+          设定后此 vlc 实例将根据在主网络 ip 地址上侦听的客䋊          ˆ·端调整同步 (默认关闭)
+      --netsync-master-ip=<字串>
+                                 主服务器 ip 地址
+          用于时钟同步的网络主时钟的 IP 地址。
+      --netsync-timeout=<整数> UDP 超时 (毫秒)
+          在放弃网络数据接收前等待的时间量（单位为毫秒）ዊ          €‚
+
+ TS 复用器 (libdvbpsi)
+      --sout-ts-pid-video=<整数>
+                                 视频 PID
+          分配一个固定的 PID 给视频流。PCR PID 将会自动分配给
+          视频。
+      --sout-ts-pid-audio=<整数>
+                                 音频 PID
+          分配一个固定的 PID 给音频流。
+      --sout-ts-pid-spu=<整数> SPU PID
+          分配一个固定的 PID 给 SPU。
+      --sout-ts-pid-pmt=<整数> PMT PID
+          分配一个固定的 PID 给 PMT
+      --sout-ts-tsid=<整数>    TS ID
+          分配一个固定的传输流 ID。
+      --sout-ts-netid=<整数>   NET ID
+          分配一个固定的网络 ID (用于 SDT 表)
+      --sout-ts-program-pmt=<字串>
+                                 PMT 程序编号
+          为每个 PMT 分配一个程序编号。这需要启用 "设置 PID
+          给 ES 的 ID"。
+      --sout-ts-es-id-pid, --no-sout-ts-es-id-pid
+                                 设置 PID 为 ES 的 ID (默认关闭)
+          如果入站的是 ES 则设置 PID 为其 ID。此项与
+          --ts-es-id-pid 配合使用，并允许输入和输出流有相同的
+          PID。 (默认关闭)
+      --sout-ts-muxpmt=<字串>  Mux PMT (需要 --sout-ts-es-id-pid)
+          定义要添加到每个 pmt 的 pid。这需要开启 "设置 PID
+          给 ES 的 ID"。
+      --sout-ts-sdtdesc=<字串> SDT 描述符 (需要 --sout-ts-es-id-pid)
+          定义每个 SDT 的描述符。这需要开启 "设置 PID 给 ES
+          的 ID"。
+      --sout-ts-alignment, --no-sout-ts-alignment
+                                 数据排列 (默认开启)
+          强制排列在 PES 范围中的所有访问单元。关闭此选项亍
+          š保存相同的带宽但是会造成不兼容。 (默认开启)
+      --sout-ts-shaping=<整数> 定型延迟 (毫秒)
+          用给予的切片长度剪切流，并在两个边界之间保持恒㋊          ®š码率。这可以避免巨大位率峰值，特别是对于参考嶍
+          §来说。
+      --sout-ts-use-key-frames, --no-sout-ts-use-key-frames
+                                 使用关键帧 (默认关闭)
+          如果开启并指定的定型，TS 复用器将会在 I
+          图像的末尾放置分界线。由于此原因用户给予的修整狊          •¿度可能会在没有使用参考帧的情况下变糟糕。在 I
+          帧经常成为流中最大的帧后这将提高定型算法的效率ዊ          €‚ (默认关闭)
+      --sout-ts-pcr=<整数>     PCR 间隔(毫秒)
+          设置将被发送的 PCR  (程序时钟参考) 间隔 (以毫秒为勍
+          •位)。此值应该低于 100 毫秒。(默认为 70 毫秒)。 
+      --sout-ts-bmin=<整数>    最小 B 值 (不推荐使用)
+          此设置属不被推荐使用的选项，已不再被使用
+      --sout-ts-bmax=<整数>    最大 B 值 (不推荐使用)
+          此设置属不被推荐使用的选项，已不再被使用
+      --sout-ts-dts-delay=<整数>
+                                 DTS 延迟 (毫秒)
+          延迟在流中与 SCR 进行比较的的 DTS (解码时间戳) 和
+          PTS (显示时间戳) 数据。这将允许某些在客户端解码器
+          中的缓存。
+      --sout-ts-crypt-audio, --no-sout-ts-crypt-audio
+                                 加密音频 (默认开启)
+          使用 CSA 加密音频 (默认开启)
+      --sout-ts-crypt-video, --no-sout-ts-crypt-video
+                                 加密视频 (默认开启)
+          使用 CSA 加密视频 (默认开启)
+      --sout-ts-csa-ck=<字串>  CSA 密匙
+          CSA 加密密匙。此选项必须是一个 16 字节长度的字串
+          (8 个以十六进制表示的字节)。
+      --sout-ts-csa2-ck=<字串> 第二 CSA 密匙
+          第二个 CSA 加密密匙。这必须是一个 16 字节的字串 (8
+          十六进制字节)。
+      --sout-ts-csa-use=<字串> 在使用的 CSA 密匙
+          在使用的 CSA 加密密匙。它可以是 odd/first/1 (默认) 或
+          even/second/2 中的一个。
+      --sout-ts-csa-pkt=<整数> 要加密的以字节为单位的数据包大㋊                                 °
+          要加密的 TS 数据包大小。在加密之前将来自值的加密
+          例行减法器的 TS 头部。
+
+ PS 复用器
+      --sout-ps-dts-delay=<整数>
+                                 DTS 延迟 (毫秒)
+          延迟在流中与 SCR 进行比较的的 DTS (解码时间戳) 和
+          PTS (显示时间戳) 数据。这将允许某些在客户端解码器
+          中的缓存。
+      --sout-ps-pes-max-size=<整数>
+                                 PES 最大大小
+          设置在生成 MPEG PS 流时所允许的最大 PES 大小。
+
+ 多部件 JPEG 复用器
+
+ MP4/MOV 复用器
+      --sout-mp4-faststart, --no-sout-mp4-faststart
+                                 创建 "快速启动" 文件 (默认开启)
+          创建 "快速启动" 文件。"快速启动" 文件是用于优化下
+          载并允许用户在文件下载时对其进行预览。
+          (默认开启)
+
+ ASF 复用器
+      --sout-asf-title=<字串>  标题
+          要放置到 ASF 注释中的标题。
+      --sout-asf-author=<字串> 作者
+          要放置到 ASF 注释中的作者。
+      --sout-asf-copyright=<字串>
+                                 版权
+          要放置到 ASF 注释中的版权字串。
+      --sout-asf-comment=<字串>
+                                 注释
+          要放置到 ASF 注释中的注释。
+      --sout-asf-rating=<字串> 分级
+          要放置到 ASF 注释中的 "分级"。
+      --sout-asf-packet-size=<整数>
+                                 数据包大小
+          ASF 数据包长度 -- 默认是 4096 字节
+      --sout-asf-bitrate-override=<整数>
+                                 位率覆盖
+          不尝试猜测 ASF 的位率。设置它，将允许您控制
+          Windows Media Player 将如何缓村流式内容。以字节为单位拊          ®¾置音频+视频位率
+
+ MSN 正在播放
+      --msn-format=<字串>      标题格式字串
+          发送到 MSN 的格式字串 {0} 艺术家, {1} 标题, {2}
+          专辑。默认为 "艺术家 - 标题" ({0} - {1})。
+
+ 动态模糊滤镜
+      --blur-factor=<整数 [1 .. 127]>
+                                 模糊因数 (1-127)
+          模糊程度从 1 到 127。
+
+ Mosaic 视频子滤镜
+      --mosaic-alpha=<整数 [0 .. 255]>
+                                 透明
+          mosaic 前景图片的透明度。0 表示透明，255 不透明度
+          (默认)。
+      --mosaic-height=<整数>   高度
+          mosaic 的总计高度，以像素为单位。
+      --mosaic-width=<整数>    宽度
+          mosaic 的总计高度，以像素为单位。
+      --mosaic-align={0 (居中), 1 (左), 2 (右), 4 (上), 8 (下), 5 (左上), 6 (右上), 9 (左下), 10 (右下)}
+                                 Mosaic 排列
+          您可以强制指定 mosaic 在视频上排列 (0=居中、1=左、2=
+          右、4=上、8=下，您也可以混合使用这些值，例如
+          6=4+2 表示右上)。
+      --mosaic-xoffset=<整数>  左上角的 X 坐标
+          mosaic 的坐上角 X 坐标。
+      --mosaic-yoffset=<整数>  坐上角的 Y 坐标
+          mosaic 的左上角 Y 坐标。
+      --mosaic-borderw=<整数>  边框宽度
+          在 miniatures 之间的边框像素宽度。
+      --mosaic-borderh=<整数>  边框高度
+          在 miniatures 之间的边框像素高度。
+      --mosaic-position={0 (自动), 1 (固定), 2 (偏移)}
+                                 位置模块
+          用于 mosaic 的位置模式。自动: 自动选择最佳的行和列
+          数量。固定: 使用用户定义的行和列数量。偏移:
+          为每幅图像使用用户定义的偏移。
+      --mosaic-rows=<整数>     行数
+          在 mosaic 的图像行数 (仅被用于位置模式被设置为
+          "固定" 的模式下)。
+      --mosaic-cols=<整数>     列数
+          在 mosaic 的图像列数 (仅被用于位置模式被设置为
+          "固定" 的模式下)。
+      --mosaic-keep-aspect-ratio, --no-mosaic-keep-aspect-ratio
+                                 保持高宽比 (默认关闭)
+          在调整 mosaic 元素时保持原始高宽比。 (默认关闭)
+      --mosaic-keep-picture, --no-mosaic-keep-picture
+                                 保持原始大小 (默认关闭)
+          保持 mosaic 元素的原始大小。 (默认关闭)
+      --mosaic-order=<字串>    元素顺序
+          您可以强制指定 mosaic 元素的数序。您必须给予一个辍
+          —号分隔的图像 ID 列表。这些 ID 被分配给 "mosaic - 桥"
+          模式。
+      --mosaic-offsets=<字串>  偏移顺序
+          您可以强制指定在 mosaic 中的元素偏移 (x,y)
+          (仅在位置模式被设置为 "偏移" 的情况下)。您必须给㋊          ‡º一个逗号分隔的坐标列表 (例如: 10,10,150,10)。
+      --mosaic-delay=<整数>    延迟
+          来自 mosaic 元素的图片将被安装此值 (以毫秒)
+          被延迟。使用高值的时候您需要加大缓冲的大小。
+
+ 用于将立体声转换为单声道的音频滤镜
+      --sout-mono-downmix, --no-sout-mono-downmix
+                                 使用混缩算法 (默认开启)
+          此选项将选择一个适用于于耳机声道混合气的立体声䋊          µ混缩为单声道的算法。它可以提供在房间中全部扬塍
+          °器的效果。 (默认开启)
+      --sout-mono-channel={0 (左), 1 (右), 2 (左后), 4 (右后), 8 (居中), 5 (左前)}
+                                 选择要保留的声道
+          此选项将静音除了选中声道外的其它所有声道。请从
+          (0=左、1=右、2=左后、3=右后、4=中间、5=左前)
+          中选择一个
+
+ MOD 去复用器 (libmodplug)
+      --mod-noisereduction, --no-mod-noisereduction
+                                 噪点消除 (默认开启)
+          开启噪点消除算法。 (默认开启)
+      --mod-reverb, --no-mod-reverb
+                                 混响 (默认关闭)
+          开启混响 (默认关闭)
+      --mod-reverb-level=<整数 [0 .. 100]>
+                                 混响等级
+          混响等级 (从 0 到 100, 默认值是 0)。
+      --mod-reverb-delay=<整数 [0 .. 1000]>
+                                 混响延迟
+          以毫秒为单位的混响延迟。通常值是从 40 到 200
+          毫秒。
+      --mod-megabass, --no-mod-megabass
+                                 超重低音 (默认关闭)
+          开启超重低音模式 (默认关闭)
+      --mod-megabass-level=<整数 [0 .. 100]>
+                                 超重低音等级
+          超重低音模式等级 (从 0 到 100, 默认值是 0)。
+      --mod-megabass-range=<整数 [10 .. 100]>
+                                 超重低音截至频率
+          超重低音模式截至频率, 以 Hz 为单位。这是超重低音䋊          •ˆ果应用的最大频率。有效值从 10 到 100 Hz。
+      --mod-surround, --no-mod-surround
+                                 环绕声 (默认关闭)
+          环绕声 (默认关闭)
+      --mod-surround-level=<整数 [0 .. 100]>
+                                 环绕声等级
+          环绕效果等级 (从 0 到 100, 默认值是 0)。
+      --mod-surround-delay=<整数 [0 .. 1000]>
+                                 环绕声延迟 (毫秒)
+          环绕声延迟，以毫秒为单位。通常的值是从 5 到 40
+          毫秒。
+
+ Matroska 流去复用器
+      --mkv-use-ordered-chapters, --no-mkv-use-ordered-chapters
+                                 已排序的章节 (默认开启)
+          按照剪辑中指定的顺序播放章节。 (默认开启)
+      --mkv-use-chapter-codec, --no-mkv-use-chapter-codec
+                                 章节编解码 (默认开启)
+          使用剪辑中找到的章节编解码。 (默认开启)
+      --mkv-preload-local-dir, --no-mkv-preload-local-dir
+                                 预载目录 (默认关闭)
+          从相同的目录中预载一系列的 matroska 文件
+          (对损坏文件支持差)。 (默认关闭)
+      --mkv-seek-percent, --no-mkv-seek-percent
+                                 基于百分比非时间的搜索
+                                 (默认关闭)
+          基于百分比非时间的搜索。 (默认关闭)
+      --mkv-use-dummy, --no-mkv-use-dummy
+                                 空元素 (默认关闭)
+          读取并放弃未知的 EBML 元素 (对损坏的文件支持差)。
+          (默认关闭)
+
+ M-JPEG 摄像机去复用器
+      --mjpeg-fps=<浮点>       每秒帧数
+          这是一个在从一个文件播放 MJPEG 时的帧率。为一个实
+          时流 (来自摄像机) 使用 0 (这是默认值)。
+
+ 镜像视频滤镜
+ 将视频切割为两个相同的部分，就像在镜子中一样
+      --mirror-split={0 (垂直), 1 (水平)}
+                                 镜像趋向
+          定义镜像切割的趋向。    可以为垂直或水平
+      --mirror-direction={0 (从左到右/从上到下), 1 (从右到左/从下往上)}
+                                 方向
+          镜像方向
+
+ Marquee 显示
+ 在视频上方显示文本
+      --marq-marquee=<字串>    文本
+          用于显示的文本。(可用的格式字串为:
+          与时间有关的: %Y = 年, %m = 月, %d = 天, %H = 小时, %M =
+          分钟, %S = 秒, ... 与元数据有关: $a = 艺术家, $b =
+          专辑, $c = 版权, $d = 描述, $e = 编码者, $g = 流派, $l =
+          语言, $n = 轨道号, $p = 正在播放, $r = 分级, $s =
+          字幕语言, $t = 标题, $u = url, $A = 日期, $B = 音频位率
+          (以 kb/s), $C = 章节,$D = 持续时间, $F =
+          带路径的完整名称, $I = 标题e, $L = 剩余时间, $N =
+          名称, $O = 音频语言, $P = 位置 (以 %), $R = 分级, $S =
+          音频采样率 (以 kHz), $T = 时间, $U = 发布商, $V = 音量,
+          $_ = 新行) 
+   位置:
+      --marq-x=<整数>          X 偏移
+          从屏幕左边缘开始的 X 偏移。
+      --marq-y=<整数>          Y 偏移
+          从屏幕顶部向下的 Y 偏移。
+      --marq-position={0 (居中), 1 (左), 2 (右), 4 (上), 8 (下), 5 (左上), 6 (右上), 9 (左下), 10 (右下)}
+                                 Marquee 位置
+          您可以强制指定在视频上的 marquee 位置 (0=居中、1=左ዊ          €2=右、4=上、8=下，您也可以混合使用这些值，例如
+          6=4+2 表示右上)。
+   字体:
+      --marq-opacity=<整数 [0 .. 255]>
+                                 不透明度
+          覆盖文本的不透明度 (相对于透明度)。0 = 透明，255 =
+          完全不透明。
+      --marq-color={-268435456 (默认), 0 (黑色), 8421504 (灰色), 12632256 (银色), 16777215 (白色), 8388608 (栗色), 16711680 (红色), 16711935 (紫红色), 16776960 (黄色), 8421376 (橄榄绿), 32768 (绿色), 32896 (凫蓝色), 65280 (酸橙绿色), 8388736 (紫色), 128 (藏青色), 255 (蓝色), 65535 (水蓝色)}
+                                 颜色
+          要视频上渲染的文本颜色。这必须是一个十六进制值
+          (类似 HTML 颜色)。前两个字节是红，然后是绿、栏。#0
+          00000 = 黑、#FF0000 = 红、#00FF00 = 绿、#FFFF00 = 黄 (红 +
+          绿)、#FFFFFF = 白
+      --marq-size=<整数>       字体大小，像素
+          以像素为单位的字体大小。默认是 -1 (使用默认字体墍
+          §小)。
+   其它:
+      --marq-timeout=<整数>    超时
+          marquee 将显示的剩余毫秒数。默认值是 0 (永远保留)。
+      --marq-refresh=<整数>    以毫秒为单位的刷新时间
+          字串更新的间隔毫秒数。这在使用元数据或时间格式䋊          —¶间格式字串序列时很有用。
+
+ 使用 lua 脚本实现的界面
+      --lua-intf=<字串>        Lua 界面
+          要载入的 Lua 界面模块
+      --lua-config=<字串>      Lua 界面配置
+          Lua 界面配置字串。格式是: '["<界面模块名称>"] = {
+          <选项> = <值>, ...}, ...'。
+   Lua HTTP:
+      --http-host=<字串>       主机地址
+          HTTP 界面将要监听的地址和端口。它默认用于所有网繍
+          œ界面 (0.0.0.0)。如果您只想让 HTTP 界面仅对本机可用ﺍ
+          Œ请输入 127.0.0.1
+      --http-src=<字串>        源目录
+          源目录
+      --http-index, --no-http-index
+                                 目录索引 (默认关闭)
+          允许建立目录索引 (默认关闭)
+   Lua Telnet:
+      --telnet-host=<字串>     主机
+          这是界面将要监听的主机。它默认给所有网络界面
+          (0.0.0.0)。如果您希望界面仅对本机可用请输入
+          "127.0.0.1"。
+      --telnet-port=<整数>     端口
+          这是此界面将要监听的 TCP 端口。默认为 4212。
+      --telnet-password=<字串> 密码
+          一个被用于保护此界面的简易管理员密码。默认值是
+          "admin"。
+      --lua-sd=<字串>          (null)
+      --lua-longname=<字串>    (null)
+
+ 标志子滤镜
+ 使用本地图片作为视频中的 logo
+      --logo-file=<字串>       标志文件名
+          要使用的图像文件的完整路径名。格式为 <图像>[,<以䋊          ¯«秒为单位的延迟>[,<alpha>][;<图像>[,<延迟>[,<alpha>]]][;..
+          .]。如果您仅有一个文件，只需在这里指定文件名。
+      --logo-x=<整数>          X 坐标
+          标志的 X 坐标。您可以通过左击它移动标志。
+      --logo-y=<整数>          Y 坐标
+          标志的 Y 坐标。您可以通过左击它移动标志。
+      --logo-delay=<整数>      标志的间隔图像时间为毫秒
+          图像显示间隔时间 0 - 60000 毫秒。
+      --logo-repeat=<整数>     标志动画 # 的循环
+          标志动画的循环数量。-1 = 继续, 0 = 关闭
+      --logo-opacity=<整数 [0 .. 255]>
+                                 logo 透明度
+          logo 透明度 (数值介于 0(完全透明) 与 255(完全不透明)
+          之间)。
+      --logo-position={0 (居中), 1 (左), 2 (右), 4 (上), 8 (下), 5 (左上), 6 (右上), 9 (左下), 10 (右下)}
+                                 标志位置
+          强制指定视频上的标志位置 (0=居中、1=左、2=右、4=上
+          、8=下，您也可以混合使用这些值，例如 6=4+2
+          表示右上)。
+
+ 文件日志
+      --logfile=<字串>         日志文件名
+          指定日志文件名。
+      --logmode={text,html}      日志格式
+          指定日志格式。可用的选择有 "text" (默认) 和 "html"。
+      --log-verbose=<整数>     冗长等级
+          选择日志记录程度，或者 -1 表示使用与通过 --verbose
+          所给出的相同的提示程度。
+
+ RTP/RTSP/SDP 去复用器 (使用 Live555)
+      --rtsp-tcp, --no-rtsp-tcp  使用 RTP over RTSP (TCP) (默认关闭)
+          使用 RTP over RTSP (TCP) (默认关闭)
+      --rtp-client-port=<整数> 客户端端口
+          RTP 源会话使用的端口
+      --rtsp-mcast, --no-rtsp-mcast
+                                 通过 RTSP 强制多播 RTP (默认关闭)
+          通过 RTSP 强制多播 RTP (默认关闭)
+      --rtsp-http, --no-rtsp-http
+                                 通过 HTTP  通道使用 RTSP 和 RTP
+                                 (默认关闭)
+          通过 HTTP  通道使用 RTSP 和 RTP (默认关闭)
+      --rtsp-http-port=<整数>  HTTP 隧道端口
+          用于通过 HTTP 隧道 RTSP/RTP 的端口。
+      --rtsp-caching=<整数>    缓存值 (毫秒)
+          允许您修改 RTSP 流的默认缓存值。此值必须以毫秒为㋊          •位设置。
+      --rtsp-kasenna, --no-rtsp-kasenna
+                                 Kasenna RTSP 方言 (默认关闭)
+          Kasenna 服务器使用一个旧的并且是非标准的 RTSP
+          方言。在您设置了此参数后，VLC 将会尝试使用此方言
+          通信，但在此模式中您不能连接普通的 RTSP 服务器。
+          (默认关闭)
+      --rtsp-wmserver, --no-rtsp-wmserver
+                                 WMServer RTSP 方言 (默认关闭)
+          WMServer 使用了非标准的 RTSP 方言。选择此参数将让
+          VLC 采用一些与 RFC 2326 准则相抵触的选项。
+          (默认关闭)
+      --rtsp-user=<字串>       RTSP 用户名
+          设置用于连接的用户名，如果 url 中未设定用户名或孍
+          †码。
+      --rtsp-pwd=<字串>        RTSP 密码
+          设置用于连接的密码，如果 url 中未设定用户名或密瞍
+          。
+
+ Kate 重叠解码器
+ Kate 是一款文本与图像覆盖层编解码器。
+要渲染复杂的 Kate 流需要 Tiger 渲染库，但即使没有，VLC 也能渲染静态文本和基于图像的字幕。
+注意，在播放新流之前对以下设置的更改将不会生效。有望尽早修复。
+      --kate-formatted, --no-kate-formatted
+                                 格式化字幕 (默认开启)
+          Kate 流 允许文本格式化。VLC 部分支持此功能，但您可
+          以选择禁用所有格式。注意：如果启用了“通过 Tiger
+          渲染”，本选项将不起作用。 (默认开启)
+
+ 内存视频解码器
+      --invmem-width=<整数>    宽度
+          视频内存缓冲宽度。
+      --invmem-height=<整数>   高度
+          视频内存缓冲高度。
+      --invmem-lock=<字串>     锁定函数
+          锁定回调函数的地址。此功能必须返回一个有效的内㋊          ­˜地址供视频渲染器使用。
+      --invmem-unlock=<字串>   取消锁定函数
+          取消锁定回调函数的地址
+      --invmem-data=<字串>     调用数据
+          用于锁定和取消锁定函数的数据
+      --invmem-chroma=<字串>   色度
+          用于内存图像的 4 字节输出色度，例如 "RV32"。
+
+ 热键管理界面
+      --hotkeys-mousewheel-mode={0 (音频控制), 1 (位置控制), 2 (忽略)}
+                                 鼠标轮 X 轴控制
+          鼠标滚轮的 x 轴可控制音量或位置，也可以忽略滚轮⋊          º‹件
+
+ 耳机虚拟空间定位效果
+ 在您只使用一个耳机时给予您在房间中以 7.1 声道扬声器给你带来的临场音频效果。它应该在长时间聆听音乐时能够使您更舒适并不易厌倦。
+它可以工作与从单声道到 7.1 声道的任意源。
+      --headphone-dim=<整数>   性能基准
+          以米为单位的左前扬声器和聆听者的距离。
+      --headphone-compensate, --no-headphone-compensate
+                                 延迟补偿 (默认关闭)
+          物理算法可能会在某些时候扰乱与 lips 移动和语音之狊          —´的同步。如果发生此情况，请调节此设置进行补偿⾍
+          ‚ (默认关闭)
+      --headphone-dolby, --no-headphone-dolby
+                                 不解码杜比环绕声 (默认关闭)
+          在通过此滤镜处理前不解码杜比环绕声编码的流。不䋊          Ž¨荐开启此设置。 (默认关闭)
+
+ H264 视频去复用器
+      --h264-fps=<浮点>        每秒帧数
+          H264 流的期望帧率。
+
+ 高斯视频滤镜
+ 应用色彩梯度与边界侦测特效
+      --gradient-mode={gradient,edge,hough}
+                                 扭曲模式
+          扭曲模式，"倾斜", "边缘" 和 "破碎" 中的一种。
+      --gradient-type=<整数 [0 .. 1]>
+                                 倾斜图像类型
+          倾斜图像类型 (0 或 1)。 0 将使图像变为白色，1
+          将保持颜色。
+      --gradient-cartoon, --no-gradient-cartoon
+                                 应用卡通效果 (默认开启)
+          应用卡通效果。它仅能用于 "斜度" 和 "边缘" 模式。
+          (默认开启)
+
+ Goom 效果
+      --goom-width=<整数>      显示宽度
+          这将允许您设置 Goom 显示的分辨率 (较高的分辨率比輍
+          ƒ漂亮但是要消耗更多的 CPU 资源)。
+      --goom-height=<整数>     显示高度
+          这将允许您设置 Goom 显示的分辨率 (较高的分辨率比輍
+          ƒ漂亮但是要消耗更多的 CPU 资源)。
+      --goom-speed=<整数>      Goom 动画速度
+          这允许您设置动画的速度 (在 1 到 10 之间，默认为 6).
+
+ GnuTLS 传输层安全
+      --gnutls-cache-timeout=<整数>
+                                 继续 TLS 会话的期满时间
+          它可以缓冲继续 TLS 会话。期满时间将以秒为单位保嫍
+          ˜在此缓存内。
+      --gnutls-cache-size=<整数>
+                                 继续 TLS 会话数
+          这是可以被缓存的最大继续 TLS 会话数。
+
+ 鼠标手势控制界面
+      --gestures-threshold=<整数>
+                                 运动限制 (10-100)
+          用于记录鼠标手势所需的移动数量。
+      --gestures-button={left,middle,right}
+                                 触发按钮
+          用于鼠标手势的触发按钮。
+
+ 高斯模糊滤镜
+ 添加模糊特效
+      --gaussianblur-sigma=<浮点>
+                                 高斯标准离差
+          高斯的标准离差。像素将按照像素 3*sigma
+          任意方向进行模糊。
+
+ Freetype2 字体渲染器
+      --freetype-font=<字串>   字体
+          您要使用字体的字体集
+      --freetype-fontsize=<整数>
+                                 以像素为单位的字体大小
+          这是将会在视频上渲染的默认字体大小。如果设置任䋊          „不等于 0 的值就将会覆盖相对字体大小。
+      --freetype-opacity=<整数 [0 .. 255]>
+                                 不透明度
+          将要在视频上渲染的文本不透明度
+          (相对于透明度)。0 = 透明、255 = 完全不透明。
+      --freetype-color={0 (黑色), 8421504 (灰色), 12632256 (银色), 16777215 (白色), 8388608 (栗色), 16711680 (红色), 16711935 (紫红色), 16776960 (黄色), 8421376 (橄榄绿), 32768 (绿色), 32896 (凫蓝色), 65280 (酸橙绿色), 8388736 (紫色), 128 (藏青色), 255 (蓝色), 65535 (水蓝色)}
+                                 文本默认色彩
+          要视频上渲染的文本颜色。这必须是一个十六进制值
+          (类似 HTML 颜色)。前两个字节是红，然后是绿、蓝。#0
+          00000 = 黑、#FF0000 = 红、#00FF00 = 绿、#FFFF00 = 黄 (红 +
+          绿)、#FFFFFF = 白
+      --freetype-rel-fontsize={20 (较小), 18 (小), 16 (普通), 12 (大), 6 (较大)}
+                                 相对字体大小
+          这是一个将被在视频上渲染的默认的相对字体大小。㋊          ¦‚果设置了绝对字体大小，相对大小将被覆盖。
+      --freetype-effect={1 (背景), 2 (轮廓), 3 (胖轮廓)}
+                                 字体效果
+          它可以应用效果到被渲染的字体中以改善可读性。
+      --freetype-yuvp, --no-freetype-yuvp
+                                 使用 YUVP 渲染器 (默认关闭)
+          此渲染器字体使用 "苍白的 YUV"。此选项仅在您要编码
+          到 DVB 字幕时才需要 (默认关闭)
+
+ 文件夹元数据
+      --album-art-filename=<字串>
+                                 专辑封面文件名
+          用于在当前目录寻找专辑封面的文件名
+
+ FluidSynth MIDI 合成器
+      --soundfont=<字串>       音源 (必须)
+          用于软件合成器的音源文件。
+
+ 文件输入
+      --file-caching=<整数>    缓存值 (毫秒)
+          文件的缓存值，以毫秒为单位。
+      --network-caching=<整数> 网络额外缓存值 (ms)
+          远程文件额外增加的缓存值，以毫秒为单位。
+      --recursive={none,collapse,expand}
+                                 子目录行为
+          选择是否要展开子目录。
+无: 不在播放列表中显示子勊          ›®录。
+收缩: 子目录显示但是只在播放前展开。
+展开:
+           展开所有子目录。
+
+      --ignore-filetypes=<字串>
+                                 已忽略扩展
+          在打开一个目录时这些扩展名将不会被添加到播放列拊          ¡¨中。
+例如在您添加的目录中含有播放列表文件时就狊          ž常有用。使用逗号分隔的扩展名列表。
+
+ 伪视频解码器
+      --fake-file=<字串>       图像文件
+          用于伪装输入的图片文件路径。
+      --fake-file-reload=<整数>
+                                 重新载入图像文件
+          每 n 秒重新载入图像文件。
+      --fake-width=<整数>      视频宽度
+          输出视频宽度。
+      --fake-height=<整数>     视频高度
+          输出视频高度。
+      --fake-keep-ar, --no-fake-keep-ar
+                                 保持高宽比 (默认关闭)
+          将宽度和高度作为最大值。 (默认关闭)
+      --fake-aspect-ratio=<字串>
+                                 背景高宽比
+          图像文件的高宽比 (4:3、16:9)。默认是方块像素。
+      --fake-deinterlace, --no-fake-deinterlace
+                                 反交错视频 (默认关闭)
+          在载入它之前反交错图像。 (默认关闭)
+      --fake-deinterlace-module={deinterlace,ffmpeg-deinterlace}
+                                 反交错模块
+          要使用的反交错模块。
+      --fake-chroma=<字串>     使用了色度
+          强制为输出使用指定的色度。默认是 I420。
+
+ 释放 RGB 组件视频滤镜
+      --extract-component={16711680 (红色), 65280 (绿色), 255 (蓝色)}
+                                 要释放的 RGB 部分
+          要释放的 RGB 部分。0 为红、1 为绿、2 为蓝。
+
+ MPEG-I/II/4 / A52 / DTS / MLP 音频
+      --es-fps=<浮点>          每秒帧数
+          这是在播放 MPEG 视频通量流时的备选帧率。
+
+ 擦除视频滤镜
+ 以图片为掩体移除视频区域
+      --erase-mask=<字串>      图像掩码
+          图像掩码。alpha 值大于 50% 的像素将被消除。
+      --erase-x=<整数>         X 坐标
+          掩码的 X 坐标。
+      --erase-y=<整数>         Y 坐标
+          掩码的 Y 坐标。
+
+ 10 波段均衡器
+      --equalizer-preset={flat,classical,club,dance,fullbass,fullbasstreble,fulltreble,headphones,largehall,live,party,pop,reggae,rock,ska,soft,softrock,techno}
+                                 均衡器预设
+          用于均衡器的预设。
+      --equalizer-bands=<字串> 带宽增益
+          不使用预设，但是手动指定带宽。您需要提供 -20dB
+          与 20dB 之间的 10 个值，由空格分隔，例如 "0 2 4 2 0 -2
+          -4 -2 0 2"。
+      --equalizer-2pass, --no-equalizer-2pass
+                                 双重 (默认关闭)
+          过滤音频两次。这将提供更好的效果。 (默认关闭)
+      --equalizer-preamp=<浮点>
+                                 全局增益
+          设置以 dB 为单位的全局增益 (-20 ... 20).
+
+ DVDRead 输入 (无菜单支持)
+      --dvdread-angle=<整数>   DVD 视角
+          默认 DVD 视角。
+      --dvdread-caching=<整数> 缓存值(毫秒)
+          DVD 缓存值。此值应该以毫秒为单位设置。
+
+ DVD 导航输入
+      --dvdnav-angle=<整数>    DVD 视角
+          默认 DVD 视角。
+      --dvdnav-caching=<整数>  缓存值(毫秒)
+          DVD 缓存值。此值应该以毫秒为单位设置。
+      --dvdnav-menu, --no-dvdnav-menu
+                                 直接在菜单中启动 (默认开启)
+          直接在主菜单中启动 DVD。这将尝试跳过所有不需要的
+          警告画面。 (默认开启)
+
+ DVB 字幕解码器
+      --dvbsub-position={0 (居中), 1 (左), 2 (右), 4 (上), 8 (下), 5 (左上), 6 (右上), 9 (左下), 10 (右下)}
+                                 子画面位置
+          您可以强制指定视频上子画面的位置 (0=居中、1=左、2
+          =右、4=上、8=下，您也可以合并使用这些值，例如
+          6=右上)。
+      --dvbsub-x=<整数>        解码 X 坐标
+          渲染字幕的 X 坐标
+      --dvbsub-y=<整数>        解码 Y 坐标
+          渲染字幕的 Y 坐标
+      --sout-dvbsub-x=<整数>   编码 X 坐标
+          编码字幕的 X 坐标
+      --sout-dvbsub-y=<整数>   编码 Y 坐标
+          编码字幕的 Y 坐标
+
+ 空界面功能
+   空界面:
+      --dummy-quiet, --no-dummy-quiet
+                                 不打开 DOS 命令行界面 (默认关闭)
+          按默认空界面插件将会启动一个 DOS 命令行窗口。开厍
+          ¯静默模式将不会产生此命令窗口但是也可能使您在没
+          有视频窗口打开的情况下想关闭 VLC 时遇到麻烦。
+          (默认关闭)
+   空界面其:
+      --dummy-save-es, --no-dummy-save-es
+                                 保存 raw 编解码器数据 (默认关闭)
+          保存 raw 编解码器数据，如果您已经选择/强制在主选狊          ¡¹中的空编码器。 (默认关闭)
+   空视频输出:
+      --dummy-chroma=<字串>    空图像色度格式
+          强制强制空视频输出创建的图像使用指定的色度格式⋊          »£替选择最有效的格式改进性能。
+
+ DTS 逻辑声学音频解码器
+      --dts-dynrng, --no-dts-dynrng
+                                 DTS 动态范围压限 (默认开启)
+          动态范围压限将使很响的声音变得柔和，并且是柔和勊          š„声音便的更响亮，所以您可以在没有任何人打扰的喍
+          ˆ杂环境中更容易的聆听音乐。如果您关闭了动态范围
+          压限，播放将会更接近于在电影院或在聆听室中的效䋊          žœ。 (默认开启)
+
+ DirectShow 输入
+      --dshow-caching=<整数>   缓存值(毫秒)
+          DirectShow 串流的缓存值。此值应以毫秒为单位。
+      --dshow-vdev={,none}       适配设备名称
+          将被 DirectShow 插件使用的视频设备名称。如果您不指㋊          ®š任何设备，则将使用默认的设备。
+      --dshow-adev={,none}       音频设备名称
+          将被 DirectShow 插件使用的音频设备名称。如果您不指㋊          ®š任何设备，则将使用默认的设备。
+      --dshow-size=<字串>      视频大小
+          将被 DirectShow 插件显示的视频大小。如果您不指定任⋊          ½•数值，将使用您设备的默认尺寸。您可以指定一个枍
+          ‡准尺寸  (cif, d1, ...) 或 <宽度>x<高度>。
+      --dshow-aspect-ratio=<字串>
+                                 图像宽高比 n:m
+          定义要使用的图像宽高比。默认为 4:3
+      --dshow-chroma=<字串>    适配输入色度格式
+          强制 DirectShow 视频输入使用一个指定的色度格式 (eg.
+          I420 (默认), RV24, 等)
+      --dshow-fps=<浮点>       适配输入帧率
+          强制 DirectShow 视频输入使用一个指定的帧率 (例如 0
+          表示默认、25, 29.97, 50, 59.94, 等)
+      --dshow-config, --no-dshow-config
+                                 设备属性 (默认关闭)
+          在开始流之前显示选定设备的属性对话框。
+          (默认关闭)
+      --dshow-tuner, --no-dshow-tuner
+                                 调谐器属性 (默认关闭)
+          显示调谐器属性 [频道选择] 页。 (默认关闭)
+      --dshow-tuner-channel=<整数>
+                                 调谐 TV 频道
+          设置调谐器将要设置的 TV 频道 (0 表示默认)。
+      --dshow-tuner-country=<整数>
+                                 调谐器国家代码
+          设置用于确认当前频道映射频率的国家代码 (0
+          表示默认)。
+      --dshow-tuner-input={0 (默认), 1 (电缆), 2 (天线)}
+                                 调谐器输入类型
+          选择调谐器输入类型 (电缆/天线)。
+      --dshow-video-input=<整数>
+                                 视频输入 pin
+          选择视频输入源，例如混合、s-video 或调谐器。由于轍
+          ™些设置是由硬件确定的，您应该在 "设备设置"
+          区域查找较佳的设置。并在这里使用这些数值。-1
+          表示设置将不会被更改。
+      --dshow-video-output=<整数>
+                                 视频输出 pin
+          选择视频输出类型。请查看 "视频输入" 选项。
+      --dshow-audio-input=<整数>
+                                 音频输入 pin
+          选择音频输入源。请查看 "视频输入" 选项。
+      --dshow-audio-output=<整数>
+                                 音频输入 pin
+          请选择音频输出类型。查看 "视频输入" 选项。
+      --dshow-amtuner-mode={0 (默认), 1 (TV), 2 (FM 广播), 4 (AM 广播), 8 (DSS)}
+                                 AM 调谐器模式
+          AM 调谐器模式。可以被设置为默认 (0), TV (1),AM 广播
+          (2), FM 广播 (3) 或 DSS (4)。
+      --dshow-audio-channels=<整数>
+                                 声道数量
+          按给予声道数选择音频输入格式 (如果非  0)
+      --dshow-audio-samplerate=<整数>
+                                 音频采样率
+          使用给予的采样率选择音频输入格式 (如果非 0)
+      --dshow-audio-bitspersample=<整数>
+                                 音频每采样未
+          使用给予的位/采样选择音频输入格式 (如果非 0)
+
+ DirectX (DirectDraw) 视频输出
+ 推荐供 Windows XP 使用的视频输出。与 Vista 的 Aero 接口不兼容
+      --directx-hw-yuv, --no-directx-hw-yuv
+                                 使用硬件 YUV->RGB 转换 (默认开启)
+          尝试为 YUV->RGB 转换使用硬件加速。此选项在使用覆盖
+          时没有任何效果。 (默认开启)
+      --directx-use-sysmem, --no-directx-use-sysmem
+                                 在系统内存中使用系统缓存
+                                 (默认关闭)
+          在系统内存中创建视频缓冲代替视频内存。不推荐这⋊          ¹ˆ做，因为通常使用显存将从硬件加速
+          (类似调整大小或 YUV->RGB 转换) 中获益。此选项在使用
+          覆盖时将没有任何效果。 (默认关闭)
+      --directx-3buffering, --no-directx-3buffering
+                                 为覆盖使用三重缓冲 (默认开启)
+          在使用 YUV 覆盖时尝试使用三重缓冲。这将会有更高瘍
+          „视频质量 (不闪烁)。 (默认开启)
+      --directx-device={}        想要的显示设备名称
+          在一个多显示器设置中您可以指定您要视频窗口在哪㋊          °设备中显示的 Windows 设备名称。例如，"\\.\DISPLAY1"
+          或 "\\.\DISPLAY2"。
+
+ Direct3D 视频输出
+ 推荐供 Windows Vista 及更新版本使用的视频输出
+      --direct3d-desktop, --no-direct3d-desktop
+                                 启用桌面模式 (默认关闭)
+          桌面模式允许您在桌面显示视频。 (默认关闭)
+
+ Dirac 视频编码器使用 dirac-research 库
+      --sout-dirac-quality=<浮点 [0.000000 .. 10.000000]>
+                                 恒定质量因子
+          如位率=0，使用此数值以得到恒定质量
+      --sout-dirac-bitrate=<整数 [-1 .. 2147483647]>
+                                 CBR 位率 (kb/秒)
+          大于零的值将启用常位率模式
+      --sout-dirac-lossless, --no-sout-dirac-lossless
+                                 启用无损编码 (默认关闭)
+          无损编码将忽略码率和质量设置，以完美再现原始质狊          ‡ (默认关闭)
+      --sout-dirac-prefilter={none,cwm,rectlp,diaglp}
+                                 预过滤器
+          启用自适应预过滤
+      --sout-dirac-prefilter-strength=<整数 [0 .. 10]>
+                                 预过滤总量
+          较高数值意味着更多的预过滤
+      --sout-dirac-chroma-fmt={420,422,444}
+                                 色度格式
+          选择色度格式将强行将视频转换为所选格式
+      --sout-dirac-l1-sep=<整数 [-1 .. 2147483647]>
+                                 'P' 帧间的距离
+          'P' 帧间的距离
+      --sout-dirac-num-l1=<整数 [-1 .. 2147483647]>
+                                 每 GOP 的 'P' 帧数目
+          每 GOP 的 'P' 帧数目
+      --sout-dirac-coding-mode={auto,progressive,field}
+                                 图片编码模式
+          分场编码即隔行扫描的场将被分别编码，而不是伪逐拊          ¡Œ扫描帧
+      --sout-dirac-mv-prec={1,1/2,1/4,1/8}
+                                 动作向量精确度
+          运动矢量的精度（单位为像素）。
+      --sout-dirac-mc-blk-width=<整数 [-1 .. 2147483647]>
+                                 运动补偿块宽度
+      --sout-dirac-mc-blk-height=<整数 [-1 .. 2147483647]>
+                                 mc-blk-height
+      --sout-dirac-mc-blk-overlap=<整数 [-1 .. 100]>
+                                 块重叠 (%)
+          各移动块与附近块重叠的量
+      --sout-dirac-mc-blk-xblen=<整数 [-1 .. 2147483647]>
+                                 横向块长
+          总水平块长（含重叠部分）
+      --sout-dirac-mc-blk-yblen=<整数 [-1 .. 2147483647]>
+                                 纵向块长
+          总垂直块长（含重叠部分）
+      --sout-dirac-me-simple-search=<字串>
+                                 简单 ME 搜索区域 x:y
+          (不推荐) 在 +/-x, +/-y 的区间内进一次简易的 (非分级)
+          块匹配运动向量搜索
+      --sout-dirac-me-combined, --no-sout-dirac-me-combined
+                                 三原色动作估计 (默认开启)
+          将色度用作运动估算过程的一部分 (默认开启)
+      --sout-dirac-dwt-intra=<整数 [-1 .. 6]>
+                                 图片内 DWT 滤镜
+          图片内 DWT 滤镜
+      --sout-dirac-dwt-inter=<整数 [-1 .. 6]>
+                                 图片间 DWT 滤镜
+          图片间 DWT 滤镜
+      --sout-dirac-dwt-depth=<整数 [-1 .. 4]>
+                                 DWT 反复数目
+          又称 DWT 级别
+      --sout-dirac-multi-quant=<整数 [-1 .. 1]>
+                                 启用多个量化器
+          启用多重子带量化 (每个码块一次)
+      --sout-dirac-spartition=<整数 [-1 .. 1]>
+                                 启用空间化分割
+          启用空间化分割
+      --sout-dirac-noac, --no-sout-dirac-noac
+                                 禁用算术编码 (默认关闭)
+          改用可变长码，码率非常高时很有用 (默认关闭)
+      --sout-dirac-cpd=<浮点>  每 cycle 角度值
+          每 cycle 角度值
+
+ 文件转储器
+      --demuxdump-file=<字串>  转储文件名
+          raw 流将被转储的文件名。
+      --demuxdump-append, --no-demuxdump-append
+                                 附加到已存在的文件 (默认关闭)
+          如果文件已经存在，它将不会被覆盖。 (默认关闭)
+
+ 反交错视频滤镜
+   显示:
+      --filter-deinterlace-mode={discard,blend,mean,bob,linear,x,yadif,yadif2x}
+                                 反交错模式
+          要用于本地播放的反交错模式。
+   流:
+      --sout-deinterlace-mode={discard,blend,mean,bob,linear,x,yadif,yadif2x}
+                                 串流反交错模式
+          要用于串流的反交错模式。
+
+ 裁剪视频滤镜
+ 移除视频边缘，并用黑边替代
+      --crop-geometry=<字串>   裁剪几何图像 (像素)
+          设置要裁剪的几何区域。 这将被设置为 <宽> x <高> +
+          <左便宜> + <上偏移>。
+      --autocrop, --no-autocrop  自动裁剪 (默认关闭)
+          自动检测黑并裁剪它们。 (默认关闭)
+      --autocrop-ratio-max=<整数 [0 .. 15000]>
+                                 最大比率 (x 1000)
+          最大图像比率。裁剪插件将不会自动裁剪高于比率的㋊          ›¾像 (例如一个过于 "平整" 的图像) 。值 x1000: 1333
+          意味着 4/3。
+      --crop-ratio=<整数 [0 .. 15000]>
+                                 手动比率
+          强制一个比率 (0 为自动)。值 x1000: 1333 意味着 4/3。
+      --autocrop-time=<整数>   要更改的图像数量
+          检测到多少数量的相同检测率 (与上次检测到比率有嵍
+          ®异) 来当作比率已被更改或触发重新裁剪。
+      --autocrop-diff=<整数>   更改的行数
+          检测到作为更改或触发重新裁剪的最小的差异行数。
+      --autocrop-non-black-pixels=<整数>
+                                 非黑像素的数量
+          将测到作为行为黑色的最大一行中的非黑像素数量。
+      --autocrop-skip-percent=<整数 [0 .. 100]>
+                                 跳过百分比 (%)
+          在检测黑行时的行百分比。这将允许跳过在黑框中的䋊           ‡志并任意的裁剪它们。
+      --autocrop-luminance-threshold=<整数 [0 .. 128]>
+                                 亮度阀值
+          将一个像素作为黑的最大亮度 (0-255)。
+
+ 视频比例滤镜
+   裁剪:
+      --croppadd-croptop=<整数 [0 .. 2147483647]>
+                                 从顶部开始裁剪的像素
+          从图像顶部开始裁剪的图像数量。
+      --croppadd-cropbottom=<整数 [0 .. 2147483647]>
+                                 从底部开始裁剪的像素
+          从图像底部开始裁剪的图像数量。
+      --croppadd-cropleft=<整数 [0 .. 2147483647]>
+                                 从左侧开始裁剪的像素
+          从图像左侧开始裁剪的图像数量。
+      --croppadd-cropright=<整数 [0 .. 2147483647]>
+                                 从右侧开始裁剪的像素
+          从图像右侧开始裁剪的图像数量。
+   Padd:
+      --croppadd-paddtop=<整数 [0 .. 2147483647]>
+                                 要添加到顶部的像素数量
+          在裁剪后要添加到顶部的像素数量。
+      --croppadd-paddbottom=<整数 [0 .. 2147483647]>
+                                 要添加到底部的像素
+          在裁剪后要添加到底部的像素数量。
+      --croppadd-paddleft=<整数 [0 .. 2147483647]>
+                                 要添加到左侧的像素
+          在裁剪后要添加到左侧的像素数量。
+      --croppadd-paddright=<整数 [0 .. 2147483647]>
+                                 要添加到右侧的像素
+          在裁剪后要添加到右侧的像素数量。
+
+ 色彩阀值滤镜
+ 选择视频中的颜色
+      --colorthres-color={16711680 (红色), 16711935 (紫红色), 16776960 (黄色), 65280 (酸橙绿色), 255 (蓝色), 65535 (水蓝色)}
+                                 颜色
+          类似这样的色彩将被保留，其它的将会被灰度化。这㋊          ¿…须是一个十六进制的值 (类似 HTML 颜色)。前两个字舍
+          ‚是红，然后是绿、蓝。#000000 = 黑、#FF0000 =
+          红、#00FF00 = 绿、#FFFF00 = 黄 (红 + 绿)、#FFFFFF = 白
+      --colorthres-saturationthres=<整数>
+                                 饱和度阀值
+      --colorthres-similaritythres=<整数>
+                                 相似阀值
+
+ 克隆视频滤镜
+ 将视频复制到多个窗口和/或视频输出模块
+      --clone-count=<整数>     克隆数量
+          要克隆的视频窗口数量。
+      --clone-vout-list=<字串> 视频输出模块
+          您可以指定用于克隆的视频输出模块。使用一个逗号㋊          ˆ†隔的模块列表。
+
+ 声音延迟
+ 为声音添加延迟效果
+      --delay-time=<浮点>      延迟时间
+          平均延时的毫秒数。注意平均
+      --sweep-depth=<浮点>     扫描深度
+          最大扫描深度，单位为毫秒。因此，扫描间隔为延时
+          +/- 扫描深度。
+      --sweep-rate=<浮点>      扫描率
+          扫描深度的变化率，以毫秒为单位，播放时每秒的位勊          §»
+      --feedback-gain=<浮点 [-0.900000 .. 0.900000]>
+                                 反馈增益
+          反馈循环中的增益
+      --wet-mix=<浮点 [-0.999000 .. 0.999000]>
+                                 湿混
+          延迟信号层级
+      --dry-mix=<浮点 [-0.999000 .. 0.999000]>
+                                 干混
+          输入信号层级
+
+ 音频 CD 输入
+      --cdda-caching=<整数>    缓存值(毫秒)
+          音频 CD 的默认缓存值。此值的应该以毫秒为单位设置
+          。
+      --cdda-track=<整数>      (null)
+      --cdda-first-sector=<整数>
+                                 (null)
+      --cdda-last-sector=<整数>
+                                 (null)
+      --cddb-server=<字串>     CDDB 服务器
+          要使用的 CDDB 服务器地址。
+      --cddb-port=<整数>       CDDB 端口
+          要使用的 CDDB 服务器端口。
+
+ Canvas 视频滤镜
+ 自动调整大小并为视频加边
+      --canvas-width=<整数 [0 .. 2147483647]>
+                                 输出宽度
+          输出 (canvas) 图像宽度
+      --canvas-height=<整数 [0 .. 2147483647]>
+                                 输出高度
+          输出 (canvas) 图像高度
+      --canvas-aspect=<字串>   输出图像宽高比
+          设置 canvas 的画面宽高比。如果留空，canvas 将假定
+          SAR 与输入画面的相同。
+      --canvas-padd, --no-canvas-padd
+                                 视频加边 (默认开启)
+          如果启用，视频将经度量加边以适应 canvas。否则，视
+          频将经度量裁剪以适应 canvas。 (默认开启)
+
+ 蓝屏视频滤镜
+ 此效果，又称为 "绿屏" 或 "关键色度" 在背景上混合 "蓝色部分" 的 mosaic 图像前景 (类似于天气预报)。您可以为混合选择 "关键" 色彩 (默认为蓝色)。 
+      --bluescreen-u=<整数 [0 .. 255]>
+                                 蓝屏 U 值
+          蓝屏关键色 (以 YUV 值) 的 "U" 值。从 0 到 255。默认是
+          120 为蓝。
+      --bluescreen-v=<整数 [0 .. 255]>
+                                 蓝屏 V 值
+          蓝屏关键色 (以 YUV 值) 的 "V" 值。从 0 到 255。默认是
+          90 为蓝。
+      --bluescreen-ut=<整数 [0 .. 255]>
+                                 蓝屏 U 阀值
+          用于 U 平面的蓝屏混合器色调变化阀值。值在 10 到
+          20 看上去比较明智。
+      --bluescreen-vt=<整数 [0 .. 255]>
+                                 蓝屏 V 阀值
+          用于 V 平面的蓝屏混合器色调变化阀值。值在 10 到
+          20 看上去比较明智。
+
+ 混合基准滤镜
+   基准:
+      --blendbench-loops=<整数>
+                                 要混合的时间编号
+          将要执行混合的时间编号
+      --blendbench-alpha=<整数 [0 .. 255]>
+                                 混合图像的 Alpha 值
+          要混合图像的 Alpha 值
+   基础图像:
+      --blendbench-base-image=<字串>
+                                 要混合的图像
+          将被混合的图像
+      --blendbench-base-chroma=<字串>
+                                 基础图像的色度
+          将被载入的基础图像色度
+   混合图像:
+      --blendbench-blend-image=<字串>
+                                 将被混合的图像
+          将被混合到基础图像的图像
+      --blendbench-blend-chroma=<字串>
+                                 混合图像的色度
+          将被载入的混合图像色度
+
+ DirectShow DVB 输入
+      --dvb-caching=<整数>     缓存值(毫秒)
+          DVB 流的缓存值。此值应该以毫秒为单位设置。
+      --dvb-frequency=<整数>   转发器/多播频率
+          DVB-S 为 kHz 或 DCB-C/T 为 Hz
+      --dvb-network-name=<字串>
+                                 网络名称
+          系统调节空间中的唯一网络名称
+      --dvb-create-name=<字串> 要建立的网络名称
+          在系统调节空间中建立一个唯一的名称
+      --dvb-adapter=<整数>     要调节的适配卡
+          适配卡在目录中有一个命名为 /dev/dvb/adapter[n] 并且
+          n>=0 的设备文件。
+      --dvb-inversion={-1 (未定义), 0 (关), 1 (开), 2 (自动)}
+                                 倒转模式
+          倒转模式 [0=关, 1=开, 2=自动]
+      --dvb-polarisation={H,V,L,R}
+                                 卫星极化
+          卫星极化 [H/V/L/R]
+      --dvb-network-id=<整数>  网络标识符
+      --dvb-azimuth=<整数>     卫星方位角
+          以第十角度为角度为单位的卫星方位角
+      --dvb-elevation=<整数>   卫星立体图
+          以第十角度为单位的卫星立体图
+      --dvb-longitude=<整数>   卫星经度
+          以第十角度为单位的卫星经度，-ve=西
+      --dvb-range=<字串>       卫星范围代码
+          卫星范围代码由生产商定义，例如 DISEqC 切换代码
+      --dvb-lnb-lof1=<整数>    天线 lnb_lof1 (kHz)
+          低波段本地 Osc 频率，以 kHz 为单位 (通常是 9.75GHz)
+      --dvb-lnb-lof2=<整数>    天线 lnb_lof2 (kHz)
+          高波段本地 Osc 频率，以 kHz 为单位 (通常是 10.6GHz)
+      --dvb-lnb-slof=<整数>    天线 lnb_slof (kHz)
+          低噪音快切换频率，以  kHz 为单位 (通常是 11.7GHz)
+      --dvb-srate=<整数>       以 kHz 为单位的符号率
+      --dvb-modulation={-1 (未定义), 16 (QAM16), 32 (QAM32), 64 (QAM64), 128 (QAM128), 256 (QAM256), 10002 (BPSK), 10004 (QPSK), 20008 (8VSB), 20016 (16VSB)}
+                                 调制类型
+          QAM, PSK 或 VSB 调节方法
+      --dvb-major-channel=<整数>
+                                 ATSC 主要频道
+          ATSC 主要频道
+      --dvb-minor-channel=<整数>
+                                 ATSC 次要频道
+          ATSC 次要频道
+      --dvb-physical-channel=<整数>
+                                 ATSC 物理频道
+          ATSC 物理频道
+      --dvb-code-rate-hp={-1 (未定义), 1 (1/2), 2 (2/3), 3 (3/4), 4 (5/6), 5 (7/8)}
+                                 FEC 比率
+          FEC 率包括 DVB-T 高优先级串流 FEC 率
+      --dvb-code-rate-lp={-1 (未定义), 1 (1/2), 2 (2/3), 3 (3/4), 4 (5/6), 5 (7/8)}
+                                 地面低优先级流代码率 (FEC)
+          低优先级 FEC 率 [未定义,1/2,2/3,3/4,5/6,7/8]
+      --dvb-bandwidth={-1 (未定义), 6 (6 MHz), 7 (7 MHz), 8 (8 MHz)}
+                                 地面波段
+          地面波段 [0=自动,6,7,8 单位为 MHz]
+      --dvb-guard={-1 (未定义), 4 (1/4), 8 (1/8), 16 (1/16), 32 (1/32)}
+                                 地面保护间隔
+          保护间隔 [未定义,1/4,1/8,1/16,1/32]
+      --dvb-transmission={-1 (未定义), 2 (2k), 8 (8k)}
+                                 地面传输模式
+          传输模式 [未定义,2k,8k]
+      --dvb-hierarchy={-1 (未定义), 1 (1), 2 (2), 4 (4)}
+                                 地面控制模式
+          控制 alpha 值 [未定义,1,2,4]
+
+ 球视频滤镜
+ 增强现实球游戏
+      --ball-color={red,green,blue,white}
+                                 球的颜色
+          球的颜色，可以是 "red", "blue" 和 "green" 中的一个。
+      --ball-speed=<整数 [1 .. 15]>
+                                 球速
+          设置球速，位移值即每帧移动像素数。
+      --ball-size=<整数 [5 .. 30]>
+                                 球的尺寸
+          设置球的尺寸，其半径的像素数
+      --ball-gradient-threshold=<整数 [1 .. 200]>
+                                 梯度阀值
+          设置边界计算的梯度阀值。
+      --ball-edge-visible, --no-ball-edge-visible
+                                 边界可见性 (默认开启)
+          设置边界可见度。 (默认开启)
+
+ AVI 去复用器
+      --avi-interleaved, --no-avi-interleaved
+                                 强制交错模式 (默认关闭)
+          前置交错模式。 (默认关闭)
+      --avi-index={0 (询问操作), 1 (总是修复), 2 (不修复)}
+                                 强制创建索引
+          为 AVI 文件创建一个索引。如果您的 AVI
+          文件已损坏或不完整 (无法搜索) 请使用此功能。
+
+ FFmpeg 音频/视频解码器
+ FFmpeg 库提供了多个音频和视频解码器/编码器。它包含了 (MS)MPEG4, DivX, SV1,H261, H263, H264, WMV, WMA, AAC, AMR, DV, MJPEG 以及其他编解码器
+   正在解码:
+      --ffmpeg-dr, --no-ffmpeg-dr
+                                 直接渲染 (默认开启)
+          直接渲染 (默认开启)
+      --ffmpeg-error-resilience=<整数>
+                                 弹性错误
+          Ffmpeg 可以执行弹性错误。
+但是如果遇到了一个有问頍
+          ˜的编码器 (例如 M$ 的 ISO MPEG-4 编码器) 这就可能产生㋊          ¾ˆ多错误。
+有效值范围从 0 到 4 (0 表示关闭所有弹性狊          ”™误)。
+      --ffmpeg-workaround-bugs=<整数>
+                                 工作区 bug
+          尝试修正一些问题:
+1  自动检测
+2  旧 msmpeg4
+4  xvid
+          反交错
+8  ump4 
+16 未填充
+32 ac vlc
+64 Qpel 色度。
+这必须䋊          ˜¯值的和。例如要修正 "ac vlc" 和 "ump4"，则输入 40。
+      --ffmpeg-hurry-up, --no-ffmpeg-hurry-up
+                                 紧急 (默认开启)
+          解码器在时间不充足的情况下可能部分解码器或跳过㋊          ¸§。在 CPU 不是很强大时这非常有用，但是可能会破坏
+          图像。 (默认开启)
+      --ffmpeg-skip-frame=<整数 [-1 .. 4]>
+                                 跳帧 (默认=0)
+          强制跳帧来加速解码 (-1=无, 0=默认, 1=B 帧, 2=P 帧,
+          3=B+P 帧, 4=全部帧)。
+      --ffmpeg-skip-idct=<整数 [-1 .. 4]>
+                                 跳过 idct (默认=0)
+          强制跳过 idct 来加速某些帧的解码 (-1=无, 0=默认, 1=B
+          帧, 2=P 帧, 3=B+P 帧, 4=全部帧)。
+      --ffmpeg-vismv=<整数>    可视化运动向量
+          您可以覆盖图像上的运行向量 (显示如何移动图像的攍
+          ¹向)。此值为掩码，基于下列值:
+1 - 可视化向前预告
+          MVs 的 P 帧
+2 - 可视化向前预告 MVs 的 B 帧
+4 -
+          可视化向后预告 MVs 的 B 帧
+要可视化所有向量,
+          值应该为 7。
+      --ffmpeg-lowres=<整数 [0 .. 2]>
+                                 低分辨率解码
+          仅解码视频的低分辨率版本。这仅需要很少的处理器拊          µ„源
+      --ffmpeg-fast, --no-ffmpeg-fast
+                                 允许非正常速度优化 (默认关闭)
+          允许不符合标准的速度优化。更快但可能会出错。
+          (默认关闭)
+      --ffmpeg-skiploopfilter={0 (无), 1 (非参考), 2 (双向), 3 (非关键), 4 (全部)}
+                                 用于 H.264 解码的跳过循环滤镜
+          跳过循环滤镜 (又作去块) 通常对图像质量会造成不良
+          的效果。但是它能为高分辨率的流提供一个很大的提狊          €Ÿ。
+      --ffmpeg-debug=<整数>    调试掩码
+          设置 FFmpeg 的调试掩码
+      --ffmpeg-hw, --no-ffmpeg-hw
+                                 硬件解码 (默认关闭)
+          这将允许硬件解码（当硬件解码可用时）。
+          (默认关闭)
+   正在编码:
+      --sout-ffmpeg-hq={rd,bits,simple}
+                                 质量等级
+          用于编码的动态向量的质量等级 (这可能会大大降低纍
+          –码速度)。
+      --sout-ffmpeg-keyint=<整数>
+                                 关键帧率
+          一个关键帧所包含的帧数。
+      --sout-ffmpeg-bframes=<整数>
+                                 B 帧率
+          在两个参考帧之间将被标识为 B 帧的数量。
+      --sout-ffmpeg-hurry-up, --no-sout-ffmpeg-hurry-up
+                                 紧急 (默认关闭)
+          如果您的 CPU 无法保持编码率那么编码器可以生成一䶍
+          ª比较匆忙的质量权衡。它将会关闭格式结构量化，以
+          及动态向量 (hq) 的速率失真并改善噪点消除阀来改善勊          ¼–码器的任务。 (默认关闭)
+      --sout-ffmpeg-interlace, --no-sout-ffmpeg-interlace
+                                 交错编码 (默认关闭)
+          为交错的帧开启专用的算法。 (默认关闭)
+      --sout-ffmpeg-interlace-me, --no-sout-ffmpeg-interlace-me
+                                 交错运动估算 (默认开启)
+          开启交错运动估算算法。这需要较多的 CPU 资源。
+          (默认开启)
+      --sout-ffmpeg-vt=<整数>  视频位率偏差
+          以 kbits/s 为单位的视频位率偏差。
+      --sout-ffmpeg-pre-me, --no-sout-ffmpeg-pre-me
+                                 预欲动估算 (默认关闭)
+          开启预运动估算算法。 (默认关闭)
+      --sout-ffmpeg-rc-buffer-size=<整数>
+                                 速率控制缓存大小
+          速率控制缓存大小 (以千字节为单位)。一个较大的缓㋊          ­˜将会有较佳的帧率控制，但是可能会导致流的延迟⾍
+          ‚
+      --sout-ffmpeg-rc-buffer-aggressivity=<浮点>
+                                 帧率控制缓存激进性
+          帧率控制缓存激进性。
+      --sout-ffmpeg-i-quant-factor=<浮点>
+                                 I 量化因数
+          I 帧的量化因数，与 P 帧相比较 (例如 1.0 =>
+          相同比例的 I 和 P 帧)。
+      --sout-ffmpeg-noise-reduction=<整数>
+                                 噪点消除
+          开启一个简易的噪点消除算法仅在损失很小质量的画狊          ¢的情况下通过降低编码长度和位率的方法消除噪点⾍
+          ‚
+      --sout-ffmpeg-mpeg4-matrix, --no-sout-ffmpeg-mpeg4-matrix
+                                 MPEG4 量化矩阵 (默认关闭)
+          为 MPEG2 编码使用 MPEG4 量化矩阵。通常这会产生质量輍
+          ƒ高的图像，但是还会保留与标准 MPEG2
+          解码器的兼容性。 (默认关闭)
+      --sout-ffmpeg-qmin=<整数>
+                                 最小视频向量化比例
+          最小视频向量化比例。
+      --sout-ffmpeg-qmax=<整数>
+                                 最大视频向量化比例
+          最大视频向量化比例。
+      --sout-ffmpeg-trellis, --no-sout-ffmpeg-trellis
+                                 格式向量化 (默认关闭)
+          开启格式向量化 (用于填充系数的速率失真)。
+          (默认关闭)
+      --sout-ffmpeg-qscale=<浮点>
+                                 固定量化比例
+          为 VBR 编码固定视频量化比例 (允许值: 0.01 到 255.0)。
+      --sout-ffmpeg-strict=<整数>
+                                 严格标准的一致
+          在编码时强制严格标准的一致 (允许值: -1, 0, 1)。
+      --sout-ffmpeg-lumi-masking=<浮点>
+                                 明亮掩码
+          为非常高亮度的宏块提升量化 (默认: 0.0)。
+      --sout-ffmpeg-dark-masking=<浮点>
+                                 阴暗掩码
+          为非常暗的宏块提升量化 (默认: 0.0)。
+      --sout-ffmpeg-p-masking=<浮点>
+                                 运动掩码
+          为高时间的复杂运动的宏块提升量化 (默认: 0.0)。
+      --sout-ffmpeg-border-masking=<浮点>
+                                 边框掩码
+          为带有边框的宏块提升量化 (默认: 0.0)。
+      --sout-ffmpeg-luma-elim-threshold=<整数>
+                                 亮度消除
+          在 PSNR 不是改变的很多的情况下消除亮度块 (默认:
+          0.0)。H264 规格推荐为 -4。
+      --sout-ffmpeg-chroma-elim-threshold=<整数>
+                                 色度消除
+          在 PSNR 不是改变的很多的情况下消除色度块 (默认:
+          0.0)。H264 规格推荐为 7。
+      --sout-ffmpeg-aac-profile=<字串>
+                                 指定要使用的 AAC 音频方案
+          指定要用于编码音频位流的 AAC 音频方案。它有下列辍
+          ‰项: 主、低、ssr (不推荐) 和 ltp (默认: 主)
+      --ffmpeg-mux=<字串>      Ffmpeg 复用
+          强制使用 ffmpeg 复用器。
+
+ 提交已播放的歌曲给 last.fm
+      --lastfm-username=<字串> 用户名
+          您的 last.fm 用户名帐号
+      --lastfm-password=<字串> 密码
+          您的 last.fm 帐号密码
+      --scrobbler-url=<字串>   Scrobbler 网址
+          设置可选 scrobbler 引擎的 URL
+
+ 音频直方图视频子滤镜
+      --audiobargraph_v-i_values=<字串>
+                                 音频声道层级数值
+          各声道音频层级的值，介于 0 与 1 各层级应以 ':'
+          分隔。
+      --audiobargraph_v-x=<整数>
+                                 X 坐标
+          直方图的 X 坐标。
+      --audiobargraph_v-y=<整数>
+                                 Y 坐标
+          直方图的 Y 坐标。
+      --audiobargraph_v-transparency=<整数 [0 .. 255]>
+                                 直方图透明度
+          直方图透明度值 (介于 0(完全透明) 与
+          255(完全不透明) 之间)。
+      --audiobargraph_v-position={0 (居中), 1 (左), 2 (右), 4 (上), 8 (下), 5 (左上), 6 (右上), 9 (左下), 10 (右下)}
+                                 直方图位置
+          强制指定视频上的标志位置 (0=居中、1=左、2=右、4=上
+          、8=下，您也可以混合使用这些值，例如 6=4+2
+          表示右上)。
+      --audiobargraph_v-alarm=<整数>
+                                 警告
+          发出静音信号并显示警告 (0=不警告, 1=警告)。
+      --audiobargraph_v-barWidth=<整数>
+                                 直方图宽度，单位为像素 (默认 :
+                                 10)
+          BarGraph 中显示各直方的宽度，单位为像素 (默认 :
+          10)。
+
+ BarGraph 功能的音频部分
+      --audiobargraph_a-address=<字串>
+                                 要使用的 TCP 地址 (默认 localhost)
+          用于与 Bar Graph 的视频部分进行通讯的 TCP 地址 (默认
+          localhost)。使用 bargraph 外壳时，请用 localhost。
+      --audiobargraph_a-port=<整数>
+                                 要使用的 TCP 端口 (默认 12345)
+          用于与 Bar Graph 的视频部分进行通讯的 TCP 端口 (默认
+          12345)。使用与 rc 接口所用相同的端口。
+      --audiobargraph_a-bargraph=<整数>
+                                 定义是否发送 BarGraph 信息 (默认 1)
+          定义是否发送 BarGraph 信息。1 为发送，否则填 0
+          (默认 1)。
+      --audiobargraph_a-bargraph_repetition=<整数>
+                                 每 n 个音频包发送 barGraph 信息
+                                 (默认 4)
+          定义发送 barGraph 信息的频率。每 n 个音频数据包发送
+          一次 barGraph 信息 (默认为 4)。
+      --audiobargraph_a-silence=<整数>
+                                 定义是否发送静音警告信息 (默认
+                                 1)
+          定义是否发送静音警告信息。1 为发送，否则填 0
+          (默认 1)。
+      --audiobargraph_a-time_window=<整数>
+                                 弹出窗口前计时时间，单位为毫秒
+                                 (默认 5000)
+          弹出计时窗口，其中音频层级以毫秒为单位度量，用⋊          ºŽ静音侦测。如果音频层级低于此阈值则发送警告
+          (默认 5000)。
+      --audiobargraph_a-alarm_threshold=<浮点>
+                                 音频层级提起警告的最小值 (默认
+                                 0.1)
+          进行警告提起的阈值。如果音频层级在此期间内低于䋊          ­¤阈值则发送警告 (默认 0.1)。
+      --audiobargraph_a-repetition_time=<整数>
+                                 两条警告信息的间隔时间，以毫秒⋊                                 ¸º单位 (默认 2000)
+          两次警告的时间间隔，以毫秒为单位。此数值用于避㋊          …过度警告 (默认 2000)。
+      --audiobargraph_a-connection_reset=<整数>
+                                 定期强制重置连接 (默认 1)
+          定义是否重置 TCP 连接。与 audiobargraph_v 配合使用
+          (默认 1)。
+
+ AtmoLight 滤镜
+ 此模块允许控制一个被称为 AtmoLight 的设备连接到您的计算机。
+AtmoLight 是一个飞利浦称作 AmbiLight 的自制版本。
+如果您希望获取更多信息敬请访问
+
+http://www.vdr-wiki.de/wiki/index.php/Atmo-plugin
+http://www.vdr-wiki.de/wiki/index.php/AtmoWin
+
+您可以找到如何自己编译它以及在哪里获取所需的模块的详细说明。
+您也可以看到设备实时操作时的图像和一些视频。
+   选择设备类型与连接:
+      --atmo-device={0 (AtmoWin 软件), 1 (经典 AtmoLight), 2 (Quattro AtmoLight), 3 (DMX), 4 (MoMoLight), 5 (fnordlicht)}
+                                 设备类型
+          从列表中选择您更偏好的硬件，或选择通过 AtmoWin
+          软件将处理托付给外部进程——将有更多可用选项
+      --atmo-serialdev=<字串>  串口/设备
+          AtmoLight 控制器附属的序列端口的名称。
+在 Windows
+          通常使用 COM1 或 COM2。Linux 使用  /dev/ttyS01 f.e。
+      --atmo-atmowinexe=<字串> AtmoWin*.exe 的文件名
+          如果您希望由 VLC 启动 AtmoLight 控制软件，请在这里输
+          入完整的 AtmoWinA.exe 路径。
+   在暂停时使用此颜色照亮房间:
+      --atmo-usepausecolor, --no-atmo-usepausecolor
+                                 暂停时的色彩 (默认关闭)
+          在用于暂停时的色彩 (亮得足够拿瓶啤酒?) (默认关闭)
+      --atmo-pcolor-red=<整数 [0 .. 255]>
+                                 暂停红
+          暂停颜色的红成分
+      --atmo-pcolor-green=<整数 [0 .. 255]>
+                                 暂停率
+          暂停颜色的绿成分
+      --atmo-pcolor-blue=<整数 [0 .. 255]>
+                                 暂停蓝
+          暂停颜色的蓝成分
+      --atmo-fadesteps=<整数 [1 .. 250]>
+                                 暂停淡入步骤
+          更改当前颜色为暂停颜色的步骤数量 (每步骤需要 40
+          毫秒)
+   在关闭时使用此颜色照亮房间:
+      --atmo-ecolor-red=<整数 [0 .. 255]>
+                                 结束红
+          结束颜色的红色成分
+      --atmo-ecolor-green=<整数 [0 .. 255]>
+                                 结束绿
+          结束颜色的绿色成分
+      --atmo-ecolor-blue=<整数 [0 .. 255]>
+                                 结束蓝
+          结束颜色的蓝色成分
+      --atmo-efadesteps=<整数 [1 .. 250]>
+                                 结束淡入步骤
+          更改当前颜色为暂停颜色用于逐渐增强亮度的影院类㋊          ž‹的步骤数量 (每步骤需要 40 毫秒)
+   DMX 选项:
+      --atmo-dmx-channels=<整数 [1 .. 64]>
+                                 AtmoLight 频道数
+          AtmoLight 有多少频道，应与 DMX 设备相仿
+      --atmo-dmx-chbase=<字串> 各频道的 DMX 地址
+          在此定义各频道使用的 DMX 基本地址；或者分别输入操
+          °值
+   MoMoLight 选项:
+      --atmo-momo-channels=<整数 [3 .. 4]>
+                                 频道数
+          根据您的 MoMoLight 硬件选择 3 或 4 个频道
+   fnordlicht 选项:
+      --atmo-fnordlicht-amount=<整数 [1 .. 4]>
+                                 fnordlicht 数目
+          根据您的 fnordlicht 硬件数选择 3 或 4 个频道
+   内建 Atmo 的通道布局:
+      --atmo-zones-top=<整数 [0 .. 16]>
+                                 顶部通道数
+          屏幕顶部通道数
+      --atmo-zones-bottom=<整数 [0 .. 16]>
+                                 底部通道数
+          屏幕底部通道数
+      --atmo-zones-lr=<整数 [0 .. 16]>
+                                 左 / 右边的通道
+          左右边总有相同数目的通道
+      --atmo-zone-summary, --no-atmo-zone-summary
+                                 计算平均通道 (默认关闭)
+          包含示例图像中所有像素的平均值
+          (仅当使用单频道的 AtmoLight 时有用) (默认关闭)
+   仅为内建的现场视频处理器设置:
+      --atmo-edgeweightning=<整数 [1 .. 30]>
+                                 边缘宽度
+          增加此值将会决定帧的边框颜色。
+      --atmo-brightness=<整数 [50 .. 300]>
+                                 亮度
+          您的 LED 块的总体亮度
+      --atmo-darknesslimit=<整数 [0 .. 10]>
+                                 暗限制
+          低于此亮度值的响度将被忽略。应该大于一个信箱式䋊          ’­放视频。
+      --atmo-huewinsize=<整数 [0 .. 5]>
+                                 色调窗口
+          用于统计。
+      --atmo-satwinsize=<整数 [0 .. 5]>
+                                 亮度窗口
+          用于统计。
+      --atmo-filtermode={0 (不过滤), 1 (混合), 2 (百分比)}
+                                 输出颜色滤镜模块
+          定义应如何根据之前的色彩计算输出色彩
+      --atmo-meanlength=<整数 [300 .. 5000]>
+                                 过滤长度 (毫秒)
+          直到颜色完全变色的时间。这可以防止闪烁。
+      --atmo-meanthreshold=<整数 [1 .. 100]>
+                                 过滤阀值
+          用于一个立即更改的颜色数量。
+      --atmo-percentnew=<整数 [1 .. 100]>
+                                 平滑过滤 (在 %)
+          平滑过滤
+      --atmo-framedelay=<整数 [0 .. 200]>
+                                 帧延迟 (ms)
+          在同步时帮助获取视频输出和亮度效果。在 20
+          毫秒附近的值应该能成功。
+   更改信道分配 (修正错误的布线):
+      --atmo-channel_0={-1 (关闭), 4 (通道 4:总), 3 (通道 3:左), 1 (通道 1:右), 0 (通道 0:上), 2 (通道 2:下)}
+                                 频道 0: 概要
+          映射硬件频道 X 到逻辑通道 Y 以修正错误的布线 :-)
+      --atmo-channel_1={-1 (关闭), 4 (通道 4:总), 3 (通道 3:左), 1 (通道 1:右), 0 (通道 0:上), 2 (通道 2:下)}
+                                 频道 1: 左
+          映射硬件频道 X 到逻辑通道 Y 以修正错误的布线 :-)
+      --atmo-channel_2={-1 (关闭), 4 (通道 4:总), 3 (通道 3:左), 1 (通道 1:右), 0 (通道 0:上), 2 (通道 2:下)}
+                                 频道 2: 右
+          映射硬件频道 X 到逻辑通道 Y 以修正错误的布线 :-)
+      --atmo-channel_3={-1 (关闭), 4 (通道 4:总), 3 (通道 3:左), 1 (通道 1:右), 0 (通道 0:上), 2 (通道 2:下)}
+                                 频道 3: 上
+          映射硬件频道 X 到逻辑通道 Y 以修正错误的布线 :-)
+      --atmo-channel_4={-1 (关闭), 4 (通道 4:总), 3 (通道 3:左), 1 (通道 1:右), 0 (通道 0:上), 2 (通道 2:下)}
+                                 频道 4: 下
+          映射硬件频道 X 到逻辑通道 Y 以修正错误的布线 :-)
+      --atmo-channels=<字串>   频道 / 通道分配
+          对于频道 / 通道多余五个的设备，在此写下各频道要䋊          ˜¾示的通道号并以 , 或 ; 分隔数值，使用 -1
+          禁用特定频道。对经典 AtmoLight 而言，序列 4,3,1,0,2
+          将设置成默认频道/通道映射。上面仅两通道，左边右
+          边各一个，无总通道的经典 AtmoLight 映射为 -1,3,2,1,0
+   为您的 LED 块调节白色照明:
+      --atmo-whiteadj, --no-atmo-whiteadj
+                                 使用软件白调节 (默认开启)
+          要使驱动进行白调节或您的 LED 块吗? 推荐。
+          (默认开启)
+      --atmo-white-red=<整数 [0 .. 255]>
+                                 白红
+          在您的 LED 块上的纯白的红值。
+      --atmo-white-green=<整数 [0 .. 255]>
+                                 白绿
+          在您的 LED 块上的纯白的绿值。
+      --atmo-white-blue=<整数 [0 .. 255]>
+                                 白蓝
+          在您的 LED 块上的纯白的蓝值。
+   更改变化:
+      --atmo-gradient_zone_0=<字串>
+                                 通道 0: 上梯度
+          定义个 64x48 像素的小位图，包含灰度变化
+      --atmo-gradient_zone_1=<字串>
+                                 通道 1: 右梯度
+          定义个 64x48 像素的小位图，包含灰度变化
+      --atmo-gradient_zone_2=<字串>
+                                 通道 2: 下梯度
+          定义个 64x48 像素的小位图，包含灰度变化
+      --atmo-gradient_zone_3=<字串>
+                                 通道 3: 左梯度
+          定义个 64x48 像素的小位图，包含灰度变化
+      --atmo-gradient_zone_4=<字串>
+                                 通道 4: 总梯度
+          定义个 64x48 像素的小位图，包含灰度变化
+      --atmo-gradient_path=<字串>
+                                 倾斜图像搜索路径
+          这里是您偏爱的梯度位图分配选项，以类似 zone_0.bmp,
+          zone_1.bmp 等等的文件名放入同一个文件夹中，并在此謍
+          ¾定文件夹名
+      --atmo-width=<整数 [64 .. 512]>
+                                 释放图像宽度
+          用于加速处理的 mini 图像宽度 (默认是 64)
+      --atmo-height=<整数 [48 .. 384]>
+                                 释放图像高度
+          用于加速处理的 mini 图像高度 (默认是 48)
+      --atmo-showdots, --no-atmo-showdots
+                                 标记已分析像素 (默认关闭)
+          使示例方格以白色格线显示在屏幕上 (默认关闭)
+
+ 文件音频输出
+      --audiofile-format={u8,s8,u16,s16,u16_le,s16_le,u16_be,s16_be,fixed32,float32,spdif}
+                                 输出格式
+          "u8", "s8", "u16", "s16", "u16_le", "s16_le", "u16_be", "s16_be",
+          "fixed32", "float32" 或 "spdif" 中的一个
+      --audiofile-channels=<整数>
+                                 输出声道数
+          按默认，所有的进入的声道都将被保存但是您可以在拊          ¿™里重定义数字。
+      --audiofile-file=<字串>  输出文件
+          要写入音频采样的文件 ("-" 为标准输出
+      --audiofile-wav, --no-audiofile-wav
+                                 添加波形头部 (默认开启)
+          您可以添加一个 WAV 头部到文件中而不是直接写入到䶍
+          €个原始文件。 (默认开启)
+
+ DirectX 音频输出
+      --directx-audio-device-name={default}
+                                 输出设备
+          选择音频输出设备
+      --directx-audio-float32, --no-directx-audio-float32
+                                 使用浮点 32 输出 (默认关闭)
+          此选项将允许您开启或关闭高质量浮点 32
+          音频输出模式 (可能某些声卡无法很好的支持)。
+          (默认关闭)
+      --directx-audio-speaker={Windows default,Mono,Stereo,Quad,5.1,7.1}
+                                 扬声器配置
+          选择您想用的扬声器配置。此选项不支持上混!
+          所以请 *不要* 做类似 立体声 -> 5.1 的转换。
+
+ Alpha 掩码视频滤镜
+ 使用图像的 alpha 通道作为透明掩码。
+      --alphamask-mask=<字串>  透明掩码
+          Alpha 混合透明掩码。使用一个 png alpha 通道。
+
+ 图像属性滤镜
+      --contrast=<浮点 [0.000000 .. 2.000000]>
+                                 图像对比度 (0-2)
+          设置图像对比度, 在 0 和 2 之间。默认为 1。
+      --brightness=<浮点 [0.000000 .. 2.000000]>
+                                 图像亮度 (0-2)
+          设置图像亮度, 在 0 和 2 之间。默认为 1。
+      --hue=<整数 [0 .. 360]>  图像色调 (0-360)
+          设置图像色调, 在 0 和 360 之间。默认为 0。
+      --saturation=<浮点 [0.000000 .. 3.000000]>
+                                 图像饱和度 (0-3)
+          设置图像饱和度, 在 0 和 3 之间。默认为 1。
+      --gamma=<浮点 [0.010000 .. 10.000000]>
+                                 图像色度 (0-10)
+          设置图像色度，在 0.01 和 10 之间。默认为 1。
+      --brightness-threshold, --no-brightness-threshold
+                                 亮度阀值 (默认关闭)
+          当此模式被开启时，像素将被显示为黑色和白色。阀㋊          €¼将使用下面定义的亮度。 (默认关闭)
+
+ UDP 输入
+      --udp-caching=<整数>     缓存值(毫秒)
+          UDP 流的缓存值。此值必须以毫秒为单位设置。
+
+ TCP 输入
+      --tcp-caching=<整数>     缓存值(毫秒)
+          TCP 流的缓存值。此值必须以毫秒为单位设置。
+
+ SMB 输入
+ Samba (Windows 网络共享) 输入
+      --smb-caching=<整数>     缓存值(毫秒)
+          SMB 流的缓存值。此值必须以毫秒为单位设置。
+      --smb-user=<字串>        SMB 用户名
+          将被用于连接的用户名。
+      --smb-pwd=<字串>         SMB 密码
+          将被用于连接的密码。
+      --smb-domain=<字串>      SMB 域
+          连接要使用的域/工作组。
+
+ Real RTSP
+      --realrtsp-caching=<整数>
+                                 缓存值 (毫秒)
+          RTSP 流的缓存值。此值必须以毫秒为单位设置。
+
+ UDP 流输出
+      --sout-udp-caching=<整数>
+                                 缓存值 (毫秒)
+          默认出站 UDP 流的缓存值。此值应该以毫秒为单位设绍
+          ®。
+      --sout-udp-group=<整数>  分组数据包
+          数据包可以在正确的时间或按分组一个接一个的被发狊          €，您可以选择在一个时间内将被发送的数据包数量⾍
+          ‚它将有助于在大负荷的系统上减轻时序安排的负载。
+
+ IceCAST 输出
+      --sout-shout-name=<字串> 流名称
+          给予此流/频道在 shoutcast/icecast 服务器上的名称。
+      --sout-shout-description=<字串>
+                                 流描述
+          关于您频道的内容或信息的描述。
+      --sout-shout-mp3, --no-sout-shout-mp3
+                                 传输 MP3 流 (默认关闭)
+          您通常会提供给 shoutcast 模块 Ogg 流。它也可以被 MP3
+          流替代，所以您可以向 shoutcast/icecast 服务器发送 MP3
+          流。 (默认关闭)
+      --sout-shout-genre=<字串>
+                                 流派描述
+          内容的流派。
+      --sout-shout-url=<字串>  URL 描述
+          您的流或频道的 URL 信息。
+      --sout-shout-bitrate=<字串>
+                                 位率
+          被转码流的位率信息。
+      --sout-shout-samplerate=<字串>
+                                 采样率
+          被转码流的采样率信息。
+      --sout-shout-channels=<字串>
+                                 频道编号
+          被转码流的频道编号信息。
+      --sout-shout-quality=<字串>
+                                 Ogg Vorbis 质量
+          被转码流的 Ogg Vorbis 质量信息。
+      --sout-shout-public, --no-sout-shout-public
+                                 公共流 (默认关闭)
+          使服务器能够在 icecast/shoutcast 网站的 '黄页'
+          (流目录列表) 中出现。需要为 shoutcast 指定位流信息⾍
+          ‚icecast 需要 Ogg 流。 (默认关闭)
+
+ HTTP 流输出
+      --sout-http-user=<字串>  用户名
+          访问流时所要求的用户名。
+      --sout-http-pwd=<字串>   密码
+          访问流时所要求的密码。
+      --sout-http-mime=<字串>  Mime
+          由服务器返回的 MIME (如果未指定则自动检测)。
+      --sout-http-cert=<字串>  证书文件
+          将被用于 HTTPS 的 x509 PEM 证书文件的路径。
+      --sout-http-key=<字串>   私匙文件
+          将被用于 HTTPS 的 x509 私匙文件的路径。如果您没有请
+          留空。
+      --sout-http-ca=<字串>    根 CA 文件
+          用于 HTTPS 的 x509 PEM 受信任的根 CA 证书
+          (证书颁发机构) 文件的路径。如果您没有请留空。
+      --sout-http-crl=<字串>   CRL 文件
+          用于 SSL 的 x509 PEM 证书废止列表文件的地址。如果您䋊          ²¡有请留空。
+
+ 文件流输出
+      --sout-file-append, --no-sout-file-append
+                                 附加到文件 (默认关闭)
+          增补到文件，如果它已经存在就替换它。 (默认关闭)
+
+ Microsoft 媒体服务器 (MMS) 输入
+      --mms-caching=<整数>     缓存值(毫秒)
+          MMS 流的缓存值。此值必须以毫秒为单位设置。
+      --mms-timeout=<整数>     TCP/UDP 超时 (毫秒)
+          在放弃网络接收数据前的等待时间数量。注意，在完㋊          …¨放弃前将会有 10 次重试。
+      --mms-all, --no-mms-all    强制选择所有流 (默认关闭)
+          MMS 流可以包含一系列的不同位率元素流。您可以选择
+          它们中的所有流。 (默认关闭)
+      --mms-maxbitrate=<整数>  最大位率
+          选择要限制的流最大位率。
+      --mmsh-proxy=<字串>      HTTP 代理
+          要使用的 HTTP 代理必须是以下形式 http://[用户名@]我瘍
+          „代理.我的域名:我的端口/ 的形式;如果为空将会尝试
+          http_proxy 环境变量。
+
+ 内存输入
+      --imem-caching=<整数>    缓存值(毫秒)
+          imem 流缓存值。此值应该以毫秒为单位设置。
+      --imem-get=<字串>        获取函数
+          获取回调函数的地址
+      --imem-release=<字串>    释放函数
+          释放回调函数的地址
+      --imem-cookie=<字串>     回调 cookie 字串
+          回调函数的文本标记符
+      --imem-data=<字串>       调用数据
+          获取与释放函数数据
+      --imem-id=<整数>         ID
+          设置通量流的 ID
+      --imem-group=<整数>      组
+          设置通量流所属的组
+      --imem-cat={0 (未知), 1 (音频), 2 (视频), 3 (字幕), 4 (数据)}
+                                 分类
+          设置通量流的分类
+      --imem-codec=<字串>      编码
+          设置通量流的编解码器
+      --imem-language=<字串>   语言
+          通量流的语言，以 ISO639 代码表示
+      --imem-samplerate=<整数> 采样率
+          音频通量流的采样率
+      --imem-channels=<整数>   声道数
+          音频通量流的声道数目
+      --imem-width=<整数>      宽度
+          视频或字幕通量流的宽度
+      --imem-height=<整数>     高度
+          视频或字幕通量流的高度
+      --imem-dar=<字串>        显示宽高比
+          视频通量流的显示宽高比
+      --imem-fps=<字串>        帧率
+          视频通量流的帧率
+      --imem-size=<整数>       大小
+          流尺寸（单位为字节）
+
+ HTTP 输入
+      --http-proxy=<字串>      HTTP 代理
+          要使用的 HTTP 代理必须是以下形式 http://[用户名@]我瘍
+          „代理.我的域名:我的端口/ 的形式;如果为空将会尝试
+          http_proxy 环境变量。
+      --http-proxy-pwd=<字串>  HTTP 代理密码
+          如果您的 HTTP 代理需要一个密码，请在这里设置它。
+      --http-caching=<整数>    缓存值(毫秒)
+          HTTP 流的缓存值。此值应该以毫秒为单位设置。
+      --http-user-agent=<字串> HTTP 用户代理
+          将被用于连接的用户代理。
+      --http-reconnect, --no-http-reconnect
+                                 自动重新连接 (默认关闭)
+          如果流被断开连接将会自动尝试重新连接。
+          (默认关闭)
+      --http-continuous, --no-http-continuous
+                                 连续流 (默认关闭)
+          读取一个将被经常更新的文件 (例如一个在服务器上瘍
+          „ JPG 文件)。您不应该全局打开此选项，它将会破坏其
+          它类型的 HTTP 流。 (默认关闭)
+      --http-forward-cookies, --no-http-forward-cookies
+                                 转发 Cookies (默认开启)
+          在 http 重定向间转发 cookies。 (默认开启)
+      --http-max-redirect=<整数>
+                                 最大重定向数目
+          限制要跟随的重定向数目。
+      --http-use-IE-proxy, --no-http-use-IE-proxy
+                                 使用 Internet Explorer 中所输入的 HTTP
+                                 代理服务器 (默认关闭)
+          为所有 URL 使用 Internet Explorer 中所输入的 HTTP
+          代理服务器。不必考虑账户分流设置与自动配置脚本ዊ          €‚ (默认关闭)
+
+ FTP 输入
+      --ftp-caching=<整数>     缓存值(毫秒)
+          FTP 流的缓存值。此值应该以毫秒为单位设置。
+      --ftp-user=<字串>        FTP 用户名
+          将被用于连接的用户名。
+      --ftp-pwd=<字串>         FTP 密码
+          将被用于连接的密码。
+      --ftp-account=<字串>     FTP 帐号
+          将被用于连接的帐号。
+
+ 伪装视频输入
+      --fake-caching=<整数>    缓存值(毫秒)
+          伪装流缓存值。此值应该以毫秒为单位设置。
+      --fake-fps=<浮点>        帧率
+          每秒的帧数 (例如 24, 25, 29.97, 30)。
+      --fake-id=<整数>         ID
+          设置在 #duplicate{} 结构中使用的伪装通量流的 ID
+          (默认 0)。
+      --fake-duration=<整数>   以毫秒为单位的持续时间
+          伪造 end-of-file 标记前伪装流化的时长 (默认为 -1
+          即强制伪装时进行无限的流式处理，其他情况则持续
+          10 秒钟。0 即进行无限的流式处理)。
+
+ Blu-Ray 光碟输入
+      --bd-caching=<整数>      缓存值(毫秒)
+          BD 缓存值。此值应以毫秒为单位。
+
+ ATSC A/52 (AC-3) 音频解码器
+      --a52-dynrng, --no-a52-dynrng
+                                 A/52 动态范围压限 (默认开启)
+          动态范围压限将使很响的声音变得柔和，并且是柔和勊          š„声音便的更响亮，所以您可以在没有任何人打扰的喍
+          ˆ杂环境中更容易的聆听音乐。如果您关闭了动态范围
+          压限，播放将会更接近于在电影院或在聆听室中的效䋊          žœ。 (默认开启)
+      --a52-upmix, --no-a52-upmix
+                                 开启内部混响 (默认关闭)
+          开启内部混响算法 (不推荐)。 (默认关闭)
+
+ 音频
+ 这些选项将允许您修改音频子系统的行为并添加可以被预处理使用的可视化效果 (频谱分析器等)。在这里开启这些滤镜并在 "音频滤镜" 模块区域中设置它们。
+      --audio, --no-audio        开启音频 (默认开启)
+          您可以完全关闭音频输出。音频解码步骤将不会执行틊          ¼Œ这样就可以节省一些处理器资源。 (默认开启)
+      --volume=<整数 [0 .. 1024]>
+                                 默认音频音量
+          您可以在这里设置默认的音频输出音量，单位从 0 到
+          1024。
+      --volume-step=<整数 [0 .. 1024]>
+                                 音频输出音量步进
+          使用此选项调节音量的步进大小，范围从  0 到 1024。
+      --aout-rate=<整数>       音频输出频率 (Hz)
+          您可以在这里强制指定音频输出频率。公共值是 -1
+          (默认)、48000、44100、32000、22050、16000、11025、8000。
+      --hq-resampling, --no-hq-resampling
+                                 高质量音频重采样 (默认开启)
+          这将使用高质量音频重采样算法。高质量音频重采样㋊          ¯能会增加处理器负担所以您可以关闭它并使用更简斍
+          “的重采样算法代替。 (默认开启)
+      --spdif, --no-spdif        在可能时使用 S/PDIF (默认关闭)
+          S/PDIF 可以在您的硬件支持时默认使用做播放音频流。
+           (默认关闭)
+      --force-dolby-surround={0 (自动), 1 (开), 2 (关)}
+                                 强制检测杜比环绕声
+          在您知道您的流是 (或不是) 由杜比环绕编码时使用此
+          设置，但是有时也会检测失败。如果流实际上不是使勊          ”¨杜比环绕进行编码的话，打开此选项可能会增强您瘍
+          „体验，特别是和耳机声道混音器一起使用时。
+      --audio-desync=<整数>    音频异步补偿
+          这将延迟音频输出。延迟的单位是毫秒。如果您感觉㋊          ˆ°视频和音频之间有延迟的话此功能将非常方便。
+      --audio-replay-gain-mode={none,track,album}
+                                 回放增益模式
+          选择增益模式
+      --audio-replay-gain-preamp=<浮点>
+                                 回放预放大
+          这将允许您为回放增益信息更改默认的目标电平 (89
+          dB)
+      --audio-replay-gain-default=<浮点>
+                                 默认回放增益
+          这是在没有回放增益信息时使用的流增益
+      --audio-replay-gain-peak-protection, --no-audio-replay-gain-peak-protection
+                                 峰值保护 (默认开启)
+          保护音频剪辑 (默认开启)
+      --audio-time-stretch, --no-audio-time-stretch
+                                 启用时间拉抻音频 (默认开启)
+          这允许以稍低或稍高的速度播放音频且不影响音频音拊          °ƒ (默认开启)
+  -A, --aout=<字串>            音频输出模块
+          这是被 VLC 使用的音频输出模块。默认的行为是自动辍
+          ‰择最佳的可用模块。
+      --audio-filter=<字串>    音频滤镜
+          这将添加音频预处理滤镜，修改音频渲染。
+      --audio-visual=<字串>    音频可视化
+          这将添加可视化模块 (频谱分析器等)。
+
+ 视频
+ 这些选项将允许您修改视频输出子系统的默认行为。例如您可以开启视频滤镜 (反交错、图像调整等)。在这里开启这些滤镜并在在 "视频滤镜" 模块区域设置它们。您也可以设置许多其它视频选项。
+      --video, --no-video        开启视频 (默认开启)
+          您可以完整的关闭视频输出。视频解码步骤将被跳过틊          ¼Œ这将节省一些处理器资源。 (默认开启)
+      --grayscale, --no-grayscale
+                                 黑白输出视频 (默认关闭)
+          以黑白方式输出视频。这将不会解码色彩信息，可以拊          Š‚省一些处理器资源。 (默认关闭)
+  -f, --fullscreen, --no-fullscreen
+                                 全屏幕视频输出 (默认关闭)
+          在全屏幕模式开始播放视频 (默认关闭)
+      --embedded-video, --no-embedded-video
+                                 嵌入视频 (默认开启)
+          将视频输出嵌入到主界面中。 (默认开启)
+      --x11-display=<字串>     X11 显示
+          要使用的 X11 硬件。按默认 VLC 将使用显示环境变量的
+          值。
+      --xlib, --no-xlib          Project-Id-Version: vlc 1.1.x
+Report-Msgid-Bug
+                                 s-To: vlc-devel@videolan.org
+POT-Creation-Date
+                                 : 2010-08-27 01:01+0200
+PO-Revision-Date:
+                                 
+Last-Translator: Dean Lee <xslidian@lidian.in
+                                 fo>
+Language-Team: Simplified Chinese
+                                 <xslidian+vlc@gmail.com>
+Language: Chinese
+                                 Simplified
+MIME-Version: 1.0
+Content-Type:
+                                 text/plain; charset=UTF-8
+Content-Transfer-Enc
+                                 oding: 8bit
+X-Poedit-Language: Chinese
+
+                                 (默认开启)
+      --drop-late-frames, --no-drop-late-frames
+                                 丢弃延迟的帧 (默认开启)
+          这将丢弃延迟的帧 (在它们实际应该显示的时间后到輍
+          ¾视频输出)。 (默认开启)
+      --skip-frames, --no-skip-frames
+                                 跳帧 (默认开启)
+          在 MPEG2 流上开启帧丢弃。帧丢弃将在您的计算机不够
+          强大时发生 (默认开启)
+      --quiet-synchro, --no-quiet-synchro
+                                 静默同步 (默认关闭)
+          这将防止来自视频输出同步机构的满屏幕的调试输出⋊          ¿¡息。 (默认关闭)
+      --keyboard-events, --no-keyboard-events
+                                 按键事件 (默认开启)
+          这将启用来自 (非嵌入) 视频窗口的 VLC 热键。
+          (默认开启)
+      --mouse-events, --no-mouse-events
+                                 鼠标事件 (默认开启)
+          此项可启用针对在视频上点击鼠标的处理。
+          (默认开启)
+      --overlay, --no-overlay    覆盖视频输出 (默认开启)
+          覆盖是您显卡的硬件加速功能 (直接渲染视频的能力)ዊ          €‚VLC 将默认尝试使用它。 (默认开启)
+      --video-on-top, --no-video-on-top
+                                 总在最前 (默认关闭)
+          总是将视频窗口放置在其它窗口的最前。 (默认关闭)
+      --video-wallpaper, --no-video-wallpaper
+                                 开启壁纸模式 (默认关闭)
+          壁纸模式允许您将视频作为桌面背景显示。
+          (默认关闭)
+      --disable-screensaver, --no-disable-screensaver
+                                 关闭屏幕保护 (默认开启)
+          在播放视频时关闭屏幕保护。 (默认开启)
+      --video-title-show, --no-video-title-show
+                                 在视频上显示媒体标题 (默认开启)
+          在影片顶部显示视频标题。 (默认开启)
+      --video-title-timeout=<整数>
+                                 显示视频标题 x 毫秒
+          显示视频标题 n 毫秒，默认是 5000 毫秒 (5 秒)
+      --video-title-position={0 (居中), 1 (左), 2 (右), 4 (上), 8 (下), 5 (左上), 6 (右上), 9 (左下), 10 (右下)}
+                                 视频标题的位置
+          在视频上显示视频标题的位置 (默认在底部中间的位绍
+          ®)。
+      --mouse-hide-timeout=<整数>
+                                 在 x 毫秒后隐藏光标和全屏控制器
+          在 n 毫秒后隐藏光标和全屏控制器，默认是 3000 毫秒
+          (3 秒)
+   截图:
+      --snapshot-path=<字串>   视频截图目录 (或文件名)
+          视频截图将要储存的目录。
+      --snapshot-prefix=<字串> 视频截图文件前缀
+          视频截图文件前缀
+      --snapshot-format={png,jpg}
+                                 视频截图格式
+          将被使用保存视频截图的图像格式
+      --snapshot-preview, --no-snapshot-preview
+                                 显示视频截图预览 (默认开启)
+          在屏幕的左上角显示截图预览。 (默认开启)
+      --snapshot-sequential, --no-snapshot-sequential
+                                 使用顺序编号代替时间戳
+                                 (默认关闭)
+          使用顺序编号代替时间戳作为截图编号 (默认关闭)
+      --snapshot-width=<整数>  视频截图宽度
+          您可以强制指定视频截图的宽度。按默认将保持原始㋊          ®½度 (-1)。使用  0 将缩放宽度以保持高宽比。
+      --snapshot-height=<整数> 视频截图高度
+          您可以强制指定视频截图的高度。按默认将保持原始狊          «˜度 (-1)。使用  0 将缩放高度以保持高宽比。
+   窗口属性:
+      --width=<整数>           视频宽度
+          您可以强制指定视频宽度。按默认 (-1) VLC 将自动适应
+          视频的参数。
+      --height=<整数>          视频高度
+          您可以强制指定视频高度。按默认 (-1) VLC 将自动适应
+          视频的参数。
+      --video-x=<整数>         视频 X 坐标
+          您可以强制指定视频窗口左上角的位置 (X 坐标)。
+      --video-y=<整数>         视频 Y 坐标
+          您可以强制指定视频窗口左上角的位置 (Y 坐标)。
+      --crop=<字串>            视频裁剪
+          这将强制裁剪源视频。能接受的格式是 x:y (4:3、16:9
+          等) 来表述全局图像高宽比。
+      --custom-crop-ratios=<字串>
+                                 自定义裁剪比列表
+          将被添加到界面的裁剪比列表中的逗号分隔的裁剪比㋊          ˆ—表。
+      --aspect-ratio=<字串>    源高宽比
+          这将强制指定源高宽比。例如某些 DVD 被定义为 16:9
+          但是它们实际上是 4:3 的。这也可以在影片没有高宽歍
+          ”信息时被用作给予 VLC 一个提示。所能接受的格式是
+          x:y (4:3、16:9 等) 定义全局图像高宽比，或一个浮点值
+          (1.25、1.3333 等) 表示像素单位。
+      --autoscale, --no-autoscale
+                                 视频自动缩放 (默认开启)
+          让视频缩放至适合某个给出的窗口或全屏。
+          (默认开启)
+      --scale=<浮点>           视频缩放因数
+          自动缩放禁用时使用的缩放因子。
+默认为 1.0
+          (原始视频大小)。
+      --monitor-par=<字串>     显示器像素高宽比
+          这可以强制设置高宽比。许多显示器有正方形的像素
+          (1:1)。如果您有一个 16:9 的屏幕，您就需要更改此为
+          4:3 来保持匀称。 
+      --custom-aspect-ratios=<字串>
+                                 自定义高宽比列表
+          将被添加到界面的高宽比列表中的逗号分隔的高宽比㋊          ˆ—表。
+      --hdtv-fix, --no-hdtv-fix  固定 HDTV 高度 (默认开启)
+          这将允许在 HDTV-1080 视频在被编码器以不正确的高度謍
+          ¾置为 1088 线时正确的处理视频。您应该仅在您的视频
+          在拥有非标准格式需要全部 1088 线时才能关闭此选项ዊ          €‚ (默认开启)
+      --video-deco, --no-video-deco
+                                 窗口装饰 (默认开启)
+          VLC 可以防止在视频周围创建窗口标题、边框等等...
+          给您一个 "最小" 的窗口。 (默认开启)
+      --video-title=<字串>     视频标题
+          为视频窗口自定义标题 (以免视频未被嵌入到界面的恍
+          …况)。
+      --align={0 (居中), 1 (左), 2 (右), 4 (上), 8 (下), 5 (左上), 6 (右上), 9 (左下), 10 (右下)}
+                                 视频排列
+          强制排列视频在它的窗口中。按默认 (0) 将居中
+          (0=居中、1=左、2=右、4=上、8=下，您也可以混合使用轍
+          ™些值，如 6=4+2 表示右上)。
+      --zoom=<浮点>            缩放视频
+          您可以按指定的比例缩放视频。
+      --deinterlace={0 (关), -1 (自动), 1 (开)}
+                                 反交错
+          反交错
+      --deinterlace-mode={discard,blend,mean,bob,linear,x,yadif,yadif2x}
+                                 反交错模式
+          要用于视频处理的反交错方式。
+  -V, --vout=<字串>            视频输出模块
+          这是 VLC 使用的视频输出模块。默认的行为是自动选才
+          ©最佳的可用模块。
+      --video-filter=<字串>    视频滤镜模块
+          此选项将添加预处理滤镜来提高画质，例如反交错或䋊          ‰­曲视频。
+      --vout-filter=<字串>     视频输出滤镜模块
+          这将添加类似克隆或视频墙的视频输出滤镜
+
+ 子画面
+ 这些选项允许您修改子画面子系统的行为。例如您可以开启子画面滤镜 (logo 等)。在这里开启滤镜并在 "子画面滤镜" 模块区域中设置它们。您也可以设置许多其它子画面选项。
+   屏幕显示:
+      --spu, --no-spu            开启子画面 (默认开启)
+          您可以完全关闭子画面处理。 (默认开启)
+      --osd, --no-osd            屏幕显示 (默认开启)
+          VLC 可以在视频上显示消息。这被称为 OSD
+          (屏幕显示)。 (默认开启)
+      --text-renderer=<字串>   文本渲染模块
+          VLC 通常使用 Freetype 进行渲染，但是这可以允许您使璍
+          ¨其他模块，如 svg。
+   字幕:
+      --sub-file=<字串>        使用字幕文件
+          载入这些字幕文件。在自动检测无法检测到您的字幕䋊          –‡件时使用。
+      --sub-autodetect-file, --no-sub-autodetect-file
+                                 自动检测字幕文件 (默认开启)
+          如果未指定字幕文件名，则自动检测一个字幕文件(基
+          于影片文件名)。 (默认开启)
+      --sub-autodetect-fuzzy=<整数>
+                                 字幕自动检测模糊性
+          这将决定字幕和影片文件名匹配的模糊程度。选项是:
+          
+0 = 不自动检测字幕
+1 = 任意字幕文件
+2 = 任意包含影勊          ‰‡文件名的字幕文件
+3 = 按附加字符匹配影片名称的字
+          幕文件
+4 = 完全匹配影片名称的字幕文件
+      --sub-autodetect-path=<字串>
+                                 字幕自动检测路径
+          如果未在当前目录中找到您的字幕文件，也将会在这⋊          º›路径中查找。
+      --sub-margin=<整数>      强制字幕位置
+          您可以使用此选项将字幕放置到影片下，而不是在影勊          ‰‡上面。请尝试多个位置。
+   覆盖:
+      --sub-filter=<字串>      子画面滤镜模块
+          这将添加所谓的 "子画面滤镜"。这些滤镜覆盖一些图㋊          ƒ或文本在视频上 (例如一个 logo、任意的文本，等等)
+          。
+   轨道设置:
+      --program=<整数>         程序
+          按照给予的服务 ID 选择程序。仅在您希望读取多程序
+          流时使用此选项 (类似 DVB 流)。
+      --programs=<字串>        程序
+          按照给予的服务 ID (SID) 逗号分隔列表选择程序。仅在
+          您希望读取多程序流时使用此选项 (类似 DVB 流)。
+      --audio-track=<整数>     音频轨道
+          要使用的音轨流编号 (从 0 到 n)。
+      --sub-track=<整数>       字幕轨道
+          要使用的字幕轨道编号 (从 0 到 n)。
+      --audio-language=<字串>  音频语言
+          您希望使用的音频轨道语言 (由逗号分隔，两个或三䶍
+          ª字母的国家代码，可使用 'none' 防止退为其他语言)。
+      --sub-language=<字串>    字幕语言
+          您希望使用的字幕轨道语言 (由逗号分隔，两个或三䶍
+          ª字母的国家代码，可使用 'any' 退回初始设置)。
+      --audio-track-id=<整数>  音频轨道 ID
+          要使用的音频轨道的流 ID。
+      --sub-track-id=<整数>    字幕轨道 ID
+          要使用的字幕轨道流 ID。
+   播放控制:
+      --input-repeat=<整数>    输入重复
+          相同的输入将要重复的次数
+      --start-time=<浮点>      起始时间
+          流将在此位置开始 (以秒为单位)。
+      --stop-time=<浮点>       停止时间
+          流将会在此处停止 (以秒为单位)。
+      --run-time=<浮点>        运行时间
+          流将会运行此长度的时间 (以秒为单位)。
+      --input-fast-seek, --no-input-fast-seek
+                                 快速寻找 (默认关闭)
+          跳转时相对于准确度更偏好速度 (默认关闭)
+      --rate=<浮点>            回放速度
+          这定义了回放速度 (额定速度为 1.0)。
+      --input-list=<字串>      输入列表
+          您可以给出一个逗号分隔的输入列表，它们将会在普狊          €š流之后被连接起来。
+      --input-slave=<字串>     从输入 (实验性)
+          这将允许您在同一时间内播放多个输入。此功能是实狊          ªŒ性的，还不支持所有格式。使用一个 '#'
+          分隔的输入列表。
+      --bookmarks=<字串>       一个流的书签列表
+          您可以手动以 "{name=bookmark-name,time=optional-time-offset,byte
+          s=optional-byte-offset},{...}" 形式给出一个输入流的书签列
+          表
+   默认设备:
+      --dvd=<字串>             DVD 设备
+          这是要使用的默认 DVD 设备。请不要忘记在盘符后的儍
+          ’号 (例如 D:)
+      --vcd=<字串>             VCD 设备
+          这是要使用的默认 VCD 设备。
+      --cd-audio=<字串>        音频 CD 设备
+          这是默认要使用的音频 CD 设备。
+   网络设置:
+      --server-port=<整数>     UDP 端口
+          这是 UDP 流使用的默认端口。默认是 1234。
+      --mtu=<整数>             网络界面的 MTU
+          这是可以通过网络传输的最大应用程序层数据包大小
+          (以字节为单位)。
+  -6, --ipv6, --no-ipv6          强制 IPv6 (默认关闭)
+          将会默认为所有连接使用 IPv6。 (默认关闭)
+  -4, --ipv4, --no-ipv4          强制 IPv4 (默认关闭)
+          将会默认为所有连接使用 IPv4。 (默认关闭)
+      --ipv4-timeout=<整数>    TCP 连接超时
+          默认 TCP 连接超时 (以毫秒为单位)。
+   Socks 代理:
+      --socks=<字串>           SOCKS 服务器
+          要使用的 SOCKS 代理服务器。格式必须是地址:端口的廍
+          ¢式。它将会被使用在所有 TCP 连接上
+      --socks-user=<字串>      SOCKS 用户名
+          要在连接 SOCKS 代理时使用的用户名。
+      --socks-pwd=<字串>       SOCKS 密码
+          要在连接 SOCK 代理时使用的密码。
+   元数据:
+      --meta-title=<字串>      标题元数据
+          允许您为一个输入指定一个 "标题" 元数据。
+      --meta-author=<字串>     作者元数据
+          允许您为一个输入指定一个 "作者" 元数据。
+      --meta-artist=<字串>     艺术家元数据
+          允许您为一个输入指定一个 "艺术家" 元数据。
+      --meta-genre=<字串>      流派元数据
+          允许您为一个输入指定一个 "流派" 元数据。
+      --meta-copyright=<字串>  版权元数据
+          允许您为一个输入指定一个 "版权" 元数据。
+      --meta-description=<字串>
+                                 描述元数据
+          允许您为一个输入指定一个 "描述" 元数据。
+      --meta-date=<字串>       日期元数据
+          允许您为一个输入指定一个 "日期" 元数据。
+      --meta-url=<字串>        URL 元数据
+          允许您为一个输入指定一个 "url" 元数据。
+   高级:
+      --cr-average=<整数>      平均时钟应用计数器
+          在使用 PVR 输入时 (或一个非常不规范的来源)，请设绍
+          ®它为 10000。
+      --clock-synchro={-1 (默认), 0 (关闭), 1 (开启)}
+                                 时钟同步
+          这将允许为实时源关闭输入时钟同步。在您播放时遇㋊          ˆ°忽动忽停的网络流时使用它。
+      --clock-jitter=<整数>    时钟抖动
+          告诉时钟算法可认为有效的且可补偿的最大的输入抖㋊          Š¨ (毫秒)
+      --network-synchronisation, --no-network-synchronisation
+                                 网络同步 (默认关闭)
+          这将允许您远程为服务器和客户端同步时钟。详细的拊          ®¾置在高级 / 网络同步中可用。 (默认关闭)
+      --input-record-path=<字串>
+                                 记录目录或文件名
+          记录将会被保存到的目录或文件名
+      --input-record-native, --no-input-record-native
+                                 偏好原生串流录制 (默认开启)
+          如果可能，输入流将被录制而不是使用流输出模块
+          (默认开启)
+      --input-timeshift-path=<字串>
+                                 时间位移目录
+          用于储存时间位移临时文件的目录。
+      --input-timeshift-granularity=<整数>
+                                 时间位移间隔
+          这是将被用于保存带有时间偏移的串流的临时文件大㋊          °。
+
+ 解码器
+ 此选项可以被用做更改 VLC 选择它编解码器 (解压缩模块) 的方式。仅高级用户才应该更改此选项，它可能会破坏您所有流的播放。
+      --codec=<字串>           首选的解码器列表
+          VLC 将会按优先级使用的编解码器列表。例如，'dummy,a5
+          2' 将会在尝试其它编码器之前尝试 dummy 和 a52
+          编解码器。仅高级用户才应该修改此选项，它可能会勊           ´坏您所有流的播放。
+      --encoder=<字串>         首选的解码器列表
+          这将允许您选择 VLC 按优先级使用的编码器列表。
+
+ 输入
+ 这些选项将允许您修改类似 DVD 或 VCD 设备、网络界面设置或字幕通道等输入子系统的行为。
+      --access=<字串>          访问模块
+          这将允许您强制指定一个访问模块。您可以在未自动䋊          £€测到正确的访问时使用它。在您真正知道您该怎么俍
+          š之前请不要将这个设置为全局选项。
+      --demux=<字串>           去复用模块
+          去复用器被用于分离 "复合" 流 (类似音频和视频流)。
+          您可以在未自动检测到正确的去复用器时使用它。在䋊          ‚¨真正知道您该怎么做之前请不要将这个设置为全局辍
+          ‰项。
+      --prefer-system-codecs, --no-prefer-system-codecs
+                                 首选系统插件替代 VLC (默认关闭)
+          指示 VLC 无论是否有可用的选择都优先使用安装在您籍
+          »统中的原生插件替代 VLC 自己的插件。 (默认关闭)
+      --stream-filter=<字串>   串流滤镜模块
+          串流滤镜被用于修改正在读取的串流。
+
+ 流输出
+ 这些选项将允许您为流输出子系统设置默认的全局选项。
+      --sout=<字串>            默认流输出链
+          您可以在这里输入默认的流输出链。请参考文档学习㋊          ¦‚何构建此类链。警告: 此链将会为所有流开启。
+      --sout-display, --no-sout-display
+                                 在流发布时的显示 (默认关闭)
+          在发布流时在本地播放流。 (默认关闭)
+      --sout-keep, --no-sout-keep
+                                 保持流输出打开 (默认关闭)
+          这将允许您在多个播放列表项目中保持单独的流输出㋊          ®ž例 (如果未指定则自动插入采集流输出) (默认关闭)
+      --sout-all, --no-sout-all  为所有 ES 开启流 (默认关闭)
+          流式化所有通量流 (视频、音频和字幕) (默认关闭)
+      --sout-audio, --no-sout-audio
+                                 开启音频流输出 (默认开启)
+          在最后一个音频流被开启时选择音频流是否应该重定㋊          ‘到流输出设备中。 (默认开启)
+      --sout-video, --no-sout-video
+                                 开启视频流输出 (默认开启)
+          在最后一个视频流被开启时选择视频流是否应该重定㋊          ‘到流输出设备中。 (默认开启)
+      --sout-spu, --no-sout-spu  开启 SPU 流输出 (默认开启)
+          在最后一个 SPU 流被开启时选择 SPU 流是否应该重定向
+          到流输出设备中。 (默认开启)
+      --sout-mux-caching=<整数>
+                                 流输出合成器缓冲 (毫秒)
+          这将允许您为流输出混合器设置初始的缓冲数量。此㋊          €¼的单位应该是毫秒。
+   VLM:
+      --vlm-conf=<字串>        VLM 设置文件
+          在 VLM 启动后立即读取一个 VLM 设置文件。
+      --mux=<字串>             混合模式
+          这是一个遗留条目是您能够设置混合模块
+      --access_output=<字串>   访问输出模块
+          这是一个遗留条目是您能够设置访问输出模块
+      --ttl=<整数>             跳跃限制 (TTL)
+          这是由流输出发送的多播数据包的跳跃限制
+          (也被称为 "在线时间" 或 TTL) (-1 = 使用操作系统内建瘍
+          „默认值)。
+      --miface=<字串>          多播输出接口
+          默认多播接口。这将覆盖路由表。
+      --miface-addr=<字串>     IPv4 多播输出接口地址
+          用于默认多播接口的 IPv4 地址。这将覆盖路由表。
+      --dscp=<整数>            DiffServ 代码点
+          用于输出 UDP 流 (或 IPv4 类的服务、IPv6 通信类)
+          的差异化服务代码点。这被用于定义网络服务的质量ዊ          €‚
+      --packetizer=<字串>      首选的分包器列表
+          这将允许您选择 VLC 选择分包器的顺序。
+      --sap-interval=<整数>    SAP 发布间隔
+          在 SAP 流量控制关闭时，这将使您可以固定 SAP
+          发布之间的间隔。
+
+ CPU
+ 这些选项允许您开启特殊的 CPU 优化。您应该总是使这些选项为打开的状态。
+      --mmx, --no-mmx            开启 CPU MMX 支持 (默认开启)
+          如果您的处理器支持 MMX 指令集，VLC
+          可以利用该特性。 (默认开启)
+      --3dn, --no-3dn            开启 CPU 3D Now! 支持 (默认开启)
+          如果您的处理器支持 3D Now! 指令集，VLC
+          可以利用该特性。 (默认开启)
+      --mmxext, --no-mmxext      开启 CPU MMX EXT 支持 (默认开启)
+          如果您的处理器支持 MMX EXT 指令集，VLC
+          可以利用该特性。 (默认开启)
+      --sse, --no-sse            开启 CPU SSE 支持 (默认开启)
+          如果您的处理器支持 SSE 指令集，VLC
+          可以利用该特性。 (默认开启)
+      --sse2, --no-sse2          开启 CPU SSE2 支持 (默认开启)
+          如果您的处理器支持 SSE2 指令集，VLC
+          可以利用该特性。 (默认开启)
+      --sse3, --no-sse3          开启 CPU SSE3 支持 (默认开启)
+          如果您的处理器支持 SSE3 指令集，VLC
+          可以利用该特性。 (默认开启)
+      --ssse3, --no-ssse3        开启 CPU SSSE3 支持 (默认开启)
+          如果您的处理器支持 SSSE3 指令集，VLC
+          可以利用该特性。 (默认开启)
+      --sse41, --no-sse41        开启 CPU SSE4.1 支持 (默认开启)
+          如果您的处理器支持 SSE4.1 指令集，VLC
+          可以利用该特性。 (默认开启)
+      --sse42, --no-sse42        开启 CPU SSE4.2 支持 (默认开启)
+          如果您的处理器支持 SSE4.2 指令集，VLC
+          可以利用该特性。 (默认开启)
+
+ 其它
+ 这些选项将允许您设置默认模块。在您知道您该如何做之前请保留这些选项。
+   特殊模块:
+      --memcpy=<字串>          内存复制模块
+          您可以选择您要使用哪种内存复制模块。按默认 VLC
+          将会按您的硬件选择一个最快的模块。
+   插件:
+      --plugins-cache, --no-plugins-cache
+                                 使用一个插件缓存 (默认开启)
+          使用插件缓存将会极大的改善 VLC 的启动时间。
+          (默认开启)
+      --plugin-path=<字串>     模块搜索路径
+          VLC 查找模块的附加路径。您可以通过使用 "PATH_SEP"
+          作为分隔符添加一系列的路径
+      --data-path=<字串>       数据搜索路径
+          覆盖默认数据/共享搜索路径。
+   性能选项:
+      --one-instance, --no-one-instance
+                                 仅允许运行一个实例 (默认关闭)
+          仅允许运行一个 VLC 实例在某些时候非常有用。例如怍
+          ¨已经将 VLC 关联给一些媒体格式并且您不希望在每次㋊          œ¨资源管理器中双击一个文件时都打开一个新的 VLC
+          实例时。此选项将允许您在已运行的实例中播放文件䋊          ˆ–者将其加入队列。 (默认关闭)
+      --started-from-file, --no-started-from-file
+                                 从文件管理中启动 VLC (默认关闭)
+          告诉 VLC 它是被 OS 的文件关联所驱动的 (默认关闭)
+      --one-instance-when-started-from-file, --no-one-instance-when-started-from-file
+                                 在由文件启动时只有一个实例
+                                 (默认开启)
+          在由文件启动时仅允许一个实例。 (默认开启)
+      --playlist-enqueue, --no-playlist-enqueue
+                                 在单实例模式中添加项目到播放列拊                                 ¡¨队列中 (默认关闭)
+          在使用单实例选项时添加项目到播放队列中并保持播䋊          ”¾当前的项目。 (默认关闭)
+      --high-priority, --no-high-priority
+                                 增加进程的优先级 (默认关闭)
+          增加进程优先级非常适合用于改进您的播放体验并时
+          VLC 不扰乱其它应用程序，但是它将占用更多的处理器
+          时间。不过要注意在某些情况下 (bug) VLC 会占用全部瘍
+          „处理器时间并且整个系统将无法响应，只有重新启动
+          您的机器才能还原。 (默认关闭)
+
+ 播放列表
+ 这些选项将定义播放列表的行为。它们中的某些选项将覆盖播放列表对话框中的设置。
+  -Z, --random, --no-random      永远随机播放文件 (默认关闭)
+          VLC 将会随机播放在播放列表中的文件直到被中断。
+          (默认关闭)
+  -L, --loop, --no-loop          全部重复 (默认关闭)
+          VLC 将会无限期的保持播放播放列表中的内容。
+          (默认关闭)
+  -R, --repeat, --no-repeat      重复当前的项目 (默认关闭)
+          VLC 将保持播放当前的播放列表项目。 (默认关闭)
+      --play-and-exit, --no-play-and-exit
+                                 播放并退出 (默认关闭)
+          如果播放列表中没有项目了就退出。 (默认关闭)
+      --play-and-stop, --no-play-and-stop
+                                 播放与停止 (默认关闭)
+          在每个播放列表项目结束后停止播放。 (默认关闭)
+      --play-and-pause, --no-play-and-pause
+                                 播放与暂停 (默认关闭)
+          在播放列表中各项的最后一帧处暂停。 (默认关闭)
+      --media-library, --no-media-library
+                                 使用媒体库 (默认开启)
+          媒体库将被自动保存并在每次您启动 VLC
+          时重新载入。 (默认开启)
+      --playlist-tree, --no-playlist-tree
+                                 显示播放列表树 (默认关闭)
+          播放列表可以使用树形结构来分类某些项目，类似一⋊          ¸ª目录中的内容。 (默认关闭)
+      --open=<字串>            默认流
+          此流将总是在 VLC 启动时被打开。
+      --auto-preparse, --no-auto-preparse
+                                 自动预分析文件 (默认开启)
+          自动预分析被添加到播放列表中的文件
+          (恢复某些元数据)。 (默认开启)
+      --album-art={0 (仅手动下载), 1 (在轨道开始播放时), 2 (在轨道被添加后)}
+                                 专辑封面策略
+          选择要如何下载专辑封面。
+  -S, --services-discovery=<字串>
+                                 服务发现模块
+          指定要载入的服务发现模块，由冒号分隔。标准值为
+          sap、hal ...
+  -v, --verbose=<整数>         提示程度 (0,1,2)
+          这是提示程度等级 (0=仅错误和标准消息、1=警告、2=讍
+          ƒ试)。
+      --verbose-objects=<字串> 选择何对象应输出调试信息
+          这是一个用 ',' 分隔的字符串，各对象应以 '+' 或 '-'
+          为前缀来分别表示启用或禁用。关键字 'all'
+          代表所有对象。对象可以用类型或模块名称来表示。㋊          ¯¹用准确名称表示的对象应用的规则将比对类型应用瘍
+          „规则优先。注意，您仍然需要使用 -vvv
+          来显示出调试信息。
+  -q, --quiet, --no-quiet        安静 (默认关闭)
+          关闭所有警告和信息消息。 (默认关闭)
+      --file-logging, --no-file-logging
+                                 记录到文件 (默认关闭)
+          记录所有的 VLC 消息到一个文本文件中。 (默认关闭)
+      --language={auto,en,ar,bn,pt_BR,en_GB,bg,ca,zh_TW,cs,da,nl,fi,fr,gl,ka,de,he,hr,hu,id,it,ja,ko,lt,mn,ms,nn,kk,km,oc,fa,pl,pt_PT,pa,ro,ru,zh_CN,si,sr,sk,sl,ckb,es,sv,tr,uk,vi,wa}
+                                 语言
+          您可以手动选择界面语言。如果在这里指定了 "自动"
+          那么将自动检测系统语言。
+      --color, --no-color        彩色消息 (默认开启)
+          这将开启发送到控制台的消息的着色，您的终端需要䋊          ”¯持 Linux 色彩才有效。 (默认开启)
+      --advanced, --no-advanced  显示高级选项 (默认关闭)
+          在这被开启时，参数和/或界面将会显示所有可用的选
+          项，包括那些大多数用户永远不需要接触的选项。
+          (默认关闭)
+      --interact, --no-interact  界面交互 (默认开启)
+          在这被开启时，界面将会在每次需要用户输入时显示⋊          ¸€个对话框。 (默认开启)
+      --stats, --no-stats        收集本地统计 (默认开启)
+          收集关于正在播放的媒体的各类本地统计数据。
+          (默认开启)
+  -I, --intf=<字串>            界面模块
+          这是 VLC 使用的主界面。默认的行为是自动选择最佳瘍
+          „可用界面。
+      --extraintf=<字串>       扩展界面模块
+          您可以为 VLC 选择 "附加界面"。它们将在启动默认界雍
+          ¢时在后台启动。使用逗号分隔界面模块列表。(常用侍
+          ¼为 "rc" (远程控制), "http", "gestures" ...)
+      --control=<字串>         控制界面
+          您可以选择 VLC 的控制界面。
+
+ 热键
+ 这些设置被绑定为全局的 VLC 按键，也被称作 "热键"。
+      --key-toggle-fullscreen=<整数>
+                                 全屏幕
+          选择切换全屏幕状态的热键。
+      --global-key-toggle-fullscreen=<整数>
+                                 全屏幕
+          选择切换全屏幕状态的热键。
+      --key-leave-fullscreen=<整数>
+                                 离开全屏幕
+          选择用于离开全屏幕状态的热键。
+      --global-key-leave-fullscreen=<整数>
+                                 离开全屏幕
+          选择用于离开全屏幕状态的热键。
+      --key-play-pause=<整数>  播放/暂停
+          选择用于切换暂停状态的热键。
+      --global-key-play-pause=<整数>
+                                 播放/暂停
+          选择用于切换暂停状态的热键。
+      --key-pause=<整数>       仅暂停
+          选择用于暂停的热键。
+      --global-key-pause=<整数>
+                                 仅暂停
+          选择用于暂停的热键。
+      --key-play=<整数>        仅播放
+          选择用于播放的热键。
+      --global-key-play=<整数> 仅播放
+          选择用于播放的热键。
+      --key-faster=<整数>      较快
+          选择由于快进播放的热键。
+      --global-key-faster=<整数>
+                                 较快
+          选择由于快进播放的热键。
+      --key-slower=<整数>      较慢
+          选择用于快退播放的人间。
+      --global-key-slower=<整数>
+                                 较慢
+          选择用于快退播放的人间。
+      --key-rate-normal=<整数> 正常比率
+          选择将播放速率设为正常值的热键。
+      --global-key-rate-normal=<整数>
+                                 正常比率
+          选择将播放速率设为正常值的热键。
+      --key-rate-faster-fine=<整数>
+                                 较快 (好)
+          选择由于快进播放的热键。
+      --global-key-rate-faster-fine=<整数>
+                                 较快 (好)
+          选择由于快进播放的热键。
+      --key-rate-slower-fine=<整数>
+                                 较慢 (好)
+          选择用于快退播放的人间。
+      --global-key-rate-slower-fine=<整数>
+                                 较慢 (好)
+          选择用于快退播放的人间。
+      --key-next=<整数>        下一个
+          选择用于跳到下一个播放列表项目的热键。
+      --global-key-next=<整数> 下一个
+          选择用于跳到下一个播放列表项目的热键。
+      --key-prev=<整数>        上一个
+          选择用于跳到上一个播放列表项目的热键。
+      --global-key-prev=<整数> 上一个
+          选择用于跳到上一个播放列表项目的热键。
+      --key-stop=<整数>        停止
+          选择用于停止播放的热键。
+      --global-key-stop=<整数> 停止
+          选择用于停止播放的热键。
+      --key-position=<整数>    位置
+          选择用于显示位置的热键。
+      --global-key-position=<整数>
+                                 位置
+          选择用于显示位置的热键。
+      --key-jump-extrashort=<整数>
+                                 非常短的向后跳转
+          选择用于非常短向后跳转的热键。
+      --global-key-jump-extrashort=<整数>
+                                 非常短的向后跳转
+          选择用于非常短向后跳转的热键。
+      --key-jump+extrashort=<整数>
+                                 非常短的向前跳转
+          选择用于非常短的向前跳转的热键。
+      --global-key-jump+extrashort=<整数>
+                                 非常短的向前跳转
+          选择用于非常短的向前跳转的热键。
+      --key-jump-short=<整数>  短向后跳转
+          选择用于短向后跳转的热键。
+      --global-key-jump-short=<整数>
+                                 短向后跳转
+          选择用于短向后跳转的热键。
+      --key-jump+short=<整数>  短向前跳转
+          选择用于短向前跳转的热键。
+      --global-key-jump+short=<整数>
+                                 短向前跳转
+          选择用于短向前跳转的热键。
+      --key-jump-medium=<整数> 中向后跳转
+          选择用于中向后跳转的热键。
+      --global-key-jump-medium=<整数>
+                                 中向后跳转
+          选择用于中向后跳转的热键。
+      --key-jump+medium=<整数> 中向前跳转
+          选择用于中向前跳转的热键。
+      --global-key-jump+medium=<整数>
+                                 中向前跳转
+          选择用于中向前跳转的热键。
+      --key-jump-long=<整数>   长向后跳转
+          选择用于长向后跳转的热键。
+      --global-key-jump-long=<整数>
+                                 长向后跳转
+          选择用于长向后跳转的热键。
+      --key-jump+long=<整数>   长向前跳转
+          选择用于长向前跳转的热键。
+      --global-key-jump+long=<整数>
+                                 长向前跳转
+          选择用于长向前跳转的热键。
+      --key-frame-next=<整数>  下一帧
+          选择跳转至下一帧的热键。
+      --global-key-frame-next=<整数>
+                                 下一帧
+          选择跳转至下一帧的热键。
+      --key-nav-activate=<整数>
+                                 激活
+          选择用于激活 DVD 菜单中选中项目的按键。
+      --global-key-nav-activate=<整数>
+                                 激活
+          选择用于激活 DVD 菜单中选中项目的按键。
+      --key-nav-up=<整数>      导航上
+          选择用于在 DVD 菜单中向上移动选择器的按键。
+      --global-key-nav-up=<整数>
+                                 导航上
+          选择用于在 DVD 菜单中向上移动选择器的按键。
+      --key-nav-down=<整数>    导航下
+          选择用于在 DVD 菜单中向下移动选择器的按键。
+      --global-key-nav-down=<整数>
+                                 导航下
+          选择用于在 DVD 菜单中向下移动选择器的按键。
+      --key-nav-left=<整数>    导航左
+          选择用于在 DVD 菜单中向左移动选择器的按键。
+      --global-key-nav-left=<整数>
+                                 导航左
+          选择用于在 DVD 菜单中向左移动选择器的按键。
+      --key-nav-right=<整数>   导航右
+          选择用于在 DVD 菜单中向右移动选择器的按键。
+      --global-key-nav-right=<整数>
+                                 导航右
+          选择用于在 DVD 菜单中向右移动选择器的按键。
+      --key-disc-menu=<整数>   转到 DVD 菜单
+          选择用于转到 DVD 菜单的按键
+      --global-key-disc-menu=<整数>
+                                 转到 DVD 菜单
+          选择用于转到 DVD 菜单的按键
+      --key-title-prev=<整数>  选择上一个 DVD 标题
+          选择用于转到上一个 DVD 标题的按键
+      --global-key-title-prev=<整数>
+                                 选择上一个 DVD 标题
+          选择用于转到上一个 DVD 标题的按键
+      --key-title-next=<整数>  选择下一个 DVD 标题
+          选择用于转到下一个 DVD 标题的按键
+      --global-key-title-next=<整数>
+                                 选择下一个 DVD 标题
+          选择用于转到下一个 DVD 标题的按键
+      --key-chapter-prev=<整数>
+                                 选择上一个 DVD 章节
+          选择用于选择上一个 DVD 章节的按键
+      --global-key-chapter-prev=<整数>
+                                 选择上一个 DVD 章节
+          选择用于选择上一个 DVD 章节的按键
+      --key-chapter-next=<整数>
+                                 选择下一个 DVD 章节
+          选择用于选择下一个 DVD 章节的按键
+      --global-key-chapter-next=<整数>
+                                 选择下一个 DVD 章节
+          选择用于选择下一个 DVD 章节的按键
+      --key-quit=<整数>        退出
+          选择退出应用程序的热键。
+      --global-key-quit=<整数> 退出
+          选择退出应用程序的热键。
+      --key-vol-up=<整数>      音量上
+          选择用于增大音频音量的按键。
+      --global-key-vol-up=<整数>
+                                 音量上
+          选择用于增大音频音量的按键。
+      --key-vol-down=<整数>    音量下
+          选择用于减小音量的按键。
+      --global-key-vol-down=<整数>
+                                 音量下
+          选择用于减小音量的按键。
+      --key-vol-mute=<整数>    静音
+          选择用于静音的按键。
+      --global-key-vol-mute=<整数>
+                                 静音
+          选择用于静音的按键。
+      --key-subdelay-up=<整数> 字幕延迟上
+          选择用于增加字幕延迟的按键。
+      --global-key-subdelay-up=<整数>
+                                 字幕延迟上
+          选择用于增加字幕延迟的按键。
+      --key-subdelay-down=<整数>
+                                 字幕延迟下
+          选择用于减少字幕延迟的按键。
+      --global-key-subdelay-down=<整数>
+                                 字幕延迟下
+          选择用于减少字幕延迟的按键。
+      --key-subpos-up=<整数>   字幕位置上移
+          选择用于上移字幕位置的热键。
+      --global-key-subpos-up=<整数>
+                                 字幕位置上移
+          选择用于上移字幕位置的热键。
+      --key-subpos-down=<整数> 字幕位置下移
+          选择用于下移字幕位置的热键。
+      --global-key-subpos-down=<整数>
+                                 字幕位置下移
+          选择用于下移字幕位置的热键。
+      --key-audiodelay-up=<整数>
+                                 音频延迟上
+          选择用于增加音频延迟的按键。
+      --global-key-audiodelay-up=<整数>
+                                 音频延迟上
+          选择用于增加音频延迟的按键。
+      --key-audiodelay-down=<整数>
+                                 音频延迟下
+          选择用于减少音频延迟的按键。
+      --global-key-audiodelay-down=<整数>
+                                 音频延迟下
+          选择用于减少音频延迟的按键。
+      --key-audio-track=<整数> 切换音轨
+          在可用的音轨 (语言) 之间切换。
+      --global-key-audio-track=<整数>
+                                 切换音轨
+          在可用的音轨 (语言) 之间切换。
+      --key-audiodevice-cycle=<整数>
+                                 在音频设备之间切换
+          在可用的音频设备之间切换
+      --global-key-audiodevice-cycle=<整数>
+                                 在音频设备之间切换
+          在可用的音频设备之间切换
+      --key-subtitle-track=<整数>
+                                 切换字幕轨道
+          在可用的字幕轨道之间切换。
+      --global-key-subtitle-track=<整数>
+                                 切换字幕轨道
+          在可用的字幕轨道之间切换。
+      --key-aspect-ratio=<整数>
+                                 切换源高宽比
+          在源高宽比预定义列表之间切换。
+      --global-key-aspect-ratio=<整数>
+                                 切换源高宽比
+          在源高宽比预定义列表之间切换。
+      --key-crop=<整数>        切换视频剪辑
+          在预定义的剪辑格式列表之间切换。
+      --global-key-crop=<整数> 切换视频剪辑
+          在预定义的剪辑格式列表之间切换。
+      --key-toggle-autoscale=<整数>
+                                 打开或关闭自动缩放
+          激活或关闭自动缩放。
+      --global-key-toggle-autoscale=<整数>
+                                 打开或关闭自动缩放
+          激活或关闭自动缩放。
+      --key-incr-scalefactor=<整数>
+                                 增大缩放因数
+          增大缩放因数。
+      --global-key-incr-scalefactor=<整数>
+                                 增大缩放因数
+          增大缩放因数。
+      --key-decr-scalefactor=<整数>
+                                 减小缩放因数
+          减小缩放因数。
+      --global-key-decr-scalefactor=<整数>
+                                 减小缩放因数
+          减小缩放因数。
+      --key-deinterlace=<整数> 切换反交错模式
+          在反交错模式之间切换。
+      --global-key-deinterlace=<整数>
+                                 切换反交错模式
+          在反交错模式之间切换。
+      --key-intf-show=<整数>   显示界面
+          将界面提升至所有窗口之前。
+      --global-key-intf-show=<整数>
+                                 显示界面
+          将界面提升至所有窗口之前。
+      --key-intf-hide=<整数>   隐藏界面
+          将界面降低至所有窗口之后。
+      --global-key-intf-hide=<整数>
+                                 隐藏界面
+          将界面降低至所有窗口之后。
+      --key-snapshot=<整数>    获取视频截图
+          获取一张视频截图并将其写入到磁盘。
+      --global-key-snapshot=<整数>
+                                 获取视频截图
+          获取一张视频截图并将其写入到磁盘。
+      --key-history-back=<整数>
+                                 返回浏览历史
+          选择用于返回 (上一个媒体项目) 浏览历史的按键。
+      --global-key-history-back=<整数>
+                                 返回浏览历史
+          选择用于返回 (上一个媒体项目) 浏览历史的按键。
+      --key-history-forward=<整数>
+                                 前进浏览历史
+          选择用于前进 (上一个媒体项目) 浏览历史的按键。
+      --global-key-history-forward=<整数>
+                                 前进浏览历史
+          选择用于前进 (上一个媒体项目) 浏览历史的按键。
+      --key-record=<整数>      录制
+          录制访问滤镜开始/停止。
+      --global-key-record=<整数>
+                                 录制
+          录制访问滤镜开始/停止。
+      --key-dump=<整数>        转储
+          媒体转储访问滤镜触发器。
+      --global-key-dump=<整数> 转储
+          媒体转储访问滤镜触发器。
+      --key-zoom=<整数>        缩放
+          缩放
+      --global-key-zoom=<整数> 缩放
+          缩放
+      --key-unzoom=<整数>      反变焦
+          反变焦
+      --global-key-unzoom=<整数>
+                                 反变焦
+          反变焦
+      --key-wallpaper=<整数>   在视频输出模式中切换壁纸输出
+          在视频输出中切换壁纸输出模式。
+      --global-key-wallpaper=<整数>
+                                 在视频输出模式中切换壁纸输出
+          在视频输出中切换壁纸输出模式。
+      --key-menu-on=<整数>     在视频输出顶端的 OSD 菜单
+          在视频输出顶端的 OSD 菜单
+      --global-key-menu-on=<整数>
+                                 在视频输出顶端的 OSD 菜单
+          在视频输出顶端的 OSD 菜单
+      --key-menu-off=<整数>    不在视频输出中显示 OSD 菜单
+          不在视频输出顶端显示 OSD 菜单
+      --global-key-menu-off=<整数>
+                                 不在视频输出中显示 OSD 菜单
+          不在视频输出顶端显示 OSD 菜单
+      --key-menu-right=<整数>  在右侧高亮显示 widget
+          移动 OSD 菜单高亮显示到右侧的 widget 上
+      --global-key-menu-right=<整数>
+                                 在右侧高亮显示 widget
+          移动 OSD 菜单高亮显示到右侧的 widget 上
+      --key-menu-left=<整数>   高亮显示左侧的 widget
+          移动 OSD 菜单高亮显示到左侧的 widget 上
+      --global-key-menu-left=<整数>
+                                 高亮显示左侧的 widget
+          移动 OSD 菜单高亮显示到左侧的 widget 上
+      --key-menu-up=<整数>     高亮显示顶端的 widget
+          移动 OSD 菜单高亮到顶端的 widget 上
+      --global-key-menu-up=<整数>
+                                 高亮显示顶端的 widget
+          移动 OSD 菜单高亮到顶端的 widget 上
+      --key-menu-down=<整数>   高亮显示底部的 widget
+          移动 OSD 菜单高亮到底部的 widget 上
+      --global-key-menu-down=<整数>
+                                 高亮显示底部的 widget
+          移动 OSD 菜单高亮到底部的 widget 上
+      --key-menu-select=<整数> 选择当前的 widget
+          选择当前的 widget 执行所分配的操作。
+      --global-key-menu-select=<整数>
+                                 选择当前的 widget
+          选择当前的 widget 执行所分配的操作。
+      --key-crop-top=<整数>    从视频顶端裁剪一个像素
+          从视频顶端裁剪一个像素
+      --global-key-crop-top=<整数>
+                                 从视频顶端裁剪一个像素
+          从视频顶端裁剪一个像素
+      --key-uncrop-top=<整数>  取消从视频顶端裁剪一个像素
+          取消从视频顶端裁剪一个像素
+      --global-key-uncrop-top=<整数>
+                                 取消从视频顶端裁剪一个像素
+          取消从视频顶端裁剪一个像素
+      --key-crop-left=<整数>   从视频左侧裁剪一个像素
+          从视频左侧裁剪一个像素
+      --global-key-crop-left=<整数>
+                                 从视频左侧裁剪一个像素
+          从视频左侧裁剪一个像素
+      --key-uncrop-left=<整数> 取消从视频左侧裁剪一个像素
+          取消从视频左侧裁剪一个像素
+      --global-key-uncrop-left=<整数>
+                                 取消从视频左侧裁剪一个像素
+          取消从视频左侧裁剪一个像素
+      --key-crop-bottom=<整数> 从视频底端裁剪一个像素
+          从视频底端裁剪一个像素
+      --global-key-crop-bottom=<整数>
+                                 从视频底端裁剪一个像素
+          从视频底端裁剪一个像素
+      --key-uncrop-bottom=<整数>
+                                 取消从视频底端裁剪一个像素
+          取消从视频底端裁剪一个像素
+      --global-key-uncrop-bottom=<整数>
+                                 取消从视频底端裁剪一个像素
+          取消从视频底端裁剪一个像素
+      --key-crop-right=<整数>  从视频右侧裁剪一个像素
+          从视频右侧裁剪一个像素
+      --global-key-crop-right=<整数>
+                                 从视频右侧裁剪一个像素
+          从视频右侧裁剪一个像素
+      --key-uncrop-right=<整数>
+                                 取消从视频右侧裁剪一个像素
+          取消从视频右侧裁剪一个像素
+      --global-key-uncrop-right=<整数>
+                                 取消从视频右侧裁剪一个像素
+          取消从视频右侧裁剪一个像素
+      --key-random=<整数>      随机顺序
+          切换随机播放列表播放模式
+      --global-key-random=<整数>
+                                 随机顺序
+          切换随机播放列表播放模式
+      --key-loop=<整数>        普通/重复/循环
+          切换普通/重复/循环播放列表模式
+      --global-key-loop=<整数> 普通/重复/循环
+          切换普通/重复/循环播放列表模式
+   缩放:
+      --key-zoom-quarter=<整数>
+                                 1:4 四分之一
+      --global-key-zoom-quarter=<整数>
+                                 1:4 四分之一
+      --key-zoom-half=<整数>   1:2 二分之一
+      --global-key-zoom-half=<整数>
+                                 1:2 二分之一
+      --key-zoom-original=<整数>
+                                 1:1 原始
+      --global-key-zoom-original=<整数>
+                                 1:1 原始
+      --key-zoom-double=<整数> 2:1 双倍
+      --global-key-zoom-double=<整数>
+                                 2:1 双倍
+   跳跃大小:
+      --extrashort-jump-size=<整数>
+                                 非常短的跳转长度
+          非常短的跳转长度，以秒为单位。
+      --short-jump-size=<整数> 短跳转长度
+          短跳转长度，以秒为单位。
+      --medium-jump-size=<整数>
+                                 中跳转长度
+          中跳转长度，以秒为单位。
+      --long-jump-size=<整数>  长跳转长度
+          长跳转长度，以秒为单位。
+      --key-set-bookmark1=<整数>
+                                 设置播放列表书签 1
+          选择设置此播放列表书签的按键。
+      --global-key-set-bookmark1=<整数>
+                                 设置播放列表书签 1
+          选择设置此播放列表书签的按键。
+      --key-set-bookmark2=<整数>
+                                 设置播放列表书签 2
+          选择设置此播放列表书签的按键。
+      --global-key-set-bookmark2=<整数>
+                                 设置播放列表书签 2
+          选择设置此播放列表书签的按键。
+      --key-set-bookmark3=<整数>
+                                 设置播放列表书签 3
+          选择设置此播放列表书签的按键。
+      --global-key-set-bookmark3=<整数>
+                                 设置播放列表书签 3
+          选择设置此播放列表书签的按键。
+      --key-set-bookmark4=<整数>
+                                 设置播放列表书签 4
+          选择设置此播放列表书签的按键。
+      --global-key-set-bookmark4=<整数>
+                                 设置播放列表书签 4
+          选择设置此播放列表书签的按键。
+      --key-set-bookmark5=<整数>
+                                 设置播放列表书签 5
+          选择设置此播放列表书签的按键。
+      --global-key-set-bookmark5=<整数>
+                                 设置播放列表书签 5
+          选择设置此播放列表书签的按键。
+      --key-set-bookmark6=<整数>
+                                 设置播放列表书签 6
+          选择设置此播放列表书签的按键。
+      --global-key-set-bookmark6=<整数>
+                                 设置播放列表书签 6
+          选择设置此播放列表书签的按键。
+      --key-set-bookmark7=<整数>
+                                 设置播放列表书签 7
+          选择设置此播放列表书签的按键。
+      --global-key-set-bookmark7=<整数>
+                                 设置播放列表书签 7
+          选择设置此播放列表书签的按键。
+      --key-set-bookmark8=<整数>
+                                 设置播放列表书签 8
+          选择设置此播放列表书签的按键。
+      --global-key-set-bookmark8=<整数>
+                                 设置播放列表书签 8
+          选择设置此播放列表书签的按键。
+      --key-set-bookmark9=<整数>
+                                 设置播放列表书签 9
+          选择设置此播放列表书签的按键。
+      --global-key-set-bookmark9=<整数>
+                                 设置播放列表书签 9
+          选择设置此播放列表书签的按键。
+      --key-set-bookmark10=<整数>
+                                 设置播放列表书签 10
+          选择设置此播放列表书签的按键。
+      --global-key-set-bookmark10=<整数>
+                                 设置播放列表书签 10
+          选择设置此播放列表书签的按键。
+      --key-play-bookmark1=<整数>
+                                 播放播放列表书签 1
+          选择播放此书签的按键。
+      --global-key-play-bookmark1=<整数>
+                                 播放播放列表书签 1
+          选择播放此书签的按键。
+      --key-play-bookmark2=<整数>
+                                 播放播放列表书签 2
+          选择播放此书签的按键。
+      --global-key-play-bookmark2=<整数>
+                                 播放播放列表书签 2
+          选择播放此书签的按键。
+      --key-play-bookmark3=<整数>
+                                 播放播放列表书签 3
+          选择播放此书签的按键。
+      --global-key-play-bookmark3=<整数>
+                                 播放播放列表书签 3
+          选择播放此书签的按键。
+      --key-play-bookmark4=<整数>
+                                 播放播放列表书签 4
+          选择播放此书签的按键。
+      --global-key-play-bookmark4=<整数>
+                                 播放播放列表书签 4
+          选择播放此书签的按键。
+      --key-play-bookmark5=<整数>
+                                 播放播放列表书签 5
+          选择播放此书签的按键。
+      --global-key-play-bookmark5=<整数>
+                                 播放播放列表书签 5
+          选择播放此书签的按键。
+      --key-play-bookmark6=<整数>
+                                 播放播放列表书签 6
+          选择播放此书签的按键。
+      --global-key-play-bookmark6=<整数>
+                                 播放播放列表书签 6
+          选择播放此书签的按键。
+      --key-play-bookmark7=<整数>
+                                 播放播放列表书签 7
+          选择播放此书签的按键。
+      --global-key-play-bookmark7=<整数>
+                                 播放播放列表书签 7
+          选择播放此书签的按键。
+      --key-play-bookmark8=<整数>
+                                 播放播放列表书签 8
+          选择播放此书签的按键。
+      --global-key-play-bookmark8=<整数>
+                                 播放播放列表书签 8
+          选择播放此书签的按键。
+      --key-play-bookmark9=<整数>
+                                 播放播放列表书签 9
+          选择播放此书签的按键。
+      --global-key-play-bookmark9=<整数>
+                                 播放播放列表书签 9
+          选择播放此书签的按键。
+      --key-play-bookmark10=<整数>
+                                 播放播放列表书签 10
+          选择播放此书签的按键。
+      --global-key-play-bookmark10=<整数>
+                                 播放播放列表书签 10
+          选择播放此书签的按键。
+      --bookmark1=<字串>       播放列表书签 1
+          这将允许定义播放列表书签。
+      --bookmark2=<字串>       播放列表书签 2
+          这将允许定义播放列表书签。
+      --bookmark3=<字串>       播放列表书签 3
+          这将允许定义播放列表书签。
+      --bookmark4=<字串>       播放列表书签 4
+          这将允许定义播放列表书签。
+      --bookmark5=<字串>       播放列表书签 5
+          这将允许定义播放列表书签。
+      --bookmark6=<字串>       播放列表书签 6
+          这将允许定义播放列表书签。
+      --bookmark7=<字串>       播放列表书签 7
+          这将允许定义播放列表书签。
+      --bookmark8=<字串>       播放列表书签 8
+          这将允许定义播放列表书签。
+      --bookmark9=<字串>       播放列表书签 9
+          这将允许定义播放列表书签。
+      --bookmark10=<字串>      播放列表书签 10
+          这将允许定义播放列表书签。
+  -h, --help, --no-help          打印 VLC 帮助 (可以和 --advanced 和
+                                 --help-verbose 一起使用) (默认关闭)
+  -H, --full-help, --no-full-help
+                                 VLC 和它模块的全面帮助 (默认关闭)
+      --longhelp, --no-longhelp  打印 VLC 和它全部模块的帮助
+                                 (可以和 --advanced 和 --help-verbose
+                                 一起使用) (默认关闭)
+      --help-verbose, --no-help-verbose
+                                 在显示帮助时询问是否显示额外的拊                                 §£释 (默认关闭)
+  -l, --list, --no-list          打印一份可用模块的列表
+                                 (默认关闭)
+      --list-verbose, --no-list-verbose
+                                 打印一份带详细信息的可用模块列拊                                 ¡¨ (默认关闭)
+  -p, --module=<字串>          输出关于指定模块的帮助 (可以和
+                                 --advanced 和 --help-verbose 一起使用)。
+                                 在模块名前面加 = 可严格匹配。
+      --ignore-config, --no-ignore-config
+                                 没有设置选项将会被载入或被保存㋊                                 ˆ°设置文件中 (默认开启)
+      --reset-config, --no-reset-config
+                                 重置当前的设置为默认值
+                                 (默认关闭)
+      --reset-plugins-cache, --no-reset-plugins-cache
+                                 重置当前插件的缓存 (默认关闭)
+      --version, --no-version    打印版本信息 (默认关闭)
+      --config=<字串>          使用可替换的设置文件

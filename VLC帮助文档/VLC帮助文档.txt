@@ -1,0 +1,178 @@
+VLC调研 
+
+VLC控件支持的参数和方法 
+VLC对象列表 
+
+
+
+
+Vlc Plugin Object的方法 
+l        VersionInfo:成员, 返回版本信息的字符串 
+
+l        vlc.versionInfo()：方法, 返回版本信息的字符串 
+
+
+
+Audio object的属性(读写) 
+l        vlc.audio.mute :静音和非静音 
+
+l        vlc.audio.volume：音量的百分比，值在0—200之间 
+
+l        vlc.audio.track：音轨信息，值在0-65535之间 
+
+l        vlc.audio.channel：值在1至5整数，指示的音频通道模式使用，值可以是：“1 =立体声”，“2 =反向立体声”，“3 =左”，“4 =右” “5 =混音”。 
+
+l        vlc.audio.toggleMute() : 方法，切换静音和非静音 
+
+
+
+Input object 
+只读属性 
+
+l        vlc.input.length：毫秒数,输入文件的长度 
+
+l        vlc.input.fps：每秒产生一个浮动帧 
+
+l        vlc.input.hasVout：一个布尔值，返回true当视频正在显示，它返回false时不显示视频 
+
+l        读/写属性 
+
+l        vlc.input.position：在多媒体流正常化的情况下，给定一个浮点值，值范围[0.0 - 1.0] 
+
+l        vlc.input.time：在给定的时间以毫秒为单位的绝对位置，这个属性可以用来寻求流 
+
+<!-- absolute seek in stream !--> 
+
+vlc.input.time = <absolute seek> 
+
+<!-- relative seek in stream !--> 
+
+vlc.input.time = vlc.input.time + <relative seek> 
+
+
+
+l        vlc.input.state：当前状态（空闲/关闭= 0，开幕= 1，缓冲= 2，打= 3，暂停= 4，停止= 5，错误= 6）
+
+l        vlc.input.rate：输入速度，浮动的正常速度，0.5为速度的一半，为2.0快一倍。 
+
+
+
+
+
+Playlist object 
+只读属性 
+
+l        vlc.playlist.itemCount：目前播放列表中的项目的数量 
+
+l        vlc.playlist.isPlaying：一个布尔值，返回true 正在播放，false未播放 
+
+方法 
+
+l        vlc.playlist.add（mrl）：添加一个mrl（多媒体资源定位器）播放列表项目。mrl必须为字符串。 
+
+l        vlc.playlist.add（mrl,name,options）：添加mrl（多媒体资源定位器）播放列表项目，与meta的名字和选项。所有的输入值必须为字符串。 
+
+l        vlc.playlist.play（）：开始播放当前列表项 
+
+l        vlc.playlist.togglePause（）：切换当前播放列表项目的暂停状态 
+
+l        vlc.playlist.stop（）：停止播放当前播放列表项目 
+
+l        vlc.playlist.next（）：迭代到下一个播放列表项目 
+
+l        vlc.playlist.prev（）：迭代到以前的音乐项目 
+
+l        vlc.playlist.clear（）：清空当前播放列表，所有项目将被删除 
+
+l        vlc.playlist.removeItem（number）：删除给定的项目编号（number不能比vlc.playlist.itemCount大）
+
+
+
+
+
+
+
+Video object 
+只读属性 
+
+l        vlc.video.width：返回视频水平尺寸 
+
+l        vlc.video.height：返回视频垂直大小 
+
+读/写属性 
+
+l        vlc.video.fullscreen：当设置为true，视频将显示在全屏模式.设置为false时，视频按指定的大小显示。该属性需要布尔值作为输入。 
+
+l        vlc.video.aspectRatio：获取和设置长宽比使用视频屏幕。该属性采用字符串作为输入值。有效值为：“1:1”，“4:3”，“16:9”，“16:10”，“221:100”和“5:4” 
+
+方法 
+
+l        vlc.video.toggleFullscreen（）：全屏模式切换 
+
+Log object 
+只读属性 
+
+l        vlc.log.messages：返回一个消息对象 
+
+l        读/写属性 
+
+l        vlc.log.verbosity：写改变日志信息冗赘级别数[-1,0,1,2,3]。这些数字的含义如下：-1停用，0信息，1个错误，2警告，3调试。 
+
+Messages object 
+只读属性 
+
+l        messages.count：返回日志消息的数量 
+
+l        messages.severity：数字，日志信息的严重程度（0 =信息，1 =错误，2 =警告，3 =调试） 
+
+l        message.name：对VLC模块的名称印的日志信息（如：网址,directx，等等..） 
+
+l        message.type：对模块类型的vlc印日志信息（如：input, access, vout, sout，等等..） 
+
+l        message.message：消息文本 
+
+方法 
+
+l        messages.clear（）：清除当前日志缓冲区。 
+
+l        messages.iterator（）：返回一个消息迭代器对象 
+
+Iterator object 
+只读属性 
+
+l        iterator.hasNext：返回一个布尔值，表明还有下一个信息 
+
+方法 
+
+l        iterator.next（）：返回下一个消息对象它的日志。 
+
+VLC可以实现的功能 
+l        Vlc可以通过修改input属性，实现seek,快播，慢播 
+
+l        修改audio属性可以实现，声道设置、音量设置、静音 
+
+l        通过对video的设置，实现全屏/屏幕比例/屏幕大小的控制 
+
+l        通过PlayList对象的控制，可以实现添加、删除播放对象的功能 
+
+当前存在的问题 
+问题描述 
+l        VLC对TS文件支持存在问题,VLC控件、获取不到时间进度信息.虽然视频已经播放了很久，但时间始终是0。见图1、图2： 
+
+
+
+图1：VLC windows版 
+
+
+
+
+
+图2:vlc 网页插件版 
+
+分体分析 
+l        VLC的input属性未能正常获取fps和time的值 
+
+导致结果 
+l        结束时间无法控制 
+
+l        进度条失效 
