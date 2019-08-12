@@ -1,0 +1,2 @@
+在项目中引用ControlzEx.dll和MahApps.Metro.dll。
+然后把App.xaml的样式放到项目中
