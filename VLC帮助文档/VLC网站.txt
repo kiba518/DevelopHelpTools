@@ -1,0 +1,12 @@
+Vlc官网
+https://www.videolan.org/
+Vlc开发者地址——有入门教程 
+https://wiki.videolan.org/Developers_Corner
+Vlc编译教程
+https://wiki.videolan.org/Compile_VLC/
+Vlc window是编译教程
+https://wiki.videolan.org/Win32Compile/
+Fliter列表地址
+https://www.videolan.org/developers/vlc/doc/doxygen/html/group__filter.html
+Fliter详细地址
+https://www.videolan.org/developers/vlc/doc/doxygen/html/group__filter.html#ga46fa763ec255ebe3fb6843a6ff4ce9ad
