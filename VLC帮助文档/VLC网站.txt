@@ -10,3 +10,11 @@ Fliter列表地址
 https://www.videolan.org/developers/vlc/doc/doxygen/html/group__filter.html
 Fliter详细地址
 https://www.videolan.org/developers/vlc/doc/doxygen/html/group__filter.html#ga46fa763ec255ebe3fb6843a6ff4ce9ad
+Vlc下载列表——.7z里有include和lib文件夹
+http://download.videolan.org/pub/videolan/vlc/
+Vlc教程
+https://wiki.videolan.org/LibVLC_Tutorial/
+乌班图 vlc3.0.4在ubuntu16.04x64上的交叉编译全过程记录
+https://blog.csdn.net/zhuquanfu/article/details/83505531
+vlc 将摄像头播放到指定IP
+https://blog.csdn.net/lassewang/article/details/19996607
