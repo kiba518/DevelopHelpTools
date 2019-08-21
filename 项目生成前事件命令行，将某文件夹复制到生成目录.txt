@@ -1,1 +1,109 @@
-xcopy /r /y "$(SolutionDir)Solution Items\Lib" $(TargetDir)Lib\
+xcopy /r /y "$(SolutionDir)Dll\Lib" $(TargetDir)Lib\   ————把dll\lib下的文件全部拷贝到bin\debug\lib文件夹下
+xcopy /r /y "$(SolutionDir)Dll\Lib" $(TargetDir)  ————把dll\lib下的文件全部拷贝到bin\debug文件夹下
+xcopy /r /y /e "$(SolutionDir)Dll\Vlc" $(TargetDir)  ————把dll\lib下的文件（包括文件夹）全部拷贝到bin\debug文件夹下
+
+百度百科 https://baike.baidu.com/item/xcopy/3277173?fr=aladdin
+
+XCOPY source [destination]	[/A | /M] [/D[:date]] [/P] [/S [/E]] [/V] [/W]
+　　[/C] [/I] [/Q] [/F] [/L] [/G] [/H] [/R] [/T] [/U]
+　　[/K] [/N] [/O] [/X] [/Y] [/-Y] [/Z]
+　　[/EXCLUDE:file1[+file2][+file3]...]
+source	指定要复制的文件。
+destination	指定新文件的位置和/或名称。
+/A	只复制有存档属性集的文件，
+　　但不改变属性。
+/M	只复制有存档属性集的文件，
+　　并关闭存档属性。
+/D:m-d-y	复制在指定日期或指定日期以后更改的文件。
+　　如果没有提供日期，只复制那些源时间
+　　比目标时间新的文件。
+/EXCLUDE:file1[+file2][+file3]...	指定含有字符串的文件列表。每一个字符串
+　　必须在文件的单独行中。如果有任何
+　　字符串与要被复制的文件的绝对路径
+　　相符，那个文件将不会得到复制。
+　　例如，指定如 \obj\ 或 .obj 的字符串会排除
+　　目录 obj 下面的所有文件或带有
+　　.obj 扩展名的文件。
+/P	创建每个目标文件前提示。
+/S	复制目录和子目录，除了空的。
+/E	复制目录和子目录，包括空的。
+与 /S /E 相同。可以用来修改 /T。
+/V	验证每个新文件。
+/W	提示您在复制前按键。
+/C	即使有错误，也继续复制。
+/I	如果目标不存在，又在复制一个以上的文件，
+则假定目标一定是一个目录。
+/Q	复制时不显示文件名。
+/F	复制时显示完整的源和目标文件名。
+/L	显示要复制的文件。
+/G	允许将没有经过加密的文件复制到
+不支持加密的目标。
+/H	也复制隐藏和系统文件。
+/R	覆盖只读文件。
+/T	创建目录结构，但不复制文件。
+　　不包括空目录或子目录。/T /E 包括
+　　空目录和子目录。
+/U	只复制已经存在于目标中的文件。
+/K	复制属性。一般的 Xcopy 会重置只读属性。
+/N	用生成的短名复制。
+/O	复制文件所有权和 ACL 信息。
+/X	复制文件审核设置(隐含 /O)。
+/Y	复制文件审核设置(隐含 /O)。
+　　现存目标文件。
+　　【就是直接覆盖——Three~注】
+/-Y	导致提示以确认改写一个
+　　现存目标文件。
+/Z	用重新启动模式复制网络文件。
+命令行开关 /Y 可以预先在 COPYCMD 环境变量中设置。
+　　这可能被命令行上的 /-Y 改写。
+/B 复制符号链接本身与链接目标相对。
+/J 复制时不使用缓冲的 I/O。推荐复制大文件时使用。
+
+
+$(ConfigurationName) 当前项目配置的名称（例如，“Debug|Any CPU”）。
+
+$(OutDir) 输出文件目录的路径，相对于项目目录。这解析为“输出目录”属性的值。它包括尾部的反斜杠“\”。
+
+$(DevEnvDir) Visual Studio 2005 的安装目录（定义为驱动器 + 路径）；包括尾部的反斜杠“\”。
+
+$(PlatformName) 当前目标平台的名称。例如“AnyCPU”。
+
+$(ProjectDir) 项目的目录（定义为驱动器 + 路径）；包括尾部的反斜杠“\”。
+
+$(ProjectPath) 项目的绝对路径名（定义为驱动器 + 路径 + 基本名称 + 文件扩展名）。
+
+$(ProjectName) 项目的基本名称。
+
+$(ProjectFileName) 项目的文件名（定义为基本名称 + 文件扩展名）。
+
+$(ProjectExt) 项目的文件扩展名。它在文件扩展名的前面包括“.”。
+
+$(SolutionDir) 解决方案的目录（定义为驱动器 + 路径）；包括尾部的反斜杠“\”。
+
+$(SolutionPath) 解决方案的绝对路径名（定义为驱动器 + 路径 + 基本名称 + 文件扩展名）。
+
+$(SolutionName) 解决方案的基本名称。
+
+$(SolutionFileName) 解决方案的文件名（定义为基本名称 + 文件扩展名）。
+
+$(SolutionExt) 解决方案的文件扩展名。它在文件扩展名的前面包括“.”。
+
+$(TargetDir) 生成的主输出文件的目录（定义为驱动器 + 路径）。它包括尾部的反斜杠“\”。
+
+$(TargetPath) 生成的主输出文件的绝对路径名（定义为驱动器 + 路径 + 基本名称 + 文件扩展名）。
+
+$(TargetName) 生成的主输出文件的基本名称。
+
+$(TargetFileName) 生成的主输出文件的文件名（定义为基本名称 + 文件扩展名）。
+
+$(TargetExt) 生成的主输出文件的文件扩展名。它在文件扩展名的前面包括“.”。
+
+例如：
+
+xcopy $(TargetDir)$(TargetName).dll ..\..\..\..\..\Product\Portal\WorkFlowApp\ /y
+
+xcopy $(TargetDir)$(TargetName).pdb ..\..\..\..\..\Product\Portal\WorkFlowApp\ /y
+
+ 
+
+xcopy $(TargetDir)$(TargetName).xml ..\..\..\..\..\Product\Portal\WorkFlowApp\ /y
