@@ -1,0 +1,14 @@
+affdex官方网站 windows SDK下载网址及使用教程
+https://knowledge.affectiva.com/docs/getting-started-with-the-emotion-sdk-for-windows
+
+如何：使用“添加引用”对话框添加或删除引用到C#应用程序
+https://docs.microsoft.com/en-us/previous-versions/wkze6zky(v=vs.140)
+
+affdex的github的文档
+http://affectiva.github.io/developerportal/pages/platforms/v3_4_1/windows/classdocs/Affdex/html/b8038333-b12e-8ea1-a2ce-74c8d611fa89.htm
+
+Affectiva Emotion API & SDK (Affdex)
+http://affectiva.github.io/developerportal/
+
+PhotoDetector使用教程
+https://knowledge.affectiva.com/docs/analyze-a-photo-1
