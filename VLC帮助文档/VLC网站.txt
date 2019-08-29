@@ -18,3 +18,5 @@ https://wiki.videolan.org/LibVLC_Tutorial/
 https://blog.csdn.net/zhuquanfu/article/details/83505531
 vlc 将摄像头播放到指定IP
 https://blog.csdn.net/lassewang/article/details/19996607
+vlc 链接网址大全
+https://blog.csdn.net/qq_38644907/article/details/84134262
