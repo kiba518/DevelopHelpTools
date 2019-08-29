@@ -1,0 +1,16 @@
+public enum Suits
+    {
+        Spades,
+        Hearts,
+        Clubs,
+        Diamonds,
+        NumSuits
+    }
+
+ private static void Main(string[] args)
+        {
+            foreach (Suits suit in Enum.GetValues(typeof(Suits)))
+            {
+                Console.WriteLine((int)suit+ ":" + suit);
+            }
+        }
