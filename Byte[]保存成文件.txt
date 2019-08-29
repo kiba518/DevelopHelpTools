@@ -1,0 +1,4 @@
+string path = Server.MapPath(@"\a.pdf");
+FileStream fs = new FileStream(path, FileMode.Create);
+fs.Write(buffer, 0, buffer.Length);
+fs.Dispose();
