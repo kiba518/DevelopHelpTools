@@ -1,0 +1,18 @@
+using NAudio.Wave;
+using NAudio;
+using NAudio.CoreAudioApi; 
+
+public static List<string> GetAudioDeviceFriendlyName()
+        {
+            List<string> result = new List<string>();
+            var enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator(); 
+            //允许你在某些状态下枚举渲染设备
+            var endpoints = enumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Unplugged | DeviceState.Active);
+            foreach (var endpoint in endpoints)
+            {
+                if(endpoint.State== DeviceState.Active)
+                result.Add(endpoint.FriendlyName);
+                //endpoint.DeviceFriendlyName
+            }  
+            return result;
+        }
