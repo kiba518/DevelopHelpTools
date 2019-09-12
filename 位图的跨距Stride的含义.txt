@@ -13,10 +13,18 @@ bitmap宽的stride是宽*4，但该stride必须是4的倍数。
 但还有个字节对齐的问题, 譬如: 
 一行有 11 个像素(Width = 11), 对一个 24 位(每个像素 3 字节)的图像, Stride = 11 * 3 + 3 = 36. 
 为什么不是 Stride = 33? 因为它是按 4 字节对齐的. 
-根据上面道理, 我们可以手动计算 Stride 的值: 
-1、Stride = 每像素占用的字节数(也就是像素位数/8) * Width; 
-2、如果 Stride 不是 4 的倍数, 那么 Stride = Stride + (4 - Stride mod 4);
- 
+
+例子 一个32位的4通道图片的stride计算
+854宽 480高 stride是3424
+3424=856*4
+3424=(854*32/8)+32-((854*32/8)%32)
+
+例子 一个32位的4通道图片的stride计算
+856宽 480高 stride是3424
+856可以被4整除，所以计算方法如下
+3424=(856*32/8) 
+
+stride应该是宽，扩张到可以被4整除（127扩张到128,97扩张到100）乘以位数（3或者4）
 
 System.Windows.Media.Imaging.Bitmap的stride 
 stride = System.Windows.Media.Imaging.BitmapSource.Format.BitsPerPixel * 宽/ 8，不需要是4的倍数
