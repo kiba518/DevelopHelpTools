@@ -1,0 +1,22 @@
+wiki中国
+http://wiki.freeswitch.org.cn/
+http://wiki.freeswitch.org.cn/wiki/New_User_s_guide.html
+文档
+http://www.freeswitch.org.cn/2010/04/30/freeswitch-zhong-wen-wen-dang.html
+开发者网站
+https://freeswitch.org/confluence/display/FREESWITCH/Installation
+部署
+https://freeswitch.org/confluence/display/FREESWITCH/Debian+8+Jessie
+windows部署
+https://freeswitch.org/confluence/display/FREESWITCH/Windows
+官网
+https://freeswitch.com/
+https://freeswitch.com/#getting-started
+
+git地址（使用git CMD下载）
+git clone https://stash.freeswitch.org/scm/fs/freeswitch.git C:/FS_GIT/
+注册用户
+https://www.cnblogs.com/fire909090/p/6897568.html
+
+sip地址格式 sip:1000@192.168.1.178  sip:用户名@服务器地址
+sip代理地址格式 sip:192.168.1.178  sip:服务器地址

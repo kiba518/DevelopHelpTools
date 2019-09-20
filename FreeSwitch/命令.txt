@@ -1,0 +1,17 @@
+向FreeSwitch发送命令的默认端口是8021不是5060
+FreeSWITCH对外连接配置文件，这里配置的是8021 密码是ClueCon，FreeSWITCH启动以后会启动一个EventSocket TCP Server 他的IP和端口号都在下面这个文件里配置
+C:\Program Files\FreeSWITCH\conf\autoload_configs\event_socket.conf.xml
+需要把默认的 <param name="listen-ip" value="::"/>改为 <param name="listen-ip" value="127.0.0.1"/>
+
+windows使用\r\n做为换行符 unix使用\n
+
+FreeSwitchConsole.exe启动FreeSwitch
+运行fs_cli.exe，在命令行界面输入
+sofia status profile internal reg 查看已经注册的用户
+发送命令的两种执行模式
+api <command> <arg>         //阻塞命令
+bgapi <command> <arg>       //非阻塞命令 bgapi就是后台运行这个API，不进行阻塞
+
+使用流发送命名时，需要先发送密码验证"auth ClueCon\r\n\r\n"，再，在该流上继续发送api指令 
+
+修改完xml配置 在fs_cli.exe里输入reloadxml ，进行重载，或者关闭FreeSWITCHConsole，再打开，在FreeSWITCHConsole里运行reloadxml 
