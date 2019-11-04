@@ -1,0 +1,25 @@
+官网
+http://www.linphone.org/
+下载
+http://www.linphone.org/technical-corner/linphone?qt-technical_corner=2#qt-technical_corner
+代码
+https://gitlab.linphone.org/BC/public
+linphone-sdk
+https://gitlab.linphone.org/BC/public/linphone-sdk
+linphone的git地址
+git clone git://git.linphone.org/linphone.git --recursive
+初始化相关文档地址
+ http://www.linphone.org/docs/liblinphone/group__initializing.html
+回调函数相关文档地址 Holds all callbacks that the application should implement. None is mandatory.
+ http://www.linphone.org/docs/liblinphone/struct__LinphoneCoreVTable.html 
+
+Represents the different state a call can reach into 电话控制
+http://www.linphone.org/docs/liblinphone/group__call__control.html
+Describes proxy registration states
+http://www.linphone.org/docs/liblinphone/group__proxies.html
+Linphone core SIP transport ports
+http://www.linphone.org/docs/liblinphone/struct__LinphoneSipTransports.html
+Calls miscenalleous
+http://www.linphone.org/docs/liblinphone/group__call__misc.html
+Media
+http://www.linphone.org/docs/liblinphone/group__media__parameters.html
