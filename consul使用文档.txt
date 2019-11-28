@@ -1,0 +1,64 @@
+我们都是普通的程序员，所以，还是别太把自己当回事，我想，以这种心态工作的朋友，相对的压力会比较小一点。
+怎么判断自己是不是普通的程序员？其实，这事也很简单。
+回想一下。走出校门，刚参加工作的时候，你是否已经是一个独挡一面的软件工程师了呢?如果不是，那你肯定就是普通的程序员了。如果是，那你也不一定就不是普通的程序员。。。
+
+
+conful命令网站地址 https://www.cnblogs.com/qidakang/p/7837519.html
+使用参考网站 https://www.cnblogs.com/edisonchou/p/9124985.html
+
+Consul是HashiCorp公司推出的开源工具，用于实现【分布式系统】的服务发现与配置。与其他分布式服务注册与发现的方案
+Client Agent是客户端的代理服务器
+Consul方案中 每个服务器都要运行Client Agent这个代理服务器
+Client Agent这个代理服务器可以进行基础配置 可配置为 客户端模式（client模式） 和 服务器端模式（Server模式）
+如果是服务器端模式（Server模式）则该客户端代理 会进行 Consul Cluster 整个集群的维护 
+Consul方案中 服务器端模式（Server模式）的 代理服务器（Client Agent）要3个以上
+Consul支持多数据中心 猜测 就是 在多个服务端都可以查看请求信息及相关数据，整个数据中心是数据信息强一致，Consul内部通过raft协议进行数据一致维护
+服务器端模式（Server模式）的代理服务器（Client Agent）会【自行（是否可配置leader）】筛选出一个leader，其他的是follower，但是当leader宕机，Consul会自行通过计算再选出一个leader
+windows的consul下载完 是一个consul.exe文件 下载地址：https://www.consul.io/downloads.html
+下载完 需要在windows操作系统中增加一个环节变量 其位置是我们consul.exe文件的所在目录
+增加完这个环境变量，我们在CMD中运行consul的命令，就会找到consul.exe去执行了 
+192.168.80.100>consul agent -server -ui -bootstrap-expect=3 -data-dir=/tmp/consul -node=consul-1 -client=0.0.0.0 -bind=192.168.1.178 -datacenter=dc1
+解释 
+bind：是自己的IP，该地址用来在集群内部的通讯，集群内的所有节点到地址都必须是可达的，默认是0.0.0.0，这意味着Consulo会使用第一个可用的私有IP地址，Consul可以使用TCP和UDP并且可以使用共同的端口，如果存在防火墙，这两者协议必须是允许的。
+join：是集群Ip，加入一个已经启动的agent的ip地址，可以多次指定多个agent的地址。如果consul不能加入任何指定的地址中，则agent会启动失败，默认agent启动时不会加入任何节点。
+bootstrap-expect：是当服务器端模式（Server模式）的代理达到指定数目后 才开始运行
+data-dir：提供一个目录用来存放agent的状态，所有的agent允许都需要该目录，该目录必须是稳定的，系统重启后都继续存在
+datacenter：该标记控制agent运行的datacenter的名称，默认是dc1
+client： 0.0.0.0 就表示你的这个服务器监听在本机的所有IP地址上,通过任何一个IP地址都可以访问到.
+consul绑定在哪个client地址上，这个地址提供HTTP、DNS、RPC等服务，默认是127.0.0.1，只允许回路连接。RPC地址用于Consul命令，比如Consul members可以查询当前运行的Consul代理
+
+192.168.80.101>consul agent -server -ui -bootstrap-expect=3 -data-dir=/tmp/consul -node=consul-2 -client=0.0.0.0 -bind=192.168.80.101 -datacenter=dc1 -join 192.168.80.100
+
+192.168.80.102>consul agent -server -ui -bootstrap-expect=3 -data-dir=/tmp/consul -node=consul-3 -client=0.0.0.0 -bind=192.168.80.102 -datacenter=dc1 -join 192.168.80.100
+注意101和102的启动命令中，有一句 -join 192.168.80.100 => 有了这一句，就把101和102加入到了100所在的集群中。
+
+启动之后，集群就开始了Vote（投票选Leader）的过程，通过下面的命令可以看到集群的情况：
+
+Consul不仅提供了丰富的命令查看集群情况，还提供了一个WebUI，默认端口8500，我们可以通过访问这个URL（eg. http://192.168.80.100:8500）我这里是http://192.168.1.178:8500/ui/ 
+http://192.168.1.178:8500 不仅仅提供一个服务管理界面，他还是注册服务的地址，也就是说，在代码中注册服务时，需要链接的consul服务地址是http://192.168.1.178:8500
+ 
+
+在cmd里 我们使用netstat -ano来查看已经启用的端口
+ 
+ 
+然后我们在网站的api服务中 使用nuget添加consul的类库，在服务启动的时候，将这个服务， 发送到本地的consul服务器代理中， 
+一个服务可以通过提供服务定义配置文件或者通过调用HTTP API来动态的增加、删除、修改服务。【这里使用类库来注册服务 就是通过类库调用http api进行添加服务的】
+一旦agent启动后，并且服务已经同步，我们就可以使用DNS或者HTTP API来进行查询了。【也就是说，一旦服务注册成功，我们可以使用这个类库来查找当前分布式系统中的服务，使用的http api】
+ 
+服务升级：服务定义的升级可以通过先修改服务定义配置文件，然后给agent发送一个SIGHUP信号即可，这样允许你在升级服务时，而不会产生agent宕机时间或者服务不可达。或者通过HTTP API接口来动态的增加、删除、修改服务。
+【这个没太懂】 
+ 
+ 
+ 
+用consul的目的是 支持并发 
+让服务器形成集群，接受更多的http请求，不然一个服务器，如果并发上限是1000，那么一旦并发，1001-2000，这1000个请求就会丢失。
+形成集群后，通过分布式，来把这1-2000的请求，分配到不同的服务器主机中，这样，就不丢请求了，然后代理服务器再去访问指定的真实服务，来获取数据
+如果并发太多，在在这里加队列，来排队处理。
+ 
+ 
+ 
+ consul集群一旦运行起来，会自动创建一个consul的服务，节点名为consul-1 该服务 ，我目前估计，可以获取consul的基础信息，如consul版本ratf协议版本等等信息 
+ 
+ consul agent -server -ui -bootstrap-expect=1 -data-dir=/tmp/consul -node=consul-1 -client=0.0.0.0 -bind=192.168.1.178 -datacenter=dc1
+ 这个命令 就是有一个consul服务器端模式（Server模式）就可以启动
+ 执行这个命令后cmd就会变成一个持续存在的consul服务了，所以此时，cmd的窗口就不可以关闭了，因为一旦关闭，consul就停止了。
