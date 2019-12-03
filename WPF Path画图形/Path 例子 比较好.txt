@@ -1,0 +1,148 @@
+<Window x:Class="WpfApp1.Window3"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="Window3" Height="450" Width="800">
+    <Grid>
+        <WrapPanel>
+            <Button Height="50">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Path Stroke="Black" StrokeThickness="5">
+                            <Path.Data>
+                                <RectangleGeometry Rect="10,10,100,20">
+                                    <!--Rect参数 起始坐标 x,y 宽度，高度-->
+                                </RectangleGeometry>
+                            </Path.Data>
+                        </Path>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button Height="50"  >
+                <Button.Template>
+                    <ControlTemplate>
+                        <Path Stroke="Blue" Fill="AntiqueWhite">
+                            <Path.Data>
+                                <EllipseGeometry RadiusX="25" RadiusY="25" Center="25,25"/>
+                            </Path.Data>
+                        </Path>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button> 
+
+            <!--M 起始点  或者：m 起始点
+                比如：M 100,240或m 100,240
+                使用大写M时，表示绝对值; 使用小写m时; 表示相对于前一点的值，如果前一点没有指定，则使用(0,0)。-->
+            <Button Height="50">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Path Stroke="Black" StrokeThickness="5" Data="M0,0 L 50,50">
+                            <!--直线:Line(L)   格式：L 结束点坐标 或: l 结束点坐标。-->
+                        </Path>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button Height="50">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Path Stroke="Black" StrokeThickness="5" Data="M0,0 H 50">
+                            <!--水平直线  Horizontal line(H)：绘制从当前点到指定x坐标的直线。
+                                格式：H x值 或 h x值(x为System.Double类型的值)
+                                比如：H 100或h 100，也可以是：H 100.00或h 100.00等形式。-->
+                        </Path>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button Height="50" Margin="10,0,0,0">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Path Stroke="Black" StrokeThickness="5" Data="M0,0 V 50">
+                            <!-- 垂直直线 Vertical line(V)：绘制从当前点到指定y坐标的直线。
+                                格式：V y值 或 v y值(y为System.Double类型的值)
+                                比如：V 100或y 100，也可以是：V 100.00或v 100.00等形式。-->
+                        </Path>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button Height="50" Margin="10,0,0,0">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Path Stroke="Black" StrokeThickness="5" Data="M0,0 C 10,20 20,40 30,5">
+                            <!--  C 的参数有三个 分别命名为第一控制点 第二控制点 结束点；
+                                三次方程式贝塞尔曲线 Cubic Bezier curve(C)：通过指定两个控制点来绘制由当前点到指定结束点间的三次方程贝塞尔曲线。
+                                格式：C 第一控制点 第二控制点 结束点 或 c 第一控制点 第二控制点 结束点
+                                比如：C 100,200 200,400 300,200 或 c 100,200 200,400 300,200
+                                其中，点(100,200)为第一控制点，点(200,400)为第二控制点，点(300,200)为结束点。-->
+                        </Path>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button Height="50" Margin="10,0,0,0">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Path Stroke="Black" StrokeThickness="5" Data="M0,0 Q 10,10 30,40">
+                            <!--  Q 的参数有两个 分别命名为控制点 结束点 ；平滑直线
+                                二次方程式贝塞尔曲线 Quadratic Bezier curve(Q)：通过指定的一个控制点来绘制由当前点到指定结束点间的二次方程贝塞尔曲线。
+                                格式：Q 控制点 结束点 或 q 控制点 结束点
+                                比如：q 100,200 300,200。其中，点(100,200)为控制点，点(300,200)为结束点。-->
+                        </Path>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button Height="50" Margin="10,0,0,0">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Path Stroke="Black" StrokeThickness="5" Data="M0,0 S 10,10 30,40">
+                            <!--  S 的参数有两个 分别命名为控制点 结束点 ；平滑直线
+                                平滑三次方程式贝塞尔曲线: Smooth cubic Bezier curve(S)：通过一个指定点来“平滑地”控制当前点到指定点的贝塞尔曲线。
+                                格式：S 控制点 结束点 或 s 控制点 结束点
+                                比如：S 100,200 200,300-->
+                        </Path>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button Height="50" Margin="10,0,0,0">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Path Stroke="Black" StrokeThickness="5" Data="M0,0 T 10,10 30,40">
+                            <!--  T 的参数有两个 分别命名为控制点 结束点 ；平滑直线
+                                平滑二次方程式贝塞尔曲线 smooth quadratic Bezier curve(T)：与平滑三次方程贝塞尔曲线类似。
+                                格式：T 控制点 结束点 或 t 控制点 结束点
+                                比如：T 100,200 200,300-->
+                        </Path>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button Height="100" Width="100" Margin="10,0,0,0">
+                <Button.Template>
+                    <ControlTemplate>
+                       
+                            <Path   Stroke="Black" StrokeThickness="1"  Data="M 50,0 A 50,50,0,0,1,100,50">
+                            <!-- A 有7个参数 前两个是X轴半径 和Y轴半径
+                                三参数不懂
+                                第四个参数只能为0或1 为1表示 显示弧线比较多的那边 就是优势弧 0反之
+                                第五个参数 只可以是0或1 1是顺时针画圆 0是逆时针画圆
+                                六七参数是一个坐标点 代表结束点坐标
+                                让起始点的X和结束点的X无限接近，比如50和49.99，然后显示优势弧，就会形成一个圆
+                                =========================================================
+                                椭圆圆弧: elliptical Arc(A) : 在当前点与指定结束点间绘制圆弧。
+                                A 尺寸 圆弧旋转角度值 优势弧的标记 正负角度标记 结束点
+                                或：
+                                a 尺寸 圆弧旋转角度值 优势弧的标记 正负角度标记 结束点
+                                尺寸(Size): System.Windows.Size类型，指定椭圆圆弧X,Y方向上的半径值。
+                                旋转角度（rotationAngle）：System.Double类型。
+                                圆弧旋转角度值（rotationAngle）：椭圆弧的旋转角度值。 
+                                优势弧的标记（isLargeArcFlag）：是否为优势弧，如果弧的角度大于等于180度，则设为1，否则为0。 
+                                正负角度标记（sweepDirectionFlag）：当正角方向绘制时设为1，否则为0。 
+                                结束点（endPoint）：System.Windows.Point类型。-->
+                            </Path>
+                        
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </WrapPanel>
+    </Grid>
+</Window>
