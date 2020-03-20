@@ -1,0 +1,5 @@
+EF实体数据模型向导的选择数据源里没有oracle的选项是因为没有安装oracle工具，oracle for vs2015 Tools
+安装工具教程
+https://www.cnblogs.com/joeymary/p/5664953.html
+oracle for vs2015 Tools下载地址
+https://www.oracle.com/database/technologies/dotnet-odacmsi-downloads.html
