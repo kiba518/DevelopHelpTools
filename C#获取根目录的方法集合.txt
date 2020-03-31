@@ -1,0 +1,31 @@
+C#获取根目录的方法集合
+1、取得控制台应用程序的根目录方法
+     方法1、Environment.CurrentDirectory 取得或设置当前工作目录的完整限定路径
+     方法2、AppDomain.CurrentDomain.BaseDirectory 获取基目录，它由程序集冲突解决程序用来探测程序集
+ 2、取得Web应用程序的根目录方法
+     方法1、HttpRuntime.AppDomainAppPath.ToString();//获取承载在当前应用程序域中的应用程序的应用程序目录的物理驱动器路径。用于App_Data中获取
+     方法2、Server.MapPath("") 或者Server.MapPath("~/");//返回与Web服务器上的指定的虚拟路径相对的物理文件路径
+     方法3、Request.ApplicationPath;//获取服务器上ASP.NET应用程序的虚拟应用程序根目录
+ 3、取得WinForm应用程序的根目录方法
+     1、Environment.CurrentDirectory.ToString();//获取或设置当前工作目录的完全限定路径
+     2、Application.StartupPath.ToString();//获取启动了应用程序的可执行文件的路径，不包括可执行文件的名称
+     3、Directory.GetCurrentDirectory();//获取应用程序的当前工作目录
+     4、AppDomain.CurrentDomain.BaseDirectory;//获取基目录，它由程序集冲突解决程序用来探测程序集
+     5、AppDomain.CurrentDomain.SetupInformation.ApplicationBase;//获取或设置包含该应用程序的目录的名称
+其中：以下两个方法可以获取执行文件名称
+     1、Process.GetCurrentProcess().MainModule.FileName;//可获得当前执行的exe的文件名。
+     2、Application.ExecutablePath;//获取启动了应用程序的可执行文件的路径，包括可执行文件的名称
+
+获取.net的根目录的方法
+方法1：System.Web.HttpContext.Current.Request.PhysicalApplicationPath
+方法2：System.Web.HttpContext.Current.Server.MapPath("./")
+
+总注：Server.MapPath获得的路径都是服务器上的物理路径，也就是常说的绝对路径
+1、Server.MapPath("/")
+注：获得应用程序根目录所在的位置，如 C:\Inetpub\wwwroot\。
+2、Server.MapPath("./")
+注：获得所在页面的当前目录，等价于Server.MapPath("")。
+3、Server.MapPath("../")
+注：获得所在页面的上级目录。
+4、Server.MapPath("~/")
+注：获得当前应用级程序的目录，如果是根目录，就是根目录，如果是虚拟目录，就是虚拟目录所在的位置，如C:\Inetpub\wwwroot\Example\。
