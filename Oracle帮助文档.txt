@@ -1,0 +1,36 @@
+1.用有dba权限的用户登录：sys用户
+
+2.创建一个新用户：create user abc identified by 123456;
+
+3.授予DBA权限： grant connect,resource,dba to abc;
+
+该abc用户在服务端，Connect as可以使用SysDBA 在客户端只能使用Normal
+
+Plsql远程登录时，Database需要包含IP，如 ORCL@192.168.50.28
+
+=================================================
+
+ 安装ORACLE时，若没有为下列用户重设密码，则其默认密码如下：
+
+用户名 / 密码                      登录身份                                                       说明
+ 
+sys/change_on_install       SYSDBA 或 SYSOPER                      不能以 NORMAL 登录，可作为默认的系统管理员
+ 
+system/manager               SYSDBA 或 NORMAL                         不能以 SYSOPER 登录，可作为默认的系统管理员
+ 
+sysman/oem_temp            sysman                                                为 oms 的用户名
+ 
+scott/tiger                           NORMAL                                             普通用户
+ 
+aqadm /aqadm                  SYSDBA 或 NORMAL                          高级队列管理员
+ 
+Dbsnmp/dbsnmp               SYSDBA 或 NORMAL                          复制管理员
+ 
+登录身份：指登录时的Role指定，oracle11g中分SYSDBA和default两种。
+ 
+ 
+PS：在安装Oracle 10g的时候，提示创建数据库，在创建的同时提示你输入口令，若此时你输入了密码，在登录数据库的时候用户名sys 对应的密码就应该是你创建数据库时候输入的口令。而非默认的manager
+
+ORacle与C#Number类型对应
+https://www.cnblogs.com/xuzhiwei/p/3998446.html
+https://www.cnblogs.com/sunxuchu/p/8566254.html
