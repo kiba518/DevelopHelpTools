@@ -1,0 +1,66 @@
+////*****初始化layui*****
+//layui.use('table', function () { });
+//var table = layui.table;
+//function Table_GetTemplate(elName, h, type, cmdStr) {
+//    table.render({
+//        elem: elName//绑定元素名
+//        , height: h
+//        , url: Proxy.ApiAddress //数据接口
+//        , where: { conmmandtype: type, jsoncontent: cmdStr } 
+//        , page: false //开启分页
+//        , cols: [[ //表头
+//            { field: 'id', title: 'ID', width: '10%', sort: true, fixed: 'left' }
+//            , { field: 'username', title: '用户名', width: '10%' }
+//            , { field: 'sex', title: '性别', width: '10%', sort: true }
+//            , { field: 'city', title: '城市', width: '10%' }
+//            , { field: 'sign', title: '签名', width: '10%' }
+//            , { field: 'experience', title: '积分', width: '10%', sort: true }
+//            , { field: 'score', title: '评分', width: '10%', sort: true }
+//            , { field: 'classify', title: '职业', width: '10%' }
+//            , { field: 'wealth', title: '财富', width: '10%', sort: true }
+//        ]],
+//        skin: 'row', //表格风格
+//        even: true, //隔行背景 
+//        limits: [5, 10, 15], //显示
+//        limit: 20 //每页默认显示的数量
+//    });
+//}
+
+这种表格分页，要求了接口必须指定俩参数，一个当前页，一个是每页数量，这样，这个表格获取数据的模式就非常死板了，很多时候我们的接口接受的是一个实体参数，这样，这个表格就无法使用了
+可以使用laypage分页
+//function Table_GetTemplateRealPage (elName, h, type, cmdStr) {
+//    table.render({
+//        elem: elName//绑定元素名
+//        , height: h
+//        , url: Proxy.ApiAddress //数据接口
+//        , where: { conmmandtype: type, jsoncontent: cmdStr }
+//        , request: {
+//        pageName: 'curr' //页码的参数名称，默认：page
+//            , limitName: 'nums' //每页数据量的参数名，默认：limit
+//        }
+//        , parseData: function (res) { //res 即为原始返回的数据
+//            return {
+//                "code": res.status, //解析接口状态
+//                "msg": res.message, //解析提示文本
+//                "count": res.total, //解析数据长度
+//                "data": res.data.item //解析数据列表
+//            };
+//        }
+//        , page: true //开启分页
+//        , cols: [[ //表头
+//            { field: 'id', title: 'ID', width: '10%', sort: true, fixed: 'left' }
+//            , { field: 'username', title: '用户名', width: '10%' }
+//            , { field: 'sex', title: '性别', width: '10%', sort: true }
+//            , { field: 'city', title: '城市', width: '10%' }
+//            , { field: 'sign', title: '签名', width: '10%' }
+//            , { field: 'experience', title: '积分', width: '10%', sort: true }
+//            , { field: 'score', title: '评分', width: '10%', sort: true }
+//            , { field: 'classify', title: '职业', width: '10%' }
+//            , { field: 'wealth', title: '财富', width: '10%', sort: true }
+//        ]],
+//        skin: 'row', //表格风格
+//        even: true, //隔行背景 
+//        limits: [5, 10, 15], //显示
+//        limit: 20 //每页默认显示的数量
+//    });
+//}

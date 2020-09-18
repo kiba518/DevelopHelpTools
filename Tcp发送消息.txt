@@ -1,0 +1,52 @@
+  //private void Send(string message, int tcpType)
+        //{
+        //    try
+        //    {
+
+        //        Byte[] data = System.Text.Encoding.Default.GetBytes(message);
+        //        NetworkStream stream = TcpClient.GetStream();
+        //        stream.Write(data, 0, data.Length);
+        //        Byte[] bytes = new Byte[1024];
+
+        //        if (stream.CanRead)
+        //        {
+
+        //            String datastr = "";
+        //            while (true)
+        //            {
+        //                int i = stream.Read(bytes, 0, bytes.Length);
+        //                if (bytes != null)
+        //                {
+        //                    datastr += System.Text.Encoding.Default.GetString(bytes, 0, i);
+
+        //                    if (datastr.Contains("</end>"))
+        //                    {
+        //                        break;
+        //                    }
+        //                    if (i == 0)
+        //                    {
+        //                        break;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    break;
+        //                }
+        //            }
+        //            stream.Close();
+        //            TcpClient.Close();
+                     
+
+        //        }
+        //        else
+        //        {
+        //            stream.Close();
+        //            TcpClient.Close();
+        //            string msg = "≤ªø…∂¡»°NetworkStream"; 
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+               
+        //    }
+        //}

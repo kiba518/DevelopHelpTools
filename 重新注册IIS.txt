@@ -1,0 +1,2 @@
+C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\aspnet_regiis.exe -i
+命令行运行后，可能会提示一些信息
