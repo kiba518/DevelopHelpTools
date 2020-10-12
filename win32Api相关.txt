@@ -1,0 +1,190 @@
+FindWindow找不到窗体，因为找的MainWindow的Title属性，而不是Name属性。winform设置Text属性 设定了对应的名称就可以找到了。
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WpfShowExe
+{
+    public class Win32Hlper
+    {
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+        [DllImport("user32.dll")]
+
+        public static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        //[DllImport("coredll.dll", EntryPoint = "FindWindow")]
+        //public extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll", EntryPoint = "SendMessage", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern int SendMessage(IntPtr hwnd, uint wMsg, int wParam, int lParam); //对外部软件窗口发送一些消息(如 窗口最大化、最小化等)
+        [DllImport("user32.dll")]
+        public static extern bool EnableWindow(IntPtr hWnd, bool bEnable);//设置Enable属性
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetWindowLong(IntPtr hWnd, int nIndex); 
+        [DllImport("user32.dll", EntryPoint = "GetWindowThreadProcessId", SetLastError = true, 
+             CharSet = CharSet.Unicode, ExactSpelling = true, 
+             CallingConvention = CallingConvention.StdCall)] 
+        public static extern long GetWindowThreadProcessId(long hWnd, long lpdwProcessId);
+
+      
+
+        //[DllImport("user32.dll", EntryPoint = "GetWindowLongA", SetLastError = true)] 
+        //public static extern long GetWindowLong(IntPtr hwnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongA", SetLastError = true)] 
+        public static extern long SetWindowLong(IntPtr hwnd, int nIndex, long dwNewLong);
+
+        //public static extern int SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong); 
+
+        [DllImport("user32.dll", SetLastError = true)] 
+        public static extern long SetWindowPos(IntPtr hwnd, long hWndInsertAfter, long x, long y, long cx, long cy, long wFlags); 
+        [DllImport("user32.dll", SetLastError = true)] 
+        public static extern bool MoveWindow(IntPtr hwnd, int x, int y, int cx, int cy, bool repaint);
+        [DllImport("user32.dll", EntryPoint = "PostMessageA", SetLastError = true)] 
+        public static extern bool PostMessage(IntPtr hwnd, uint Msg, long wParam, long lParam);
+
+        #region CreateWindow的dwStyle 参数
+        //WS_BORDER 创建一个有边框的窗口
+        //WS_CAPTION 创建一个有标题栏的窗口
+        //WS_CHILDWINDOW（or WS_CHILD）  创建一个子窗口（不能与WS_POPUP一起使用） 
+        //WS_CLIPCHILDREN 当在父窗口内绘制时，把子窗口占据的区域剪切在外，即不在该区域内绘图
+        //WS_CLIPSIBLINGS 裁剪相互有关系的子窗口，不在被其它子窗口覆盖的区域内绘图，仅与WS_CHILD一起使用
+        //WS_DISABLED 创建一个初始被禁止的窗口
+        //WS_DLGFRAME 创建一个有双边框但无标题的窗口
+        //WS_HSCROLL 创建一个带水平滚动杠的窗口
+        //WS_VSCROLL 创建一个带垂直滚动杠的窗口
+        //WS_ICONIC 创建一个初始为图标的窗口，仅可以与WS_OVERLAPPEDWINDOWS一起使用
+        //WS_MAXIMIZE 创建一个最大尺寸的窗口
+        //WS_MINIMIZE 创建一个最小尺寸的窗口（即图标） 
+        //WS_MAXIMIZEBOX 创建一个带有极大框的窗口
+        //WS_MINIMIZEBOX 创建一个带有极小框的窗口
+        //WS_OVERLAPPED 创建一个重叠式窗口，重叠式窗口带有标题和边框
+        //WS_POPUP 创建一个弹出式窗口，不能与WS_CHILD一起使用
+        //WS_SYSMENU 窗口带有系统选单框，仅用于带标题栏的窗口
+        //WS_THICKFRAME 创建一个边框的窗口，使用户可以直接缩放窗口
+        //WS_VISIBLE 创建一个初始可见的窗口
+        //======================================================================
+        //ws_border 8388608 窗口具有正常的边框
+        //ws_caption 12582912 窗口具有标题栏
+        //ws_dlgframe 4194304 窗口无标题栏
+        //ws_ex_topmost 8 窗口出现在所有的非顶层窗口之上.
+        //ws_ex_transparent 32 窗口之下的任何窗口都不会被该窗口遮盖
+        //ws_hscroll 1048576 窗口具有水平滚动条
+        //ws_maximize 16777216 窗口具有最大化状态
+        //ws_maximizebox 65536 窗口具有最大化按钮
+        //ws_minimize 536870912 窗口具有最小化状态
+        //ws_minimizebox 131072 窗口具有最小化按钮
+        //ws_overlapped 0 窗口具有标题和边框
+        //ws_popup 2147483648 作为弹出式窗口来创建
+        //ws_sysmenu 524288 窗口的标题栏具有系统菜单框
+        //ws_thickframe 262144 窗口具有可缩放的厚边框
+        //ws_vscroll 2097152 窗口具有垂直滚动条
+        //======================================================================
+        //1.WS_BORDER?=?0x00800000? 创建一个带边框的窗口。?
+        // 2.WS_CAPTION?=?0x00C00000? 必须和WS_BORDER风格配合，但不能与WS_DLGFRAME风格一起使用。指示窗口包含标题要部分。（创建一个有标题框的窗口（包括WS_BODER风格））。? 
+        // 3.WS_CHILD?=?0x40000000? 创建一个子窗口。这个风格不能与WS_POPUP风格合用。（?说明窗口为子窗口，不能应用于弹出式窗口风格(WS_POPUP)）?
+        // 4.WS_CHILDWINDOW 与WS_CHILD相同。? 
+        // 5.WS_CLIPCHILDREN?=?0x02000000? 当在父窗口内绘图时，排除子窗口区域。在创建父窗口时使用这个风格。（绘制父窗口时，不绘制子窗口的裁剪区域。使用在建立父窗口时）
+        // 6.WS_CLIPSIBLINGS?=?0x04000000? 排除子窗口之间的相对区域，也就是，当一个特定的窗口接收到WM_PAINT消息时，WS_CLIPSIBLINGS 风格将所有层叠窗口排除在绘图之外，只重绘指定的子窗口。如果未指定WS_CLIPSIBLINGS风格，并且子窗口是层叠的，则在重绘子窗口的客户区时，就会重绘邻近的子窗口。（剪裁相关的子窗口，这意味着，当一个特定的子窗口接收到重绘消息时，WS_CLIPSIBLINGS风格将在子窗口要重画的区域中去掉与其它子窗口重叠的部分。（如果没有指定WS_CLIPSIBLINGS风格，并且子窗口有重叠，当你在一个子窗口的客户区绘图时，它可能会画在相邻的子窗口的客户区中。）只与WS_CHILD风格一起使用）?
+        // 7.WS_DISABLED?=?0x08000000?
+        // 创建一个初始状态为禁止的子窗口。一个禁止状态的窗口不能接受来自用户的输入信息。? 
+        // 8.WS_DLGFRAME?=?0x00400000? 创建一个带对话框边框风格的窗口。这种风格的窗口不能带标题条。（?创建一个窗口，具有双重边界，但是没有标题条）?
+        // 9.WS_GROUP?=?0x00020000? 指定一组控制的第一个控制。这个控制组由第一个控制和随后定义的控制组成，自第二个控制开始每个控制，具有WS_GROUP风格，每个组的第一个控制带有WS_TABSTOP风格，从而使用户可以在组间移动。用户随后可以使用光标在组内的控制间改变键盘焦点。（指定一组控件中的第一个，用户可以用箭头键在这组控件中移动。在第一个控件后面把WS_GROUP风格设置为FALSE的控件都属于这一组。下一个具有WS_GROUP风格的控件将开始下一组（这意味着一个组在下一组的开始处结束））?
+        // 10.WS_HSCROLL?=?0x00100000? 创建一个有水平滚动条的窗口。?
+        // 11.WS_ICONIC 创建一个初始状态为最小化状态的窗口。与WS_MINIMIZE风格相同。?
+        // 12.WS_MAXIMIZE?=?0x01000000? 创建一个初始状态为最大化状态的窗口。?
+        // 13.WS_MAXIMIZEBOX?=?0x00010000? 创建一个具有最大化按钮的窗口。该风格不能与WS_EX_CONTEXTHELP风格同时出现，同时必须指定WS_SYSMENU风格。?
+        // 14.WS_MINIMIZE?=?0x20000000? 创建一个初始状态为最小化的窗口。仅与WS_OVERLAPPED风格一起使用。?
+        // 15.WS_MINIMIZEBOX?=?0x00020000? 创建一个具有最小化按钮的窗口。?
+        // 16.WS_OVERLAPPED?=?0x00000000? 产生一个层叠的窗口。一个层叠的窗口有一个标题条和一个边框。与WS_TILED风格相同。（创建一个重叠窗口。重叠窗口通常具有标题条和边界）?
+        // 17.WS_OVERLAPPEDWINDOW 创建一个具有WS_OVERLAPPED，WS_CAPTION，WS_SYSMENU WS_THICKFRAME，WS_MINIMIZEBOX，WS_MAXIMIZEBOX风格的层叠窗口，与 WS_TILEDWINDOW 风格相同。（创建一个具有 WS_OVERLAPPED, WS_CAPTION, WS_SYSMENU, WS_THICKFRAME, WS_MINIMIZEBOX和WS_MAXIMIZEBOX风格的重叠式窗口。）?
+        // 18.WS_POPUP?=?0x80000000? 创建一个弹出式窗口。该风格不能与WS_CHILD风格同时使用。?
+        // 19.WS_POPUPWINDOW 创建一个具有WS_BORDER，WS_POPUP,WS_SYSMENU风格的窗口，WS_CAPTION和WS_POPUPWINDOW必须同时设定才能使窗口某单可见。（创建一个具有WS_BORDER，WS_POPUP和WS_SYSMENU风格的弹出窗口。为了使控制菜单可见，必须与WS_POPUPWINDOW一起使用WS_CAPTION风格）?
+        // 20.WS_SIZEBOX 创建一个可调边框的窗口，与WS_THICKFRAME风格相同。?
+        // 21.WS_SYSMENU?=?0x00080000? 创建一个在标题条上带有窗口菜单的窗口，必须同时设定WS_CAPTION风格。（创建一个在标题条上具有控制菜单的窗口。仅对带标题条的窗口使用）?
+        // 22.WS_TABSTOP?=?0x00010000?
+        // 创建一个控制，这个控制在用户按下Tab键时可以获得键盘焦点。按下Tab键后使键盘焦点转移到下一具有WS_TABSTOP风格的控制。（指定了一些控件中的一个，用户可以通过TAB键来移过它。TAB键使用户移动到下一个用WS_TABSTOP风格定义的控件）?
+        // 23.WS_THICKFRAME?=?0x00040000? 创建一个具有可调边框的窗口，与WS_SIZEBOX风格相同。（创建一个具有厚边框的窗口，可以通过厚边框来改变窗口大小）?
+        // 24.WS_TILED 产生一个层叠的窗口。一个层叠的窗口有一个标题和一个边框。与WS_OVERLAPPED风格相同。?
+        // 25.WS_TILEDWINDOW 创建一个具有WS_OVERLAPPED，WS_CAPTION，WS_SYSMENU，?WS_THICKFRAME，WS_MINIMIZEBOX，WS_MAXIMIZEBOX风格的层叠窗口。与WS_OVERLAPPEDWINDOW风格相同。?
+        // 26.WS_VISIBLE?=?0x10000000? 创建一个初始状态为可见的窗口。?
+        // 27.WS_VSCROLL?=?0x00200000? 创建一个有垂直滚动条的窗口。?? 
+        public const int WS_CHILD = 0x40000000;
+        public const int WS_VISIBLE = 0x10000000;
+        public const int WS_MAXIMIZE = 0x01000000;  
+        #endregion
+
+        #region SetWindowPos wFlags参数 　
+        //移动到屏幕的左上角：
+        //SetWindowPos(m_hWnd, NULL,0,0,0,0, SWP_NOSIZE);
+        //使其成为Topmost窗口并移动到屏幕的左上角：
+        //SetWindowPos(m_hWnd, HWND_TOPMOST,0,0,0,0, SWP_NOSIZE)；
+        //显示窗口：
+        //SetWindowPos(m_hWnd, NULL,0,0,0,0, SWP_SHOWWINDOW|SWP_NOSIZE|SWP_NOMOVE)；
+        //隐藏窗口：
+        //SetWindowPos(m_hWnd, NULL,0,0,0,0, SWP_HIDEWINDOW|SWP_NOSIZE|SWP_NOMOVE)；
+        public const int SWP_NOOWNERZORDER = 0x200;//忽略 hWndInsertAfter, 不改变 Z 序列的所有者
+        public const int SWP_NOREDRAW = 0x8;//不重绘
+        public const int SWP_NOZORDER = 0x4;//忽略 hWndInsertAfter, 保持 Z 顺序
+        public const int SWP_SHOWWINDOW = 0x0040;// 显示窗口
+        public const int SWP_NOMOVE = 0x2; //忽略 X、Y, 不改变位置
+        public const int SWP_NOSIZE = 0x1;//忽略 cx、cy, 保持大小
+        public const int SWP_NOCOPYBITS = 0x100;//丢弃客户区
+        public const int SWP_NOACTIVATE = 0x10;// 不激活}
+        public const int SWP_FRAMECHANGED = 0x20;// 强制发送 WM_NCCALCSIZE 消息, 一般只是在改变大小时才发送此消息
+        public const int SWP_HIDEWINDOW = 0x80;//隐藏窗口
+        public const int SWP_ASYNCWINDOWPOS = 0x4000; //若调用进程不拥有窗口, 系统会向拥有窗口的线程发出需求 
+        public const int HWND_TOP = 0;  //在前面 
+        public const int HWND_BOTTOM = 1;  //在后面 
+        //public const int HWND_TOPMOST = HWND(-1); //在前面, 位于任何顶部窗口的前面}
+        //public const int HWND_NOTOPMOST = HWND(-2); //在前面, 位于其他顶部窗口的后面
+        #endregion
+        public const int WS_EX_MDICHILD = 0x40;
+
+
+
+        #region SetWindowLong
+        //GWL_EXSTYLE -20设定一个新的扩展风格。
+        //GWL_HINSTANCE -6设置一个新的应用程序实例句柄。
+        //GWL_ID -12设置一个新的窗口标识符。
+        //GWL_STYLE -16设定一个新的窗口风格。
+        //GWL_USERDATA -21设置与窗口有关的32位值。每个窗口均有一个由创建该窗口的应用程序使用的32位值。
+        //GWL_WNDPROC -4为窗口设定一个新的处理函数。
+        //GWL_HWNDPARENT -8改变子窗口的父窗口,应使用SetParent函数。
+        //DWL_DLGPROC DWLP_MSGRESULT + sizeof(LRESULT) (值:4) 设置对话框过程的新地址。
+        //DWL_MSGRESULT  0 设置在对话框过程中处理的消息的返回值。
+        //DWL_USER DWLP_DLGPROC + sizeof(DLGPROC) (值:8) 设置的应用程序私有的新的额外信息，例如一个句柄或指针。
+        public const int GWL_STYLE = (-16);
+        #endregion
+
+
+
+
+      
+        public const int WM_CLOSE = 0x10; 
+      
+
+        #region ShowWindow  ShowWindow( Handle, SW_MAXIMIZE); 
+        public const int SW_HIDE = 0; //隐藏窗口，大小不变，激活状态不变
+        public const int SW_NORMAL = 1; // 激活并显示一个窗口。如果窗口被最小化或最大化，系统将其恢复到原来的尺寸和大小。应用程序在第一次显示窗口的时候应该指定此标志
+        public const int SW_MINIMIZED = 2; // 最小化, 激活
+        public const int SW_MAXIMIZE = 3; //7=3 最大化窗口，显示状态不变，激活状态不变
+        public const int SW_SHOWNOACTIVATE = 4; //8=4 以窗口最近一次的大小和状态显示窗口。激活窗口仍然维持激活状态
+        public const int SW_SHOW = 5; //在窗口原来的位置以原来的尺寸激活和显示窗口
+        public const int SW_MINIMIZE = 6; //最小化指定的窗口并且激活在Z序中的下一个顶层窗口
+        public const int SW_RESTORE = 9; // 激活并显示窗口。如果窗口最小化或最大化，则系统将窗口恢复到原来的尺寸和位置。在恢复最小化窗口时，应用程序应该指定这个标志
+        public const int SW_SHOWDEFAULT = 10;//依据在STARTUPINFO结构中指定的SW_FLAG标志设定显示状态，STARTUPINFO 结构是由启动应用程序的程序传递给CreateProcess函数的
+        public const int SW_FORCEMINIMIZE = 11; //在WindowNT5.0中最小化窗口，即使拥有窗口的线程被挂起也会最小化。在从其他线程最小化窗口时才使用这个参数
+        #endregion
+    }
+}
