@@ -1,0 +1,40 @@
+oracle备份 https://jingyan.baidu.com/article/6c67b1d6a877922787bb1e22.html
+备份
+1，管理员运行CMD
+exp abc/123456 file=c:\oracle备份\testOracle.dmp owner=abc
+备份完成
+oracle还原——https://jingyan.baidu.com/article/a681b0deeb53ab7b19434650.html
+到新ORACLE创建一个新用户
+1，创建一个新用户：create user efg identified by 123456; 
+2，授予DBA权限： grant connect,resource,dba to efg; 
+3，管理员运行CMD
+imp efg/123456 file=c:\oracle备份\testOracle.dmp full=y
+
+问题：表没有值就不导出
+==============================================================================
+exp  imp expdp impdp指的是运行
+【C:\app\Administrator\product\11.2.0\dbhome_1\BIN】对于的exp.exe  imp.exe  expdp.exe  impdp.exe文件
+通过目录可以看出，这些exe是在oracle服务器环境下的
+ 
+==============================================================================
+expdp—导出https://blog.csdn.net/tengqingyong/article/details/82974480
+导出只能导出到oracle创建的目录下
+查询oracle创建的目录SQL： 【select * from dba_directories】
+expdp abc/123456  schemas=abc directory=DATA_PUMP_DIR dumpfile=FULL.dmp
+到新ORACLE创建同名用户
+1，创建一个新用户：create user abc identified by 123456; 
+2，授予DBA权限： grant connect,resource,dba to abc; 
+3，将导出的FULL.dmp文件放到oracle创建的目录下
+4，管理员运行CMD
+impdp abc/123456 DIRECTORY=DATA_PUMP_DIR DUMPFILE=FULL.dmp FULL=y
+ 
+问题：必须导入到同名用户下
+
+================================================================================
+ 
+sqlplus sys/123456 as sysdba 【可在服务器登录】
+sqlplus abc/123456@192.168.50.28/orcl 【可在客户端登录，@后面是oracle客户端tnsnames.ora设置的连接数据库名即PLSQL登录时的database的值】
+
+===============================================================================
+exp加数据库名导出 有时候不指定登录不进去数据库
+exp abc/123456@192.168.50.28/orcl  file=c:\oracle备份\testOracle.dmp owner=abc

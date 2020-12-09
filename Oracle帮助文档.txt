@@ -34,3 +34,6 @@ PS：在安装Oracle 10g的时候，提示创建数据库，在创建的同时提示你输入口令，若此时你
 ORacle与C#Number类型对应
 https://www.cnblogs.com/xuzhiwei/p/3998446.html
 https://www.cnblogs.com/sunxuchu/p/8566254.html
+
+运行CMD测试用户连接oracle
+sqlplus sys/123456 as sysdba
