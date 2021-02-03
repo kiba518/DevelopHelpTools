@@ -1,0 +1,13 @@
+ System.Windows.Forms.OpenFileDialog frm = new System.Windows.Forms.OpenFileDialog();
+            frm.Filter = "(*.jpg,*.png,*.jpeg,*.bmp,*.gif)|*.jgp;*.png;*.jpeg;*.bmp;*.gif|All files(*.*)|*.*"; 
+            if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+               
+            }
+  System.Windows.Forms.SaveFileDialog savefrm = new System.Windows.Forms.SaveFileDialog();
+            savefrm.Filter = "ExcelÎÄ¼þ(*.xls,xlsx)|*.xls;*.xlsx";
+            savefrm.FileName = "abc.xlsx";
+            if (savefrm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+              
+            }
