@@ -1,0 +1,14 @@
+ 
+ drop sequence WF_ENTITY1_tb_seq;  
+ create sequence WF_ENTITY1_tb_seq minvalue 1 maxvalue 99999999    
+          increment by 1    
+          start with 1;   /*步长为1*/ 
+
+create or replace trigger WF_ENTITY1_tb_tri
+before insert on WF_ENTITY1  /*触发条件：当向表dectuser执行插入操作时触发此触发器*/
+ for each row     /*对每一行都检测是否触发*/
+begin   /*触发器开始*/
+select  WF_ENTITY1_tb_seq.nextval into :new.id from dual;
+/*触发器主题内容，即触发后执行的动作，在此是取得序列dectuser_tb_seq的下一个值插入到表dectuser中的userid字段中*/
+end;
+drop  trigger WF_ENTITY1_tb_tri
