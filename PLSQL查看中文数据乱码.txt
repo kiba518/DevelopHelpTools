@@ -1,0 +1,4 @@
+在环境变量里添加新变量
+NLS_LANG
+然后赋值AMERICAN_AMERICA.ZHS16GBK  
+重启PLSQL就好使了
