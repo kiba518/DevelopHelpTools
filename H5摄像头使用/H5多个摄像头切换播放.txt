@@ -1,0 +1,232 @@
+
+@{
+    Layout = null;
+    ViewBag.Title = "Index";
+}
+
+<!DOCTYPE html>
+<html lang=en style="font-size: 37.5px">
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>人脸检测</title> 
+    <link href="~/Resources/layui-v2.5.6/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Resources/css/puclic-h-f.css" rel="stylesheet" />
+    <link href="~/Resources/css/list.css" rel="stylesheet" />
+    <link href="~/Resources/font/iconfont.css" rel="stylesheet" />
+    <link href="~/Resources/font2/iconfont.css" rel="stylesheet" />
+    <script src="~/Resources/layui-v2.5.6/layui/layui.js"></script>
+    <script src="~/Resources/jquery/jquery-3.4.1.min.js"></script>
+ 
+    <meta charset="utf-8">
+    <title>web拍照</title>
+
+    
+    <style>
+        button {
+            margin-right: 15px;
+            font-size: 16px;
+            letter-spacing: 2px;
+            padding: 5px;
+        }
+
+        canvas {
+            display: none;
+        }
+
+        video {
+            border: 1px solid #ddd;
+            float: right;
+            width: 320px;
+            height: 240px;
+            background: black;
+        }
+
+        .row {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+
+            .row.menu, .row.video, .row.report {
+                border-bottom: 1px solid #ddd;
+                padding: 10px;
+            }
+
+            .row.video {
+                display: none;
+            }
+
+        button[disabled] {
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="row menu">
+        <select id="selectCarema" lay-filter="selectCarema" class="inputbox" style="width: 207px; margin-right: 4px;"></select>
+
+        <button id="carema" class="btn-primary">打开摄像头</button>
+        <button id="take-picture" class="btn-default" disabled>拍摄</button>
+        <button id="close-camera" class="btn-default" disabled>关闭摄像头</button>
+    </div>
+    <div class="row video"> 
+        <video id="video"></video>
+    </div>
+
+    <div class="row report">
+        <canvas id="canvas"></canvas>
+        <img src="" alt="" id="img-result">
+    </div>
+     
+    
+    <script>
+
+        let canvas = document.querySelector("#canvas");
+        let video = document.querySelector("#video");
+        let img = document.querySelector("#img-result");
+        let context = canvas.getContext('2d');
+        let width = 5000; //视频和canvas的宽度
+        let height = 3000; //
+        let streaming = false; // 是否开始捕获媒体
+        var mediaStreamTrack;
+
+       
+       
+        // 获取用户媒体,即摄像头
+        function openCamera() {
+             
+            var did = $("#selectCarema option:selected").val();
+            if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+                getUserMedia({
+                    audio: false, 
+                    video: {
+                        deviceId: did
+                    }
+
+                }, this.success, this.error)
+            } else {
+                alert("你的浏览器不支持访问用户媒体设备");
+            }
+          
+            $("#take-picture").addClass('btn-primary')
+            $("#close-camera").addClass('btn-primary')
+            $("#take-picture").attr('disabled', false)
+            $("#close-camera").attr('disabled', false)
+            $('.row.video').css('display', 'block');
+        }
+
+        // 关闭摄像头
+        function closeCamera() {
+            mediaStreamTrack.getTracks()[0].stop();
+            $("#take-picture").attr('disabled', true)
+            $("#take-picture").removeClass('btn-primary')
+            $("#take-picture").removeClass('btn-danger')
+            $("#close-camera").removeClass('btn-primary')
+            $("#close-camera").attr('disabled', true)
+        } 
+        // 拍照
+        function takePicture() {
+            // 需要判断媒体流是否就绪
+            if (streaming) {
+                context.drawImage(video, 0, 0, width, height);// 将视频画面捕捉后绘制到canvas里面
+                img.src = canvas.toDataURL('image/png');// 将canvas的数据传送到img里
+            }
+
+            else { alert('请检查摄像头是否正常开启'); }
+
+        } 
+        $('#carema').click(function () {
+            openCamera();
+        });
+
+        $('#close-camera').click(function () {
+            closeCamera();
+            $('.row.video').css('display', 'none');
+        });
+        // 监听视频流就位事件,即视频可以播放了
+        video.addEventListener('canplay', function (ev) {
+            if (!streaming) {
+                // height = video.videoHeight / (video.videoWidth/width);
+                video.setAttribute('width', width);
+                video.setAttribute('height', height);
+                canvas.setAttribute('width', width);
+                canvas.setAttribute('height', height);
+                streaming = true;
+            }
+        }, false);
+
+
+        $("#take-picture").click(function () {
+            takePicture();
+            if (streaming) {
+                $(this).html('重新拍摄');
+                $(this).removeClass('btn-primary');
+                $(this).addClass('btn-danger');
+            }
+
+            else { }
+        });
+        function getUserMedia(constrains, success, error) {
+
+            if (navigator.mediaDevices.getUserMedia) {
+                //最新标准API
+                navigator.mediaDevices.getUserMedia(constrains).then(success).catch(error);
+            } else if (navigator.webkitGetUserMedia) {
+                //webkit内核浏览器
+                navigator.webkitGetUserMedia(constrains).then(success).catch(error);
+            } else if (navigator.mozGetUserMedia) {
+
+                //Firefox浏览器
+                navagator.mozGetUserMedia(constrains).then(success).catch(error);
+            } else if (navigator.getUserMedia) {
+
+                //旧版API
+                navigator.getUserMedia(constrains).then(success).catch(error);
+            } else {
+
+                alert("你的浏览器不支持访问用户媒体设备");
+            }
+        }
+        function success(stream) {
+            this.streamIns = stream
+            // webkit内核浏览器
+            this.URL = window.URL || window.webkitURL
+            if ("srcObject" in video) {
+
+                mediaStreamTrack = stream;
+                video.srcObject = stream; // 将捕获的视频流传递给video  放弃window.URL.createObjectURL(stream)的使用
+                video.play(); //  播放视频
+            } else {
+
+                mediaStreamTrack = stream;
+                video.src = this.URL.createObjectURL(stream)
+                video.play(); //  播放视频
+            }
+        }
+        function error(e) {
+            alert("访问用户媒体失败" + e.name + "," + e.message);
+        }
+        layui.use(['layer', 'table', 'form'], function () {
+            navigator.mediaDevices.enumerateDevices().then(function (devices) {
+                var i = 1;
+                devices.forEach(function (dv) {
+                    var kind = dv.kind; 
+                    if (kind.match(/^video.*/)) {
+                        console.log(dv);
+                        $('#selectCarema').append(new Option("摄像头" + i + "-" + dv.label, dv.deviceId));// 下拉菜单里添加元素
+                        i++;
+                    }
+                });
+            });
+        });
+
+
+
+    </script>
+</body>
+ 
+
+ 
+</html>

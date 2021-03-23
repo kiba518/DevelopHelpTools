@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ZH-CN">
+<head>
+  <meta charset="utf-8">
+  <title>web拍照</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+
+  <style>
+    button{margin-right:15px;font-size: 16px;letter-spacing:2px;padding:5px; }
+    canvas{display:none;}
+    video{border:1px solid #ddd;float: right;width: 320px;height: 240px;background: black;}
+    .row{margin-left:0px;margin-right: 0px;}
+    .row.menu,.row.video,.row.report{border-bottom: 1px solid #ddd;padding:10px;}
+     .row.video {display: none;}
+     button[disabled]{cursor: not-allowed;}
+  </style>
+</head>
+<body>
+  
+  <div class="row menu">
+  <button id="carema" class="btn-primary">打开摄像头</button>
+  <button id="take-picture" class="btn-default" disabled>拍摄</button>
+  <button id="close-camera" class="btn-default" disabled>关闭摄像头</button>
+</div>
+    <div class="row video">
+
+      <video id="video"></video>
+      </div>
+
+      <div class="row report">
+        <canvas id="canvas"></canvas>
+        <img src="" alt="" id="img-result">
+      </div>
+      
+    </div>
+
+  
+  
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+      
+    let canvas = document.querySelector("#canvas"); //
+    let video = document.querySelector("#video");
+    let img = document.querySelector("#img-result");
+    let context = canvas.getContext('2d');
+    let width = 320; //视频和canvas的宽度
+    let height = 240; //
+    let streaming = false; // 是否开始捕获媒体
+    var mediaStreamTrack;
+    
+    // 获取用户媒体,即摄像头
+    function openCamera(){
+      navigator.mediaDevices.getUserMedia({video: true})
+      .then(stream => {
+      mediaStreamTrack = stream;
+      video.srcObject = stream; // 将捕获的视频流传递给video  放弃window.URL.createObjectURL(stream)的使用
+      video.play(); //  播放视频
+    });
+      $("#take-picture").addClass('btn-primary')
+      $("#close-camera").addClass('btn-primary')
+      $("#take-picture").attr('disabled',false)
+      $("#close-camera").attr('disabled',false)
+      $('.row.video').css('display','block');
+    }
+
+    // 关闭摄像头
+    function closeCamera(){
+       mediaStreamTrack.getTracks()[0].stop();
+       $("#take-picture").attr('disabled',true)
+       $("#take-picture").removeClass('btn-primary')
+       $("#take-picture").removeClass('btn-danger')
+       $("#close-camera").removeClass('btn-primary')
+       $("#close-camera").attr('disabled',true)
+    }
+    
+    // 拍照
+    function takePicture() {
+      // 需要判断媒体流是否就绪
+      if(streaming){
+          context.drawImage(video, 0, 0, width, height);// 将视频画面捕捉后绘制到canvas里面
+          img.src = canvas.toDataURL('image/png');// 将canvas的数据传送到img里
+      }
+    
+        else {alert('请检查摄像头是否正常开启');}
+    
+    }
+    
+
+
+    $('#carema').click(function(){
+        openCamera();
+    });
+    
+    $('#close-camera').click(function(){
+        closeCamera();
+        $('.row.video').css('display','none');
+    });
+     // 监听视频流就位事件,即视频可以播放了
+    video.addEventListener('canplay', function(ev){
+          if (!streaming) {
+            // height = video.videoHeight / (video.videoWidth/width);
+            video.setAttribute('width', width);
+            video.setAttribute('height', height);
+            canvas.setAttribute('width', width);
+            canvas.setAttribute('height', height);
+            streaming = true;
+          }
+        }, false);
+    
+    
+    $("#take-picture").click(function(){
+        takePicture();
+        if(streaming){
+        $(this).html('重新拍摄');
+        $(this).removeClass('btn-primary');
+        $(this).addClass('btn-danger');
+        }
+
+        else{}
+    });
+    
+  </script>
+</body>
+</html>
+
