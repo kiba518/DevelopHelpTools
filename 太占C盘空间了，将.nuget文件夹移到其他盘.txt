@@ -1,0 +1,27 @@
+太占C盘空间了，将.nuget文件夹移到其他盘
+ 
+太占C盘空间了，将.nuget文件夹移到其他盘-程序旅途
+该图片由Elias Obernosterer在Pixabay上发布
+C盘空间总是不够用的，这不我的C盘又剩1G的空间了。这次决定把Nuget的本地包移动其他盘，它占了差不多将近10个G。
+
+移动文件夹
+使用下面的命令查看本地包位置
+
+dotnet nuget locals all --list
+太占C盘空间了，将.nuget文件夹移到其他盘-程序旅途
+我的是在 C:\Users\Administrator\.nuget\packages\
+
+将.nuget 文件夹移动到 E:\Administrator下
+
+全局配置
+打开 %AppData%\NuGet\NuGet.Config  ，全局指定新的文件夹位置
+
+添加如下配置
+
+  <config>
+     <add key="globalPackagesFolder" value="E:\Administrator\.nuget\packages" />
+  </config>
+dotnet nuget locals all --list 再次查看
+
+参考https://docs.microsoft.com/zh-cn/nuget/consume-packages/managing-the-global-packages-and-cache-folders
+ 
