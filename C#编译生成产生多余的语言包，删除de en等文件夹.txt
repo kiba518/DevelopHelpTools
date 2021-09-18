@@ -1,0 +1,2 @@
+在 后期生成时间命令行中添加下面命令
+rd /s /q "de" "en" "es" "fr" "hu" "it" "ja" "ko" "pr-br" "ro" "pt-br" "ru" "sv" "zh-hans" "zh-hant"
