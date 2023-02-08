@@ -1,0 +1,201 @@
+TimerTask task = new TimerTask() {
+    @Override
+    public void run() {
+        // 逻辑处理
+    }
+};
+Timer timer = new Timer();
+timer.schedule(task, 0); // 此处delay为0表示没有延迟，立即执行一次task
+timer.schedule(task, 1000); // 延迟1秒，执行一次task
+timer.schedule(task, 0, 2000); // 立即执行一次task，然后每隔2秒执行一次task
+timer.schedule(task, 0, 2000); 
+timer.schedule(TimerTask task, Date time)方法用于调度指定任务的执行时间在指定的时间。
+timer.schedule(tasknew, new Date());
+
+
+线程自增
+public static Date serverDate=new Date();
+public static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+private void Increase(){
+        new Thread(){
+            @Override
+            public void run() {
+                while (true)
+                {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    serverDate.setTime(serverDate.getTime() + 1000);
+                    System.out.println("当前时间serverDate："+df.format(serverDate));
+                }
+            }
+        }.start();
+
+    }
+
+
+Timer里，handle发送handleMessage实现循环
+final Timer timer = new Timer();
+ public void test(){
+
+        final long end = System.currentTimeMillis() + 1000*3;
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.sendEmptyMessage(HandlerHelper.TEST);
+
+            }
+        }, 0, 1000);
+
+
+    }
+    private Handler handler = new Handler(){
+        public void handleMessage(android.os.Message msg) {
+
+            switch (msg.what) {
+                case HandlerHelper.TEST:
+                    etPhoneNumber.setText(df.format(ServerDateService.serverDate));
+                    Log.i("测试电话号码", etPhoneNumber.getEditValue());
+                    break;
+                default:
+                    break;
+            }
+        };
+    };
+
+ @Override
+    protected void onRelease() {
+        if (mCountHelper != null) {
+            mCountHelper.recycle();
+        }
+        timer.cancel();
+        super.onRelease();
+    }
+
+
+
+线程里，handleMessage实现循环
+ private Handler handler = new Handler(){
+        public void handleMessage(android.os.Message msg) {
+
+            switch (msg.what) {
+                case HandlerHelper.TEST:
+                    etPhoneNumber.setText(df.format(ServerDateService.serverDate));
+                    Log.i("测试电话号码", etPhoneNumber.getEditValue());
+                    break;
+                default:
+                    break;
+            }
+        };
+    };
+
+    private void Increase(){
+        new Thread(){
+            @Override
+            public void run() {
+                while (true)
+                {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    handler.sendEmptyMessage(HandlerHelper.TEST);
+                }
+            }
+        }.start();
+
+    }
+
+
+关于Looper.getMainLooper()
+private static Handler handlerUI = new Handler(Looper.getMainLooper());
+这句话的目的是给handler设置looper，如果使用默认不带参数的构造方法，则会默认获取当前线程作为looper的宿主，如果指定了主线程looper，就可以直接在回调中执行UI操作。LoopHelper 如下：
+
+ 
+package com.weiguo.collection.utils;
+
+import android.os.Handler;
+import android.os.Looper;
+
+public class LoopHelper {
+    private static Handler handlerUI = new Handler(Looper.getMainLooper());
+
+    /**
+     * 使用Handler延迟提交（postDelayed）做循环
+     * @param runnable
+     * @param delayMillis
+     */
+    public static void loopHandler(Runnable runnable,long delayMillis){
+
+        Runnable runnable1=new Runnable(){
+            @Override
+            public void run() {
+                runnable.run();
+                handlerUI.postDelayed(this, delayMillis);
+            }
+
+        };
+        runnable1.run();
+    }
+
+    /**
+     *
+     * @param runnable
+     * @param delayMillis 间隔
+     */
+    public static void loopHandlerThread(Runnable runnable,long delayMillis){
+
+        Runnable runnable1=new Runnable(){
+            @Override
+            public void run() {
+                runnable.run();
+                handlerUI.postDelayed(this, delayMillis);
+            }
+
+        };
+        new Thread(runnable1).run();
+
+    }
+
+    /**
+     * 使用线程做循环
+     * @param runnable
+     */
+    public static void LoopThread(Runnable runnable, long delayMillis){
+        new Thread(){
+            @Override
+            public void run() {
+                while (true)
+                {
+                    try {
+                        Thread.sleep(delayMillis);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    runnable.run();
+                }
+            }
+        }.start();
+
+    }
+
+}
+
+调用如下：
+   LoopHelper.loopHandler(()->{
+            etPhoneNumber.setText(df.format(ServerDateService.serverDate));
+            Log.i("测试电话号码", etPhoneNumber.getEditValue());
+        },1000);
+        LoopHelper.loopHandlerThread(()->{
+            etPhoneNumber.setText(df.format(ServerDateService.serverDate));
+            Log.i("测试电话号码", etPhoneNumber.getEditValue());
+        },1000);
+        LoopHelper.LoopThread(()->{
+            runOnUiThread(()->{
+                etPhoneNumber.setText(df.format(ServerDateService.serverDate));
+                Log.i("测试电话号码", etPhoneNumber.getEditValue());
+            });
+        },1000);
