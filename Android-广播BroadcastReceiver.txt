@@ -1,0 +1,96 @@
+1、动态注册的广播永远要快于静态注册的广播,不管静态注册的优先级设置的多高,不管动态注册的优先级有多低
+
+2、生存期，静态广播的生存期可以比动态广播的长很多，因为静态广播很多都是用来对系统时间进行监听，比如我们可以监听手机开机。而动态广播会随着context的终止而终止
+
+3、动态广播无需在AndroidManifest.xml中声明即可直接使用，也即动态；而静态广播则需要，有时候还要在AndroidManifest.xml中加上一些权限的声明
+
+1、BroadCastReceiver 的生命周期很短暂，当接收到广播的时候创建，当onReceive()方法结束后销毁
+
+2、正因为BroadCastReceiver的声明周期很短暂，所以不要在广播接收器中去创建子线程做耗时的操作，因为广播接受者被销毁后，这个子进程就会成为空进程，很容易被杀死
+
+3、因为BroadCastReceiver是运行在主线程的，所以不能直接在BroadCastReceiver中去做耗时的操作，否则就会出现ANR异常
+
+最后建议：耗时的较长的工作最好放到Service中去完成
+
+作者：黑键手记
+链接：https://www.jianshu.com/p/873edd8f2a00
+来源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+在AndroidManifest.xml中写入静态接收名
+        <receiver
+            android:name=".MyStaiticReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="wzk" />
+            </intent-filter>
+        </receiver>
+3.在主方法把广播发送给静态广播接收者
+        btn_sendstatic=findViewById(R.id.btn_sendstatic);
+ 
+        btn_sendstatic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //发送广播给静态广播接收者
+                Intent intent=new Intent();
+                //在Android8.0以上就不支持静态广播了，需要加一个这个
+                intent.setPackage(getPackageName());
+                intent.setAction("wzk");
+                intent.putExtra("info","你好");
+                sendBroadcast(intent);
+            }
+        });        btn_sendstatic=findViewById(R.id.btn_sendstatic);
+ 
+        btn_sendstatic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //发送广播给静态广播接收者
+                Intent intent=new Intent();
+                intent.setPackage(getPackageName());
+                intent.setAction("wzk");
+                intent.putExtra("info","你好");
+                sendBroadcast(intent);
+            }
+        });
+4.在广播接收器里面接收广播
+        Log.i("MyStaiticReceiver","接收到的值是"+intent.getStringExtra("info"));
+动态广播:
+1.创建广播继承BroadcastReceiver
+    class MyDymnicReveiver extends BroadcastReceiver{
+ 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i("动态广播接收者",intent.getStringExtra("info"));
+ 
+        }
+    }
+2.在主方法注册动态广播
+        //注册动态广播
+        myDymnicReveiver=new MyDymnicReveiver();
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("666");
+        registerReceiver(myDymnicReveiver,intentFilter);
+3.发送给动态广播
+        //发送给动态的广播
+        btn_send = findViewById(R.id.btn_send);
+        btn_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent();
+                intent.setAction("666");
+                intent.putExtra("info","动态广播你好");
+                sendBroadcast(intent);
+            }
+        });
+4.反注册
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (myDymnicReveiver!=null){
+            unregisterReceiver(myDymnicReveiver);
+        }
+
+————————————————
+版权声明：本文为CSDN博主「卡卡技术猫」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/suiyue010211/article/details/125951403
